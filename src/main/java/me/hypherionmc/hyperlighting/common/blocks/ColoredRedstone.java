@@ -14,17 +14,19 @@ import net.minecraft.block.SoundType;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.color.IBlockColor;
 import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.*;
 import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.util.ActionResultType;
+import net.minecraft.util.Hand;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -86,5 +88,27 @@ public class ColoredRedstone extends RedstoneLampBlock implements DyeAble {
         tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Color: " + defaultDyeColor().name()));
         tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
         super.addInformation(stack, worldIn, tooltip, flagIn);
+    }
+
+    @Override
+    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+        if (!worldIn.isRemote) {
+
+            if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof DyeItem) {
+                state = state.with(COLOR, ((DyeItem)player.getHeldItem(handIn).getItem()).getDyeColor());
+                worldIn.setBlockState(pos, state, 3);
+                worldIn.notifyBlockUpdate(pos, state, state, 3);
+
+                if (!player.isCreative()) {
+                    ItemStack stack = player.getHeldItem(handIn);
+                    stack.shrink(1);
+                    player.setHeldItem(handIn, stack);
+                }
+
+                return ActionResultType.CONSUME;
+            }
+
+        }
+        return ActionResultType.PASS;
     }
 }
