@@ -114,6 +114,26 @@ public class HLBlocks {
     public static final RegistryObject<Block> COLORED_REDSTONE_RED = BLOCKS.register("colored_redstone_red", () -> new ColoredRedstone("colored_redstone_red", DyeColor.RED, HyperLighting.mainTab));
     public static final RegistryObject<Block> COLORED_REDSTONE_BLACK = BLOCKS.register("colored_redstone_black", () -> new ColoredRedstone("colored_redstone_black", DyeColor.BLACK, HyperLighting.mainTab));
 
+    /**
+     * Glowstone
+     */
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_WHITE = BLOCKS.register("colored_glowstone_white", () -> new ColoredGlowstone("colored_glowstone_white", DyeColor.WHITE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_ORANGE = BLOCKS.register("colored_glowstone_orange", () -> new ColoredGlowstone("colored_glowstone_orange", DyeColor.ORANGE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_MAGENTA = BLOCKS.register("colored_glowstone_magenta", () -> new ColoredGlowstone("colored_glowstone_magenta", DyeColor.MAGENTA, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_LIGHT_BLUE = BLOCKS.register("colored_glowstone_light_blue", () -> new ColoredGlowstone("colored_glowstone_light_blue", DyeColor.LIGHT_BLUE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_YELLOW = BLOCKS.register("colored_glowstone_yellow", () -> new ColoredGlowstone("colored_glowstone_yellow", DyeColor.YELLOW, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_LIME = BLOCKS.register("colored_glowstone_lime", () -> new ColoredGlowstone("colored_glowstone_lime", DyeColor.LIME, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_PINK = BLOCKS.register("colored_glowstone_pink", () -> new ColoredGlowstone("colored_glowstone_pink", DyeColor.PINK, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_GRAY = BLOCKS.register("colored_glowstone_gray", () -> new ColoredGlowstone("colored_glowstone_gray", DyeColor.GRAY, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_LIGHT_GRAY = BLOCKS.register("colored_glowstone_light_gray", () -> new ColoredGlowstone("colored_glowstone_light_gray", DyeColor.LIGHT_GRAY, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_CYAN = BLOCKS.register("colored_glowstone_cyan", () -> new ColoredGlowstone("colored_glowstone_cyan", DyeColor.CYAN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_PURPLE = BLOCKS.register("colored_glowstone_purple", () -> new ColoredGlowstone("colored_glowstone_purple", DyeColor.PURPLE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_BLUE = BLOCKS.register("colored_glowstone_blue", () -> new ColoredGlowstone("colored_glowstone_blue", DyeColor.BLUE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_BROWN = BLOCKS.register("colored_glowstone_brown", () -> new ColoredGlowstone("colored_glowstone_brown", DyeColor.BROWN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_GREEN = BLOCKS.register("colored_glowstone_green", () -> new ColoredGlowstone("colored_glowstone_green", DyeColor.GREEN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_RED = BLOCKS.register("colored_glowstone_red", () -> new ColoredGlowstone("colored_glowstone_red", DyeColor.RED, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_GLOWSTONE_BLACK = BLOCKS.register("colored_glowstone_black", () -> new ColoredGlowstone("colored_glowstone_black", DyeColor.BLACK, HyperLighting.mainTab));
+
 
     /**
      * Single Lights
