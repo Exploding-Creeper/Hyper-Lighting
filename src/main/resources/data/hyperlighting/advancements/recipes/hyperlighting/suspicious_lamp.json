@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:suspicious_lamp"
+    ]
+  },
+  "criteria": {
+    "suspicious_lamp": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:quartz_block"
+          },
+          {
+            "item": "minecraft:redstone_lamp"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:suspicious_lamp"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "suspicious_lamp",
+      "has_the_recipe"
+    ]
+  ]
+}

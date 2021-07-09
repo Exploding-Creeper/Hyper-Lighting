@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hmctt",
+  "pattern": [
+    "   ",
+    "RES",
+    "   "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:iron_ingot"
+    },
+    "E": {
+      "item": "minecraft:flint"
+    },
+    "S": {
+      "item": "minecraft:bucket"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:lighter_tool"
+  }
+}

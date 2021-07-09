@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,lit=true": { "model": "hyperlighting:block/jacklantern_straw_on", "y": 180  },
+    "facing=south,lit=true": { "model": "hyperlighting:block/jacklantern_straw_on" },
+    "facing=east,lit=true": { "model": "hyperlighting:block/jacklantern_straw_on", "y": 270 },
+    "facing=west,lit=true": { "model": "hyperlighting:block/jacklantern_straw_on", "y": 90 },
+    "facing=north,lit=false": { "model": "hyperlighting:block/jacklantern_straw", "y": 180 },
+    "facing=south,lit=false": { "model": "hyperlighting:block/jacklantern_straw" },
+    "facing=east,lit=false": { "model": "hyperlighting:block/jacklantern_straw", "y": 270 },
+    "facing=west,lit=false": { "model": "hyperlighting:block/jacklantern_straw", "y": 90 }
+  }
+}

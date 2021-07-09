@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[36,)"
+license = "All rights reserved"
+issueTrackerURL="https://github.com/Exploding-Creeper/Hyper-Lighting/issues" #optional
+[[mods]] #mandatory
+# The modid of the mod
+modId = "hyperlighting" #mandatory
+version = "${file.jarVersion}" #mandatory
+displayName = "Hyper Lighting" #mandatory
+#updateJSONURL="http://myurl.me/" #optional
+displayURL="https://github.com/Exploding-Creeper/Hyper-Lighting/" #optional
+logoFile="logo.png" #optional
+#credits="Thanks for this example mod goes to Java" #optional
+authors="HypherionSA" #optional
+description = '''
+Hyper Lighting is an advanced Lighting mod for Minecraft featuring lights of all shapes and colors!
+'''
+
+[[dependencies.hyperlighting]] #optional
+modId = "forge" #mandatory
+mandatory = true #mandatory
+versionRange = "[36,)" #mandatory
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.hyperlighting]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.16.5,1.17)"
+ordering = "NONE"
+side = "BOTH"

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:fence_solar"
+    ]
+  },
+  "criteria": {
+    "solar_fence": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:daylight_detector"
+          },
+          {
+            "item": "minecraft:glass"
+          },
+          {
+            "item": "minecraft:flower_pot"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:fence_solar"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "solar_fence",
+      "has_the_recipe"
+    ]
+  ]
+}

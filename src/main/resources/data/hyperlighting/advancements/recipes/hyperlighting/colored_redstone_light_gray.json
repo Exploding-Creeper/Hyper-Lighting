@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:colored_redstone_light_gray"
+    ]
+  },
+  "criteria": {
+    "coloredredstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:redstone_lamp"
+          },
+          {
+            "item": "minecraft:light_gray_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:colored_redstone_light_gray"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "coloredredstone",
+      "has_the_recipe"
+    ]
+  ]
+}

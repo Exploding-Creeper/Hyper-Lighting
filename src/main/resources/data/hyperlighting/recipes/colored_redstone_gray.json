@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "   ",
+    "RE ",
+    "   "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:redstone_lamp"
+    },
+    "R": {
+      "item": "minecraft:gray_dye"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:colored_redstone_gray"
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    " E ",
+    " R ",
+    " S "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:torch"
+    },
+    "R": {
+      "item": "minecraft:lever"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:advanced_torch_orange"
+  }
+}

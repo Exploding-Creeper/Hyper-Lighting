@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=true": {"model": "hyperlighting:block/lava_lamp_lit"},
+    "lit=false": {"model": "hyperlighting:block/lava_lamp"}
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:battery_neon"
+    ]
+  },
+  "criteria": {
+    "battery_neon": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:stone"
+          },
+          {
+            "item": "minecraft:glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:battery_neon"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "battery_neon",
+      "has_the_recipe"
+    ]
+  ]
+}

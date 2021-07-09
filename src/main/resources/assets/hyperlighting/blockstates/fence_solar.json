@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=true": {
+      "model": "hyperlighting:block/solar_fence_light"
+    },
+    "lit=false": {
+      "model": "hyperlighting:block/solar_fence_light"
+    }
+  }
+}

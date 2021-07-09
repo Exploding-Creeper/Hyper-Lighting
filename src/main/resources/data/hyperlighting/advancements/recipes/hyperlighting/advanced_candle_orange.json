@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:advanced_candle_orange"
+    ]
+  },
+  "criteria": {
+    "candle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hyperlighting:advanced_torch_orange"
+          },
+          {
+            "item": "minecraft:flower_pot"
+          },
+          {
+            "item": "minecraft:string"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:advanced_candle_orange"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "candle",
+      "has_the_recipe"
+    ]
+  ]
+}

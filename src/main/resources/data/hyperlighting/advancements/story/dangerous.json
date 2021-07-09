@@ -1,0 +1,29 @@
+{
+  "display": {
+    "title": {
+      "text": "Living on the edge",
+      "color": "red",
+      "bold": true
+    },
+    "description": {
+      "text": "Placed a Dangerous Lamp",
+      "color": "dark_aqua"
+    },
+    "icon": {
+      "item": "hyperlighting:danger_lamp"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "gotscammed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "hyperlighting:danger_lamp"
+      }
+    }
+  }
+}

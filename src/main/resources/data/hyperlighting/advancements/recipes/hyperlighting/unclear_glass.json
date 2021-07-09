@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:unclear_glass"
+    ]
+  },
+  "criteria": {
+    "unclear_glass": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:ink_sac"
+          },
+          {
+            "item": "minecraft:glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:unclear_glass"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "unclear_glass",
+      "has_the_recipe"
+    ]
+  ]
+}
