@@ -7,10 +7,7 @@ import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
 import me.hypherionmc.hyperlighting.common.blocks.AdvancedTorchBlock;
-import me.hypherionmc.hyperlighting.common.init.HLBlocks;
-import me.hypherionmc.hyperlighting.common.init.HLContainers;
-import me.hypherionmc.hyperlighting.common.init.HLItems;
-import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
+import me.hypherionmc.hyperlighting.common.init.*;
 import me.hypherionmc.hyperlighting.common.integration.top.TOPIntegration;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
@@ -52,6 +49,9 @@ public class RegistryHandler {
 
         HyperLighting.logger.info("Registering Network Packets...");
         PacketHandler.registerMessages();
+
+        HyperLighting.logger.info("Registering Sounds");
+        HLSounds.SOUNDS.register(FMLJavaModLoadingContext.get().getModEventBus());
 
         if (ModList.get().isLoaded(ModConstants.THE_ONE_PROBE)) {
             new TOPIntegration().setup();

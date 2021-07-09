@@ -160,7 +160,9 @@ public class AdvancedLantern extends HorizontalFaceBlock implements DyeAble, Lig
                 worldIn.notifyBlockUpdate(pos, state, state, 3);
 
                 if (!player.isCreative()) {
-                    player.setHeldItem(handIn, ItemStack.EMPTY);
+                    ItemStack stack = player.getHeldItem(handIn);
+                    stack.shrink(1);
+                    player.setHeldItem(handIn, stack);
                 }
 
                 return ActionResultType.CONSUME;
