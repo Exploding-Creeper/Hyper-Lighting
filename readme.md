@@ -1,7 +1,7 @@
 ![](https://raw.githubusercontent.com/Exploding-Creeper/botassets/main/hl_banner.png)
 [![Build Status](https://ci.explodingcreeper.me/buildStatus/icon?job=Hyper+Lighting%2F1.16&build=6)](https://ci.explodingcreeper.me/job/Hyper%20Lighting/job/1.16/6/)
 [![](https://cf.way2muchnoise.eu/versions/hyper-lighting_latest.svg)](https://www.curseforge.com/minecraft/mc-mods/hyper-lighting)
-[![](https://img.shields.io/badge/Hypherion%20Development-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white%22)](https://discord.gg/PdVnXf9)
+[![](https://img.shields.io/badge/Hypherion%20Development-%237289DA.svg?style=for-the-badge&logo=discord&logoColor=white)](https://discord.gg/PdVnXf9)
 ___
 #⚠️ WARNING ⚠️
 **This version of Hyper Lighting is NOT compatible with saves from the 1.12 or 1.14 version. This version is a complete rewrite and therefore requires a world where Hyper Lighting has never been**
