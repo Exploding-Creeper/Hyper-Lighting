@@ -1,7 +1,6 @@
 package me.hypherionmc.hyperlighting.common.tile;
 
 import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
-import me.hypherionmc.hyperlighting.api.energy.SolarMachine;
 import me.hypherionmc.hyperlighting.common.blocks.SolarPanel;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
 import net.minecraft.block.Block;
@@ -22,18 +21,13 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSolarPanel extends TileEntity implements ITickableTileEntity, SolarMachine {
+public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
 
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 2000, 1000);
     private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public TileSolarPanel() {
         super(HLTileEntities.TILE_SOLAR_PANEL.get());
-    }
-
-    @Override
-    public SolarEnergyStorage getStorage() {
-        return this.energyStorage;
     }
 
     @Override
@@ -47,12 +41,12 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity, S
                 int i = world.getLightFor(LightType.SKY, pos) - world.getSkylightSubtracted();
                 float f = world.getCelestialAngleRadians(1.0F);
 
-                if (i > 5 && this.energyStorage.getSolarEnergyStored() < this.energyStorage.getMaxSolarEnergyStored()) {
+                if (i > 5 && this.energyStorage.getEnergyStored() < this.energyStorage.getMaxEnergyStored()) {
                     float f1 = f < (float)Math.PI ? 0.0F : ((float)Math.PI * 2F);
                     f = f + (f1 - f) * 0.2F;
                     i = Math.round((float)i * MathHelper.cos(f));
                     i = MathHelper.clamp(i, 0, 15);
-                    this.energyStorage.receiveSolar(i, false);
+                    this.energyStorage.receiveEnergy(i, false);
                 }
 
             }

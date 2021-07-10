@@ -1,9 +1,7 @@
 package me.hypherionmc.hyperlighting.common.tile;
 
 import me.hypherionmc.hyperlighting.api.SolarLight;
-import me.hypherionmc.hyperlighting.api.energy.ISolarEnergyStorage;
 import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
-import me.hypherionmc.hyperlighting.api.energy.SolarMachine;
 import me.hypherionmc.hyperlighting.common.blocks.FenceSolar;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
 import net.minecraft.block.Block;
@@ -13,7 +11,6 @@ import net.minecraft.network.NetworkManager;
 import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.Direction;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.LightType;
@@ -25,7 +22,7 @@ import net.minecraftforge.energy.IEnergyStorage;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSolarLight extends TileEntity implements ITickableTileEntity, SolarMachine, SolarLight {
+public class TileSolarLight extends TileEntity implements ITickableTileEntity, SolarLight {
 
     private int powerLevel = 0;
     private boolean isCharging = false;
@@ -94,8 +91,7 @@ public class TileSolarLight extends TileEntity implements ITickableTileEntity, S
         super.read(state, compound);
         this.powerLevel = compound.getInt("power");
         this.isCharging = compound.getBoolean("isCharging");
-        this.energyStorage.setEnergy(compound.getInt("Energy"));
-        this.energyStorage.setCapacity(compound.getInt("Capacity"));
+        this.energyStorage.readNBT(compound.getCompound("energyStorage"));
     }
 
     @Override
@@ -103,8 +99,7 @@ public class TileSolarLight extends TileEntity implements ITickableTileEntity, S
         super.write(compound);
         compound.putInt("power", this.powerLevel);
         compound.putBoolean("isCharging", this.isCharging);
-        compound.putInt("Energy", this.energyStorage.getSolarEnergyStored());
-        compound.putInt("Capacity", this.energyStorage.getSolarEnergyStored());
+        compound.put("energyStorage", this.energyStorage.writeNBT(compound));
         return compound;
     }
 
@@ -145,11 +140,6 @@ public class TileSolarLight extends TileEntity implements ITickableTileEntity, S
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
         super.onDataPacket(net, pkt);
         handleUpdateTag(this.getBlockState(), pkt.getNbtCompound());
-    }
-
-    @Override
-    public SolarEnergyStorage getStorage() {
-        return this.energyStorage;
     }
 
     @Nonnull

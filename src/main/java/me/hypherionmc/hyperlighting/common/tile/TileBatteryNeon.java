@@ -1,8 +1,8 @@
 package me.hypherionmc.hyperlighting.common.tile;
 
 import me.hypherionmc.hyperlighting.api.SolarLight;
+import me.hypherionmc.hyperlighting.api.energy.IEnergyContainerItem;
 import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
-import me.hypherionmc.hyperlighting.api.energy.SolarMachine;
 import me.hypherionmc.hyperlighting.common.blocks.BatteryNeon;
 import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
@@ -32,14 +32,14 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, SolarMachine, SolarLight {
+public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, SolarLight {
 
     private boolean isCharging = false;
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(500, 20, 1);
     private final ItemStackHandler itemStackHandler = new ItemHandler(1);
     private final ItemStackHandler dyeHandler = new DyeHandler(1);
 
-    private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public TileBatteryNeon() {
         super(HLTileEntities.TILE_BATTERY_NEON.get());
@@ -63,21 +63,39 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
                             if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileSolarPanel) {
                                 TileSolarPanel storage1 = (TileSolarPanel) world.getTileEntity(pos);
-                                SolarEnergyStorage storage = storage1.getStorage();
 
-                                if (storage != null && storage.canExtract() && storage.extractSolar(10, true) > 0) {
+                                if (storage1 != null && storage1.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                                    IEnergyStorage storage = storage1.getCapability(CapabilityEnergy.ENERGY).resolve().get();
 
-                                    if (this.energyStorage.receiveSolarInternal(20, true) > 0) {
-                                        this.isCharging = true;
-                                        storage.extractEnergy(this.energyStorage.receiveSolarInternal(20, false), false);
+                                    if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
+
+                                        if (this.energyStorage.receiveEnergy(20, true) > 0) {
+                                            this.isCharging = true;
+                                            storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
+                                        } else {
+                                            this.isCharging = false;
+                                        }
                                     } else {
                                         this.isCharging = false;
                                     }
-                                } else {
-                                    this.isCharging = false;
                                 }
+
                             }
                         }
+                    }
+                } else if (!itemStackHandler.getStackInSlot(0).isEmpty() && itemStackHandler.getStackInSlot(0).getItem() instanceof IEnergyContainerItem) {
+                    IEnergyStorage storage = itemStackHandler.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).resolve().get();
+
+                    if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
+
+                        if (this.energyStorage.receiveEnergy(20, true) > 0) {
+                            this.isCharging = true;
+                            storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
+                        } else {
+                            this.isCharging = false;
+                        }
+                    } else {
+                        this.isCharging = false;
                     }
                 } else {
                     this.isCharging = false;
@@ -88,7 +106,7 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
             if (this.world.getGameTime() % 40L == 0L) {
                 if (world.getBlockState(pos) != null && world.getBlockState(pos).getBlock() == HLBlocks.BATTERY_NEON.get()) {
                     if (world.getBlockState(pos).get(BatteryNeon.LIT)) {
-                        this.energyStorage.extractSolarInternal(1, false);
+                        this.energyStorage.extractEnergy(1, false);
                     }
                 }
 
@@ -123,11 +141,11 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
     }
 
     public int getMaxPowerLevel() {
-        return this.energyStorage.getMaxSolarEnergyStored();
+        return this.energyStorage.getMaxEnergyStored();
     }
 
     public int getPowerLevel() {
-        return this.energyStorage.getSolarEnergyStored();
+        return this.energyStorage.getEnergyStored();
     }
 
 
@@ -163,11 +181,6 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
         return super.getCapability(cap, side);
     }
 
-    @Override
-    public SolarEnergyStorage getStorage() {
-        return this.energyStorage;
-    }
-
     public RGBLight produceColoredLight(BlockPos pos) {
 
         if (!HyperLightingConfig.batteryColor.get()) {
@@ -198,7 +211,7 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return stack.getItem() == HLItems.WIRELESS_POWERCARD.get();
+            return stack.getItem() == HLItems.WIRELESS_POWERCARD.get() || stack.getItem() == HLItems.BATTERY.get();
         }
     }
 
