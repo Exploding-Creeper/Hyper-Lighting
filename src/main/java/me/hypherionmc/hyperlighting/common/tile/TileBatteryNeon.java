@@ -211,7 +211,7 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
         @Override
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
-            return stack.getItem() == HLItems.WIRELESS_POWERCARD.get() || stack.getItem() == HLItems.BATTERY.get();
+            return stack.getItem() == HLItems.WIRELESS_POWERCARD.get()/* || stack.getItem() == HLItems.BATTERY.get()*/;
         }
     }
 
