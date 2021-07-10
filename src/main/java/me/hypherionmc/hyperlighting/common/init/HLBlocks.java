@@ -145,7 +145,7 @@ public class HLBlocks {
     public static final RegistryObject<Block> SUSPICIOUS_LAMP = BLOCKS.register("suspicious_lamp", () -> new SuspiciousLamp("suspicious_lamp", HyperLighting.mainTab));
     public static final RegistryObject<Block> DANGER_LAMP = BLOCKS.register("danger_lamp", () -> new DangerLamp("danger_lamp", HyperLighting.mainTab));
     public static final RegistryObject<Block> WALL_LIGHT = BLOCKS.register("wall_light", () -> new WallLight("wall_light", HyperLighting.mainTab));
-    public static final RegistryObject<Block> UNCLEAR_GLASS = BLOCKS.register("unclear_glass", () -> new UnclearGlass("unclear_glass", HyperLighting.mainTab));
+    public static final RegistryObject<Block> UNCLEAR_GLASS = BLOCKS.register("unclear_glass", () -> new UnclearGlass("unclear_glass", DyeColor.WHITE, HyperLighting.mainTab));
     public static final RegistryObject<Block> LAVA_LAMP = BLOCKS.register("lava_lamp", () -> new LavaLamp("lava_lamp", HyperLighting.mainTab));
     public static final RegistryObject<Block> CAMPFIRE = BLOCKS.register("campfire", () -> new CampFireBlock("campfire", DyeColor.ORANGE, HyperLighting.mainTab));
     public static final RegistryObject<Block> CAMPFIRE_UNDERWATER = BLOCKS.register("campfire_underwater", () -> new CampFireUnderwater("campfire_underwater", DyeColor.BLUE, HyperLighting.mainTab));
