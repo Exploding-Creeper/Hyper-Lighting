@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=true": {"model":  "hyperlighting:block/hanging_fire"},
+    "lit=false": {"model":  "hyperlighting:block/hanging_fire_unlit"}
+  }
+}

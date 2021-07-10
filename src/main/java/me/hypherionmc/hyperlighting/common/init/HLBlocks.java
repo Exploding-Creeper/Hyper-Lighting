@@ -151,6 +151,7 @@ public class HLBlocks {
     public static final RegistryObject<Block> CAMPFIRE_UNDERWATER = BLOCKS.register("campfire_underwater", () -> new CampFireUnderwater("campfire_underwater", DyeColor.BLUE, HyperLighting.mainTab));
     public static final RegistryObject<Block> PUMPKIN_TRIO = BLOCKS.register("pumpkin_trio", () -> new PumpkinTrio("pumpkin_trio"));
     public static final RegistryObject<Block> PUMPKIN_TRIO_INVERTED = BLOCKS.register("pumpkin_trio_inverted", () -> new PumpkinTrio("pumpkin_trio_inverted"));
+    public static final RegistryObject<Block> HANGING_FIRE = BLOCKS.register("hanging_fire", () -> new HangingFire("hanging_fire", DyeColor.ORANGE, HyperLighting.mainTab));
 
     /**
      * MACHINES
