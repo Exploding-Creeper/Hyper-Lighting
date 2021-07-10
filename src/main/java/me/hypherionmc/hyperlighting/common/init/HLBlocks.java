@@ -162,4 +162,5 @@ public class HLBlocks {
      * OTHER
      */
     public static final RegistryObject<Block> TIKI_BASE = BLOCKS.register("tiki_base", () -> new TikiTorchStick("tiki_base"));
+
 }

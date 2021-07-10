@@ -20,10 +20,11 @@ import net.minecraftforge.energy.IEnergyStorage;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
 
-    private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 2000, 1000);
+    private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 0, 1000);
     private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public TileSolarPanel() {
@@ -46,10 +47,25 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
                     f = f + (f1 - f) * 0.2F;
                     i = Math.round((float)i * MathHelper.cos(f));
                     i = MathHelper.clamp(i, 0, 15);
-                    this.energyStorage.receiveEnergy(i, false);
+                    this.energyStorage.receiveEnergyInternal(i, false);
                 }
 
             }
+
+            if (!world.isRemote) {
+                for (Direction direction : Direction.values()) {
+                    direction = direction.getOpposite();
+                    if (world.getTileEntity(getPos().offset(direction)) != null && world.getTileEntity(getPos().offset(direction)).getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                        IEnergyStorage storage = world.getTileEntity(getPos().offset(direction)).getCapability(CapabilityEnergy.ENERGY).resolve().get();
+                        if (storage.canReceive() && storage.receiveEnergy(200, true) > 0) {
+                            if (this.energyStorage.extractEnergy(200, true) > 0) {
+                                storage.receiveEnergy(this.energyStorage.extractEnergy(200, false), false);
+                            }
+                        }
+                    }
+                }
+            }
+
             this.sendUpdates();
         }
     }
@@ -97,6 +113,96 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
             return this.energy.cast();
         }
         return super.getCapability(cap, side);
+    }
+
+    void transferEnergyToAllAround() {
+        if (!canTransferEnergyToAllAround()) {
+            return;
+        }
+
+        getConnectedSides().forEach(side -> {
+            transferEnergyTo(side, (int) ((float) this.energyStorage.getEnergyStored() / (float) getConnectedSides().size()), false);
+        });
+
+    }
+
+    boolean canTransferEnergyToAllAround() {
+        if (getWorld().isRemote) {
+            return false;
+        }
+
+        if (!this.energyStorage.canExtract()) {
+            return false;
+        }
+
+        if (this.energyStorage.getEnergyStored() <= 0) {
+            return false;
+        }
+        return true;
+    }
+
+    ArrayList<Direction> getConnectedSides() {
+        final ArrayList<Direction> connectedSides = new ArrayList<>();
+
+        for (final Direction side : Direction.values()) {
+            if (isConnectedTo(side)) {
+                connectedSides.add(side);
+            }
+        }
+
+        return connectedSides;
+    }
+
+    int transferEnergyTo(final Direction side, final int energyToTransfer, final boolean simulate) {
+        if (!canTransferEnergyTo(side, energyToTransfer)) {
+            return 0;
+        }
+        final IEnergyStorage storage = getWorld().getTileEntity(getPos().offset(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
+        return this.energyStorage.extractEnergy(storage.receiveEnergy(energyToTransfer, simulate), simulate);
+    }
+
+    boolean canTransferEnergyTo(final Direction side, final int energyToTransfer) {
+        if (!this.energyStorage.canExtract()) {
+            return false;
+        }
+
+        if (getWorld() == null) {
+            return false;
+        }
+
+        if (getWorld().isRemote) {
+            return false;
+        }
+
+        if (getWorld().getTileEntity(getPos().offset(side)) == null) {
+            return false;
+        }
+
+        final IEnergyStorage storage = getWorld().getTileEntity(getPos().offset(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
+
+        if (storage == null) {
+            return false;
+        }
+
+        if (!storage.canReceive()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    boolean isConnectedTo(final Direction side) {
+        if (getWorld() == null) {
+            return false;
+        }
+
+        final TileEntity tile = this.getWorld().getTileEntity(getPos().offset(side));
+
+        if (tile == null) {
+            return false;
+        }
+
+        return tile.getCapability(CapabilityEnergy.ENERGY, side.getOpposite()) != null;
     }
 
 }

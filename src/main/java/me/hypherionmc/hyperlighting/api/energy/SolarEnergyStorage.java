@@ -40,4 +40,16 @@ public class SolarEnergyStorage extends EnergyStorage {
         this.maxReceive = compound.getInt("maxReceive");
     }
 
+    public int setEnergyStored(int energyStored) {
+        this.energy = energyStored;
+        return this.energy;
+    }
+
+    public int receiveEnergyInternal(int maxReceive, boolean simulate)
+    {
+        int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
+        if (!simulate)
+            energy += energyReceived;
+        return energyReceived;
+    }
 }
