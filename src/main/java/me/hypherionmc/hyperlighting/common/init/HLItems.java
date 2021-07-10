@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.common.init;
 
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.items.*;
+import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.item.Item;
 import net.minecraftforge.fml.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
@@ -17,5 +18,6 @@ public class HLItems {
     //public static final RegistryObject<Item> BATTERY = ITEMS.register("battery", () -> new Battery(500, 100, 150));
 
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
+    public static final RegistryObject<Item> HANDHELD_LANTERN = ITEMS.register("handheld_lantern", CandleInAJar::new);
 
 }
