@@ -10,7 +10,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.DyeColor;
 import net.minecraft.item.ItemStack;
 
-public class BlockItemWithColoredLight extends BlockItemColor{
+public class BlockItemWithColoredLight extends BlockItemColor {
 
     public BlockItemWithColoredLight(Block blockIn, Properties builder) {
         super(blockIn, builder);

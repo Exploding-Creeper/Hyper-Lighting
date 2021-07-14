@@ -3,6 +3,7 @@ package me.hypherionmc.hyperlighting.common.handlers;
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.api.DyeAble;
+import me.hypherionmc.hyperlighting.api.ItemDyable;
 import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
@@ -11,6 +12,7 @@ import me.hypherionmc.hyperlighting.common.integration.top.TOPIntegration;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScreenManager;
 import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.color.BlockColors;
@@ -68,7 +70,8 @@ public class RegistryHandler {
 
     }
 
-    public static void registerBlockColors(BlockColors colors) {
+    public static void registerBlockColors() {
+        BlockColors colors = Minecraft.getInstance().getBlockColors();
 
         HyperLighting.logger.info("Registering DyeColor handlers...");
         HLBlocks.BLOCKS.getEntries().forEach(blockRegistryObject -> {
@@ -79,12 +82,13 @@ public class RegistryHandler {
 
     }
 
-    public static void registerItemColors(ItemColors itemColors) {
+    public static void registerItemColors() {
+        ItemColors itemColors = Minecraft.getInstance().getItemColors();
 
         HyperLighting.logger.info("Registering Item DyeColor handlers...");
         HLItems.ITEMS.getEntries().forEach(itemRegistryObject -> {
             if (itemRegistryObject.get() instanceof BlockItemColor) {
-                itemColors.register((IItemColor) itemRegistryObject.get(), itemRegistryObject.get());
+                itemColors.register(((ItemDyable) itemRegistryObject.get()).dyeHandler(), itemRegistryObject.get());
             }
         });
 
