@@ -4,25 +4,19 @@ import me.hypherionmc.hyperlighting.api.SolarLight;
 import me.hypherionmc.hyperlighting.api.energy.IEnergyContainerItem;
 import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
 import me.hypherionmc.hyperlighting.common.blocks.BatteryNeon;
-import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
-import me.hypherionmc.hyperlighting.util.ModUtils;
-import me.hypherionmc.rgblib.api.ColoredLightManager;
-import me.hypherionmc.rgblib.api.RGBLight;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.DyeItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.DyeItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -32,7 +26,7 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, SolarLight {
+public class TileBatteryNeon extends BlockEntity implements SolarLight {
 
     private boolean isCharging = false;
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(500, 20, 1);
@@ -41,85 +35,16 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
-    public TileBatteryNeon() {
-        super(HLTileEntities.TILE_BATTERY_NEON.get());
-
-        if (ModUtils.isRGBLibPresent()) {
+    public TileBatteryNeon(BlockPos pos, BlockState state) {
+        super(HLTileEntities.TILE_BATTERY_NEON.get(), pos, state);
+        /*if (ModUtils.isRGBLibPresent()) {
             ColoredLightManager.registerProvider(this, this::produceColoredLight);
-        }
+        }*/
     }
 
     @Override
-    public void tick() {
-        if (!world.isRemote) {
-            if (this.world.getGameTime() % 20L == 0L) {
-                if (!itemStackHandler.getStackInSlot(0).isEmpty() && itemStackHandler.getStackInSlot(0).getItem() == HLItems.WIRELESS_POWERCARD.get()) {
-                    ItemStack stack = itemStackHandler.getStackInSlot(0);
-                    if (stack.hasTag() && stack.getTag() != null) {
-                        CompoundNBT tagCompound = stack.getTag();
-
-                        if (tagCompound.contains("blockx") && tagCompound.contains("blocky") && tagCompound.contains("blockz")) {
-                            BlockPos pos = new BlockPos(tagCompound.getInt("blockx"), tagCompound.getInt("blocky"), tagCompound.getInt("blockz"));
-
-                            if (world.getTileEntity(pos) != null && world.getTileEntity(pos) instanceof TileSolarPanel) {
-                                TileSolarPanel storage1 = (TileSolarPanel) world.getTileEntity(pos);
-
-                                if (storage1 != null && storage1.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-                                    IEnergyStorage storage = storage1.getCapability(CapabilityEnergy.ENERGY).resolve().get();
-
-                                    if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
-
-                                        if (this.energyStorage.receiveEnergy(20, true) > 0) {
-                                            this.isCharging = true;
-                                            storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
-                                        } else {
-                                            this.isCharging = false;
-                                        }
-                                    } else {
-                                        this.isCharging = false;
-                                    }
-                                }
-
-                            }
-                        }
-                    }
-                } else if (!itemStackHandler.getStackInSlot(0).isEmpty() && itemStackHandler.getStackInSlot(0).getItem() instanceof IEnergyContainerItem) {
-                    IEnergyStorage storage = itemStackHandler.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).resolve().get();
-
-                    if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
-
-                        if (this.energyStorage.receiveEnergy(20, true) > 0) {
-                            this.isCharging = true;
-                            storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
-                        } else {
-                            this.isCharging = false;
-                        }
-                    } else {
-                        this.isCharging = false;
-                    }
-                } else {
-                    this.isCharging = false;
-                }
-
-            }
-
-            if (this.world.getGameTime() % 40L == 0L) {
-                if (world.getBlockState(pos) != null && world.getBlockState(pos).getBlock() == HLBlocks.BATTERY_NEON.get()) {
-                    if (world.getBlockState(pos).get(BatteryNeon.LIT)) {
-                        this.energyStorage.extractEnergy(1, false);
-                    }
-                }
-
-            }
-            this.sendUpdates();
-
-        }
-        world.getLight(pos);
-    }
-
-    @Override
-    public void read(BlockState state, CompoundNBT nbt) {
-        super.read(state, nbt);
+    public void load(CompoundTag nbt) {
+        super.load(nbt);
         this.isCharging = nbt.getBoolean("isCharging");
         this.energyStorage.readNBT(nbt);
         this.itemStackHandler.deserializeNBT(nbt.getCompound("inventory"));
@@ -127,8 +52,8 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundTag save(CompoundTag compound) {
+        super.save(compound);
         compound.putBoolean("isCharging", this.isCharging);
         this.energyStorage.writeNBT(compound);
         compound.put("inventory", this.itemStackHandler.serializeNBT());
@@ -150,26 +75,26 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
 
     private void sendUpdates() {
-        world.markBlockRangeForRenderUpdate(pos, this.getBlockState(), this.getBlockState());
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
+        level.setBlocksDirty(worldPosition, this.getBlockState(), this.getBlockState());
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        setChanged();
     }
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(this.getBlockState(), pkt.getNbtCompound());
+        handleUpdateTag(pkt.getTag());
     }
 
     @Nonnull
@@ -181,21 +106,87 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
         return super.getCapability(cap, side);
     }
 
-    public RGBLight produceColoredLight(BlockPos pos) {
+    /*public RGBLight produceColoredLight(BlockPos pos) {
 
         if (!HyperLightingConfig.batteryColor.get()) {
-            if (world.getBlockState(pos).getBlock() instanceof BatteryNeon && world.getBlockState(pos).get(BatteryNeon.LIT)) {
+            if (level.getBlockState(pos).getBlock() instanceof BatteryNeon && level.getBlockState(pos).getValue(BatteryNeon.LIT)) {
                 if (!dyeHandler.getStackInSlot(0).isEmpty()) {
                     ItemStack stack = dyeHandler.getStackInSlot(0);
-                    float[] color = ((DyeItem)stack.getItem()).getDyeColor().getColorComponentValues();
-                    return new RGBLight.Builder().pos(pos).color(color[0], color[1], color[2]).radius(14).build();
+                    float[] color = ((DyeItem)stack.getItem()).getDyeColor().getTextureDiffuseColors();
+                    //return new RGBLight.Builder().pos(pos).color(color[0], color[1], color[2]).radius(14).build();
                 } else {
-                    float[] color = DyeColor.WHITE.getColorComponentValues();
-                    return new RGBLight.Builder().pos(pos).color(color[0], color[1], color[2]).radius(14).build();
+                    float[] color = DyeColor.WHITE.getTextureDiffuseColors();
+                    //return new RGBLight.Builder().pos(pos).color(color[0], color[1], color[2]).radius(14).build();
                 }
             }
         }
         return null;
+    }*/
+
+    // TODO - Cleanup this mess
+    public void serverTick() {
+        if (this.level.getGameTime() % 20L == 0L) {
+            if (!itemStackHandler.getStackInSlot(0).isEmpty() && itemStackHandler.getStackInSlot(0).getItem() == HLItems.WIRELESS_POWERCARD.get()) {
+                ItemStack stack = itemStackHandler.getStackInSlot(0);
+                if (stack.hasTag() && stack.getTag() != null) {
+                    CompoundTag tagCompound = stack.getTag();
+
+                    if (tagCompound.contains("blockx") && tagCompound.contains("blocky") && tagCompound.contains("blockz")) {
+                        BlockPos pos = new BlockPos(tagCompound.getInt("blockx"), tagCompound.getInt("blocky"), tagCompound.getInt("blockz"));
+
+                        if (level.getBlockEntity(pos) != null && level.getBlockEntity(pos) instanceof TileSolarPanel) {
+                            TileSolarPanel storage1 = (TileSolarPanel) level.getBlockEntity(pos);
+
+                            if (storage1 != null && storage1.getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                                IEnergyStorage storage = storage1.getCapability(CapabilityEnergy.ENERGY).resolve().get();
+
+                                if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
+
+                                    if (this.energyStorage.receiveEnergy(20, true) > 0) {
+                                        this.isCharging = true;
+                                        storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
+                                    } else {
+                                        this.isCharging = false;
+                                    }
+                                } else {
+                                    this.isCharging = false;
+                                }
+                            }
+
+                        }
+                    }
+                }
+            } else if (!itemStackHandler.getStackInSlot(0).isEmpty() && itemStackHandler.getStackInSlot(0).getItem() instanceof IEnergyContainerItem) {
+                IEnergyStorage storage = itemStackHandler.getStackInSlot(0).getCapability(CapabilityEnergy.ENERGY).resolve().get();
+
+                if (storage.canExtract() && storage.extractEnergy(10, true) > 0) {
+
+                    if (this.energyStorage.receiveEnergy(20, true) > 0) {
+                        this.isCharging = true;
+                        storage.extractEnergy(this.energyStorage.receiveEnergy(20, false), false);
+                    } else {
+                        this.isCharging = false;
+                    }
+                } else {
+                    this.isCharging = false;
+                }
+            } else {
+                this.isCharging = false;
+            }
+
+        }
+
+        if (this.level.getGameTime() % 40L == 0L) {
+            if (level.getBlockState(worldPosition) != null && level.getBlockState(worldPosition).getBlock() == HLBlocks.BATTERY_NEON.get()) {
+                if (level.getBlockState(worldPosition).getValue(BatteryNeon.LIT)) {
+                    this.energyStorage.extractEnergy(1, false);
+                }
+            }
+
+        }
+        this.sendUpdates();
+
+        level.getMaxLocalRawBrightness(worldPosition);
     }
 
     class ItemHandler extends ItemStackHandler {
@@ -242,11 +233,11 @@ public class TileBatteryNeon extends TileEntity implements ITickableTileEntity, 
 
     public void dropInventory() {
         if (!dyeHandler.getStackInSlot(0).isEmpty()) {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), dyeHandler.getStackInSlot(0));
+            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), dyeHandler.getStackInSlot(0));
         }
 
         if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-            InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStackHandler.getStackInSlot(0));
+            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStackHandler.getStackInSlot(0));
         }
     }
 }

@@ -2,17 +2,17 @@ package me.hypherionmc.hyperlighting.common.network.packets;
 
 import me.hypherionmc.hyperlighting.common.containers.ContainerBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.network.PacketBuffer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraftforge.fmllegacy.network.NetworkEvent;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import java.util.function.Supplier;
 
@@ -21,7 +21,7 @@ public class OpenGUIPacket {
     private BlockPos posToSet;
     private int guiid;
 
-    public OpenGUIPacket(PacketBuffer buffer) {
+    public OpenGUIPacket(FriendlyByteBuf buffer) {
         posToSet = buffer.readBlockPos();
         guiid = buffer.readInt();
     }
@@ -31,7 +31,7 @@ public class OpenGUIPacket {
         this.posToSet = pos;
     }
 
-    public void toBytes(PacketBuffer buf) {
+    public void toBytes(FriendlyByteBuf buf) {
         buf.writeBlockPos(this.posToSet);
         buf.writeInt(this.guiid);
 
@@ -39,13 +39,13 @@ public class OpenGUIPacket {
 
     public boolean handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
-            TileEntity te = ctx.get().getSender().getServerWorld().getTileEntity(this.posToSet);
+            BlockEntity te = ctx.get().getSender().getLevel().getBlockEntity(this.posToSet);
 
-            INamedContainerProvider containerProvider = new INamedContainerProvider() {
+            MenuProvider containerProvider = new MenuProvider() {
                 @Override
-                public ITextComponent getDisplayName() {
+                public Component getDisplayName() {
                     if (te instanceof TileBatteryNeon) {
-                        return new TranslationTextComponent("container.batteryneon");
+                        return new TranslatableComponent("container.batteryneon");
                     }
                     /*if (te instanceof TileNeonSign) {
                         return new TranslationTextComponent("container.neonsign");
@@ -54,9 +54,9 @@ public class OpenGUIPacket {
                 }
 
                 @Override
-                public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
                     if (te instanceof TileBatteryNeon) {
-                        return new ContainerBatteryNeon(i, te.getWorld(), posToSet, playerInventory, playerEntity);
+                        return new ContainerBatteryNeon(i, te.getLevel(), posToSet, playerInventory, playerEntity);
                     }
                     /*if (te instanceof TileNeonSign) {
                         return new ContainerNeonSign(i, te.getWorld(), posToSet, playerInventory, playerEntity);
@@ -66,7 +66,7 @@ public class OpenGUIPacket {
             };
 
             if (containerProvider.getDisplayName() != null) {
-                NetworkHooks.openGui(ctx.get().getSender(), containerProvider, te.getPos());
+                NetworkHooks.openGui(ctx.get().getSender(), containerProvider, te.getBlockPos());
             }
         });
         return true;

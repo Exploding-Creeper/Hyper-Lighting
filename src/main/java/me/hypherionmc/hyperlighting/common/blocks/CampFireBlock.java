@@ -8,46 +8,53 @@ import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.tile.TileCampFire;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
 import me.hypherionmc.hyperlighting.util.ModUtils;
-import me.hypherionmc.rgblib.api.ColoredLightManager;
-import me.hypherionmc.rgblib.api.RGBLight;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.block.material.MaterialColor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.*;
-import net.minecraft.item.crafting.CampfireCookingRecipe;
-import net.minecraft.particles.BasicParticleType;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.pathfinding.PathType;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.particles.SimpleParticleType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
+import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.crafting.CampfireCookingRecipe;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MaterialColor;
+import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
@@ -57,9 +64,9 @@ import java.util.Optional;
 import java.util.Random;
 
 @SuppressWarnings("deprecation")
-public class CampFireBlock extends ContainerBlock implements IWaterLoggable, DyeAble, CustomRenderType, Lightable {
+public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, DyeAble, CustomRenderType, Lightable {
 
-    protected static final VoxelShape SHAPE = Block.makeCuboidShape(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty SIGNAL_FIRE = BlockStateProperties.SIGNAL_FIRE;
@@ -68,123 +75,123 @@ public class CampFireBlock extends ContainerBlock implements IWaterLoggable, Dye
     private final boolean smokey;
     private final int fireDamage;
 
-    public CampFireBlock(String name, DyeColor color, ItemGroup group) {
-        super(AbstractBlock.Properties.create(Material.WOOD, MaterialColor.OBSIDIAN).hardnessAndResistance(2.0F).sound(SoundType.WOOD).notSolid());
+    public CampFireBlock(String name, DyeColor color, CreativeModeTab group) {
+        super(BlockBehaviour.Properties.of(Material.WOOD, MaterialColor.PODZOL).strength(2.0F).sound(SoundType.WOOD).noOcclusion());
         this.smokey = true;
         this.fireDamage = 1;
-        this.setDefaultState(this.stateContainer.getBaseState().with(LIT, HyperLightingConfig.campfireOnByDefault.get()).with(SIGNAL_FIRE, Boolean.FALSE).with(WATERLOGGED, Boolean.FALSE).with(FACING, Direction.NORTH).with(COLOR, color));
+        this.registerDefaultState(this.stateDefinition.any().setValue(LIT, HyperLightingConfig.campfireOnByDefault.get()).setValue(SIGNAL_FIRE, Boolean.FALSE).setValue(WATERLOGGED, Boolean.FALSE).setValue(FACING, Direction.NORTH).setValue(COLOR, color));
 
         if (ModUtils.isRGBLibPresent()) {
-            ColoredLightManager.registerProvider(this, this::produceColoredLight);
+            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
         }
 
-        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().group(group)));
+        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().tab(group)));
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
-        if (!worldIn.isRemote) {
-            if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof DyeItem) {
-                state = state.with(COLOR, ((DyeItem)player.getHeldItem(handIn).getItem()).getDyeColor());
-                worldIn.setBlockState(pos, state, 3);
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
+        if (!worldIn.isClientSide) {
+            if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
+                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                worldIn.setBlock(pos, state, 3);
+                worldIn.sendBlockUpdated(pos, state, state, 3);
 
                 if (!player.isCreative()) {
-                    ItemStack stack = player.getHeldItem(handIn);
+                    ItemStack stack = player.getItemInHand(handIn);
                     stack.shrink(1);
-                    player.setHeldItem(handIn, stack);
+                    player.setItemInHand(handIn, stack);
                 }
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
-        TileEntity tileentity = worldIn.getTileEntity(pos);
+        BlockEntity tileentity = worldIn.getBlockEntity(pos);
         if (tileentity instanceof TileCampFire) {
             TileCampFire TileCampFire = (TileCampFire) tileentity;
-            ItemStack itemstack = player.getHeldItem(handIn);
+            ItemStack itemstack = player.getItemInHand(handIn);
             Optional<CampfireCookingRecipe> optional = TileCampFire.findMatchingRecipe(itemstack);
             if (optional.isPresent()) {
-                if (!worldIn.isRemote && TileCampFire.addItem(player.abilities.isCreativeMode ? itemstack.copy() : itemstack, optional.get().getCookTime())) {
-                    player.addStat(Stats.INTERACT_WITH_CAMPFIRE);
-                    return ActionResultType.SUCCESS;
+                if (!worldIn.isClientSide && TileCampFire.addItem(player.getAbilities().instabuild ? itemstack.copy() : itemstack, optional.get().getCookingTime())) {
+                    player.awardStat(Stats.INTERACT_WITH_CAMPFIRE);
+                    return InteractionResult.SUCCESS;
                 }
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
 
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void onEntityCollision(BlockState state, World worldIn, BlockPos pos, Entity entityIn) {
-        if (!entityIn.isImmuneToFire() && state.get(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
-            entityIn.attackEntityFrom(DamageSource.IN_FIRE, (float) this.fireDamage);
+    public void entityInside(BlockState state, Level worldIn, BlockPos pos, Entity entityIn) {
+        if (!entityIn.fireImmune() && state.getValue(LIT) && entityIn instanceof LivingEntity && !EnchantmentHelper.hasFrostWalker((LivingEntity) entityIn)) {
+            entityIn.hurt(DamageSource.IN_FIRE, (float) this.fireDamage);
         }
 
-        super.onEntityCollision(state, worldIn, pos, entityIn);
+        super.entityInside(state, worldIn, pos, entityIn);
     }
 
     @Override
-    public void onReplaced(BlockState state, World worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.matchesBlock(newState.getBlock())) {
-            TileEntity tileentity = worldIn.getTileEntity(pos);
+    public void onRemove(BlockState state, Level worldIn, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity tileentity = worldIn.getBlockEntity(pos);
             if (tileentity instanceof TileCampFire) {
-                InventoryHelper.dropItems(worldIn, pos, ((TileCampFire) tileentity).getInventory());
+                Containers.dropContents(worldIn, pos, ((TileCampFire) tileentity).getInventory());
             }
 
-            super.onReplaced(state, worldIn, pos, newState, isMoving);
+            super.onRemove(state, worldIn, pos, newState, isMoving);
         }
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        IWorld iworld = context.getWorld();
-        BlockPos blockpos = context.getPos();
-        boolean flag = iworld.getFluidState(blockpos).getFluid() == Fluids.WATER;
-        return this.getDefaultState().with(WATERLOGGED, Boolean.valueOf(flag)).with(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(iworld.getBlockState(blockpos.down())))).with(LIT, Boolean.valueOf(!flag)).with(FACING, context.getPlacementHorizontalFacing());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        LevelAccessor iworld = context.getLevel();
+        BlockPos blockpos = context.getClickedPos();
+        boolean flag = iworld.getFluidState(blockpos).getType() == Fluids.WATER;
+        return this.defaultBlockState().setValue(WATERLOGGED, Boolean.valueOf(flag)).setValue(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(iworld.getBlockState(blockpos.below())))).setValue(LIT, Boolean.valueOf(!flag)).setValue(FACING, context.getHorizontalDirection());
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (stateIn.get(WATERLOGGED)) {
-            worldIn.getPendingFluidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickRate(worldIn));
-            return Blocks.AIR.getDefaultState();
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
+        if (stateIn.getValue(WATERLOGGED)) {
+            worldIn.getLiquidTicks().scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(worldIn));
+            return Blocks.AIR.defaultBlockState();
         }
 
-        return facing == Direction.DOWN ? stateIn.with(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(facingState))) : super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return facing == Direction.DOWN ? stateIn.setValue(SIGNAL_FIRE, Boolean.valueOf(this.isHayBlock(facingState))) : super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     private boolean isHayBlock(BlockState stateIn) {
-        return stateIn.matchesBlock(Blocks.HAY_BLOCK);
+        return stateIn.is(Blocks.HAY_BLOCK);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @OnlyIn(Dist.CLIENT)
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 
         if (!canBeLit(stateIn, worldIn, pos)) {
             extinguish(worldIn, pos, stateIn);
-            worldIn.notifyBlockUpdate(pos, stateIn, stateIn, 3);
+            worldIn.sendBlockUpdated(pos, stateIn, stateIn, 3);
         }
 
-        if (stateIn.get(LIT)) {
+        if (stateIn.getValue(LIT)) {
 
             if (rand.nextInt(10) == 0) {
-                worldIn.playSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.BLOCK_CAMPFIRE_CRACKLE, SoundCategory.BLOCKS, 0.5F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.6F, false);
+                worldIn.playLocalSound((double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, SoundEvents.CAMPFIRE_CRACKLE, SoundSource.BLOCKS, 0.5F + rand.nextFloat(), rand.nextFloat() * 0.7F + 0.6F, false);
             }
 
             if (this.smokey && rand.nextInt(5) == 0) {
@@ -196,16 +203,16 @@ public class CampFireBlock extends ContainerBlock implements IWaterLoggable, Dye
         }
     }
 
-    public static void extinguish(IWorld world, BlockPos pos, BlockState state) {
-        if (world.isRemote() && state.get(LIT)) {
+    public static void extinguish(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (world.isClientSide() && state.getValue(LIT)) {
             for (int i = 0; i < 20; ++i) {
-                spawnSmokeParticles((World) world, pos, state.get(SIGNAL_FIRE), true);
+                spawnSmokeParticles((Level) world, pos, state.getValue(SIGNAL_FIRE), true);
             }
-            world.setBlockState(pos, state.with(LIT, false), 3);
-            world.updateBlock(pos, state.getBlock());
+            world.setBlock(pos, state.setValue(LIT, false), 3);
+            world.blockUpdated(pos, state.getBlock());
         }
 
-        TileEntity tileentity = world.getTileEntity(pos);
+        BlockEntity tileentity = world.getBlockEntity(pos);
         if (tileentity instanceof TileCampFire) {
             ((TileCampFire) tileentity).dropAllItems();
         }
@@ -213,19 +220,19 @@ public class CampFireBlock extends ContainerBlock implements IWaterLoggable, Dye
     }
 
     @Override
-    public boolean receiveFluid(IWorld worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
-        if (!state.get(BlockStateProperties.WATERLOGGED) && fluidStateIn.getFluid() == Fluids.WATER) {
-            boolean flag = state.get(LIT);
+    public boolean placeLiquid(LevelAccessor worldIn, BlockPos pos, BlockState state, FluidState fluidStateIn) {
+        if (!state.getValue(BlockStateProperties.WATERLOGGED) && fluidStateIn.getType() == Fluids.WATER) {
+            boolean flag = state.getValue(LIT);
             if (flag) {
-                if (!worldIn.isRemote()) {
-                    worldIn.playSound((PlayerEntity) null, pos, SoundEvents.ENTITY_GENERIC_EXTINGUISH_FIRE, SoundCategory.BLOCKS, 1.0F, 1.0F);
+                if (!worldIn.isClientSide()) {
+                    worldIn.playSound((Player) null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
 
                 extinguish(worldIn, pos, state);
             }
 
-            worldIn.setBlockState(pos, state.with(WATERLOGGED, Boolean.valueOf(true)).with(LIT, Boolean.valueOf(false)), 3);
-            worldIn.getPendingFluidTicks().scheduleTick(pos, fluidStateIn.getFluid(), fluidStateIn.getFluid().getTickRate(worldIn));
+            worldIn.setBlock(pos, state.setValue(WATERLOGGED, Boolean.valueOf(true)).setValue(LIT, Boolean.valueOf(false)), 3);
+            worldIn.getLiquidTicks().scheduleTick(pos, fluidStateIn.getType(), fluidStateIn.getType().getTickDelay(worldIn));
             return true;
         } else {
             return false;
@@ -233,22 +240,22 @@ public class CampFireBlock extends ContainerBlock implements IWaterLoggable, Dye
     }
 
     @Override
-    public void onProjectileCollision(World worldIn, BlockState state, BlockRayTraceResult hit, ProjectileEntity projectile) {
-        if (!worldIn.isRemote && projectile.isBurning()) {
-            Entity entity = projectile.getShooter();
-            boolean flag = entity == null || entity instanceof PlayerEntity || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
-            if (flag && !state.get(LIT) && !state.get(WATERLOGGED)) {
-                BlockPos blockpos = hit.getPos();
-                worldIn.setBlockState(blockpos, state.with(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
+    public void onProjectileHit(Level worldIn, BlockState state, BlockHitResult hit, Projectile projectile) {
+        if (!worldIn.isClientSide && projectile.isOnFire()) {
+            Entity entity = projectile.getOwner();
+            boolean flag = entity == null || entity instanceof Player || net.minecraftforge.event.ForgeEventFactory.getMobGriefingEvent(worldIn, entity);
+            if (flag && !state.getValue(LIT) && !state.getValue(WATERLOGGED)) {
+                BlockPos blockpos = hit.getBlockPos();
+                worldIn.setBlock(blockpos, state.setValue(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
             }
         }
 
     }
 
-    public static void spawnSmokeParticles(World worldIn, BlockPos pos, boolean isSignalFire, boolean spawnExtraSmoke) {
+    public static void spawnSmokeParticles(Level worldIn, BlockPos pos, boolean isSignalFire, boolean spawnExtraSmoke) {
         Random random = worldIn.getRandom();
-        BasicParticleType basicparticletype = isSignalFire ? ParticleTypes.CAMPFIRE_SIGNAL_SMOKE : ParticleTypes.CAMPFIRE_COSY_SMOKE;
-        worldIn.addOptionalParticle(basicparticletype, true, (double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + random.nextDouble() + random.nextDouble(), (double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.07D, 0.0D);
+        SimpleParticleType basicparticletype = isSignalFire ? ParticleTypes.CAMPFIRE_SIGNAL_SMOKE : ParticleTypes.CAMPFIRE_COSY_SMOKE;
+        worldIn.addAlwaysVisibleParticle(basicparticletype, true, (double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + random.nextDouble() + random.nextDouble(), (double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.07D, 0.0D);
         if (spawnExtraSmoke) {
             worldIn.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
         }
@@ -257,91 +264,105 @@ public class CampFireBlock extends ContainerBlock implements IWaterLoggable, Dye
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.get(WATERLOGGED) ? Fluids.WATER.getStillFluidState(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
     @Override
     public BlockState rotate(BlockState state, Rotation rot) {
-        return state.with(FACING, rot.rotate(state.get(FACING)));
+        return state.setValue(FACING, rot.rotate(state.getValue(FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirrorIn) {
-        return state.rotate(mirrorIn.toRotation(state.get(FACING)));
+        return state.rotate(mirrorIn.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT, SIGNAL_FIRE, WATERLOGGED, FACING, COLOR);
     }
 
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileCampFire();
-    }
-
-    @Override
-    public boolean allowsMovement(BlockState state, IBlockReader worldIn, BlockPos pos, PathType type) {
+    public boolean isPathfindable(BlockState state, BlockGetter worldIn, BlockPos pos, PathComputationType type) {
         return false;
     }
 
-    public boolean canBeLit(BlockState state, World world, BlockPos pos) {
-        return !state.get(WATERLOGGED) && !(world.isRaining() && world.canBlockSeeSky(pos));
+    public boolean canBeLit(BlockState state, Level world, BlockPos pos) {
+        return !state.getValue(WATERLOGGED) && !(world.isRaining() && world.canSeeSkyFromBelowWater(pos));
     }
 
     @Override
-    public IBlockColor dyeHandler() {
+    public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            if (state.get(LIT)) {
-                return state.get(COLOR).getColorValue();
+            if (state.getValue(LIT)) {
+                return state.getValue(COLOR).getFireworkColor();
             } else {
-                return DyeColor.BLACK.getColorValue();
+                return DyeColor.BLACK.getFireworkColor();
             }
         };
     }
 
     @Override
     public DyeColor defaultDyeColor() {
-        return this.getDefaultState().get(COLOR);
+        return this.defaultBlockState().getValue(COLOR);
     }
 
     @Override
     public RenderType getRenderType() {
-        return RenderType.getCutoutMipped();
+        return RenderType.cutoutMipped();
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(LIT) ? 15 : 0;
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(LIT) ? 15 : 0;
     }
 
     @Override
-    public void toggleLight(World worldIn, BlockState state, BlockPos pos) {
+    public void toggleLight(Level worldIn, BlockState state, BlockPos pos) {
 
-        state = state.with(LIT, !state.get(LIT));
-        worldIn.setBlockState(pos, state, 2);
-        if (!state.get(LIT)) {
+        state = state.setValue(LIT, !state.getValue(LIT));
+        worldIn.setBlock(pos, state, 2);
+        if (!state.getValue(LIT)) {
             extinguish(worldIn, pos, state);
         }
-        worldIn.notifyNeighborsOfStateChange(pos, this);
+        worldIn.updateNeighborsAt(pos, this);
 
     }
 
     // RGBLib Support
-    private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        if (state.get(LIT) && !HyperLightingConfig.campfireColor.get()) {
-            return RGBLight.builder().pos(pos).color(state.get(COLOR).getColorValue(), false).radius(15).build();
+    /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
+        if (state.getValue(LIT) && !HyperLightingConfig.campfireColor.get()) {
+            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getFireworkColor(), false).radius(15).build();
         }
         return null;
-    }
+    }*/
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip.camp_fire"));
-        tooltip.add(new TranslationTextComponent("tooltip.camp_fire_line1"));
-        tooltip.add(new StringTextComponent(TextFormatting.YELLOW + "Dyable"));
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TranslatableComponent("tooltip.camp_fire"));
+        tooltip.add(new TranslatableComponent("tooltip.camp_fire_line1"));
+        tooltip.add(new TextComponent(ChatFormatting.YELLOW + "Dyable"));
+        tooltip.add(new TextComponent(ChatFormatting.BLUE + "Colored Lighting Supported"));
         //super.addInformation(stack, worldIn, tooltip, flagIn);
     }
 
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TileCampFire(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level p_153212_, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        return (level1, blockPos, blockState, t) -> {
+            if (t instanceof TileCampFire tile) {
+                if (level1.isClientSide()) {
+                    tile.clientTick();
+                } else {
+                    tile.serverTick();
+                }
+            }
+        };
+    }
 }

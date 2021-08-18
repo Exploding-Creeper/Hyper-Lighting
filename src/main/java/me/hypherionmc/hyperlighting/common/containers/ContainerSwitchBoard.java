@@ -2,26 +2,26 @@ package me.hypherionmc.hyperlighting.common.containers;
 
 import me.hypherionmc.hyperlighting.common.init.HLContainers;
 import me.hypherionmc.hyperlighting.common.tile.TileSwitchBoard;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.Slot;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.items.CapabilityItemHandler;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.SlotItemHandler;
 
-public class ContainerSwitchBoard extends Container {
+public class ContainerSwitchBoard extends AbstractContainerMenu {
 
     private final TileSwitchBoard te;
     IItemHandler handler;
 
-    public ContainerSwitchBoard(int windowID, World world, BlockPos pos, PlayerInventory inventory, PlayerEntity player) {
+    public ContainerSwitchBoard(int windowID, Level world, BlockPos pos, Inventory inventory, Player player) {
         super(HLContainers.SWITCHBOARD_CONTAINER.get(), windowID);
-        this.te = (TileSwitchBoard) world.getTileEntity(pos);
+        this.te = (TileSwitchBoard) world.getBlockEntity(pos);
 
 
         if (te != null) {
@@ -52,18 +52,18 @@ public class ContainerSwitchBoard extends Container {
     }
 
     @Override
-    public boolean canInteractWith(PlayerEntity playerIn) {
+    public boolean stillValid(Player playerIn) {
         return true;
     }
 
     @Override
-    public void detectAndSendChanges() {
-        super.detectAndSendChanges();
+    public void broadcastChanges() {
+        super.broadcastChanges();
     }
 
     @Override
-    public ItemStack transferStackInSlot(PlayerEntity playerIn, int index) {
-        return super.transferStackInSlot(playerIn, index);
+    public ItemStack quickMoveStack(Player playerIn, int index) {
+        return super.quickMoveStack(playerIn, index);
     }
 
     public TileSwitchBoard getTe() {

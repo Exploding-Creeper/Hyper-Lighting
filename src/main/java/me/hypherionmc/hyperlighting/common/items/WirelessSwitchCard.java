@@ -3,97 +3,95 @@ package me.hypherionmc.hyperlighting.common.items;
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
 import me.hypherionmc.hyperlighting.api.SwitchModule;
-import net.minecraft.block.Block;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.ItemUseContext;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.World;
-
-import java.util.Properties;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.Level;
 
 public class WirelessSwitchCard extends Item implements SwitchModule {
 
     public WirelessSwitchCard() {
-        super(new Properties().group(HyperLighting.machinesTab));
+        super(new Properties().tab(HyperLighting.machinesTab));
     }
 
     @Override
-    public void onCreated(ItemStack stack, World worldIn, PlayerEntity playerIn) {
-        super.onCreated(stack, worldIn, playerIn);
+    public void onCraftedBy(ItemStack stack, Level worldIn, Player playerIn) {
+        super.onCraftedBy(stack, worldIn, playerIn);
         if (!stack.hasTag()) {
-            CompoundNBT compound = new CompoundNBT();
+            CompoundTag compound = new CompoundTag();
             stack.setTag(compound);
         }
     }
 
     @Override
-    public ActionResultType onItemUse(ItemUseContext context) {
-        World worldIn = context.getWorld();
-        PlayerEntity player = context.getPlayer();
-        BlockPos pos = context.getPos();
-        Hand hand = context.getHand();
+    public InteractionResult useOn(UseOnContext context) {
+        Level worldIn = context.getLevel();
+        Player player = context.getPlayer();
+        BlockPos pos = context.getClickedPos();
+        InteractionHand hand = context.getHand();
 
-        if (!worldIn.isRemote) {
-            if (player.getHeldItem(hand).getItem() instanceof WirelessSwitchCard) {
-                ItemStack stack = player.getHeldItem(hand);
+        if (!worldIn.isClientSide) {
+            if (player.getItemInHand(hand).getItem() instanceof WirelessSwitchCard) {
+                ItemStack stack = player.getItemInHand(hand);
                 Block blk = worldIn.getBlockState(pos).getBlock();
                 if (blk instanceof RemoteSwitchable) {
-                    CompoundNBT compound = stack.getTag();
+                    CompoundTag compound = stack.getTag();
                     if (compound == null) {
-                        compound = new CompoundNBT();
+                        compound = new CompoundTag();
                     }
                     compound.putInt("blockx", pos.getX());
                     compound.putInt("blocky", pos.getY());
                     compound.putInt("blockz", pos.getZ());
                     stack.setTag(compound);
-                    player.sendStatusMessage(new TranslationTextComponent("Linked to " + pos), true);
-                    return ActionResultType.PASS;
+                    player.displayClientMessage(new TranslatableComponent("Linked to " + pos), true);
+                    return InteractionResult.PASS;
                 }
             } else {
-                ItemStack stack = player.getHeldItem(hand);
-                CompoundNBT compound = stack.getTag();
+                ItemStack stack = player.getItemInHand(hand);
+                CompoundTag compound = stack.getTag();
                 if (compound != null) {
                     int x, y, z;
                     x = compound.getInt("blockx");
                     y = compound.getInt("blocky");
                     z = compound.getInt("blockz");
                     BlockPos poss = new BlockPos(x, y, z);
-                    player.sendStatusMessage(new TranslationTextComponent("Linked to block " + poss), true);
-                    return ActionResultType.PASS;
+                    player.displayClientMessage(new TranslatableComponent("Linked to block " + poss), true);
+                    return InteractionResult.PASS;
                 } else {
-                    player.sendStatusMessage(new TranslationTextComponent("Not linked"), true);
-                    return ActionResultType.PASS;
+                    player.displayClientMessage(new TranslatableComponent("Not linked"), true);
+                    return InteractionResult.PASS;
                 }
             }
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public ActionResult<ItemStack> onItemRightClick(World worldIn, PlayerEntity playerIn, Hand handIn) {
-        if (!worldIn.isRemote) {
-            ItemStack stack = playerIn.getHeldItem(handIn);
-            CompoundNBT compound = stack.getTag();
+    public InteractionResultHolder<ItemStack> use(Level worldIn, Player playerIn, InteractionHand handIn) {
+        if (!worldIn.isClientSide) {
+            ItemStack stack = playerIn.getItemInHand(handIn);
+            CompoundTag compound = stack.getTag();
             if (compound != null) {
                 int x, y, z;
                 x = compound.getInt("blockx");
                 y = compound.getInt("blocky");
                 z = compound.getInt("blockz");
                 BlockPos poss = new BlockPos(x, y, z);
-                playerIn.sendStatusMessage(new TranslationTextComponent("Linked to block " + poss), true);
-                return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+                playerIn.displayClientMessage(new TranslatableComponent("Linked to block " + poss), true);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
             } else {
-                playerIn.sendStatusMessage(new TranslationTextComponent("Not linked"), true);
-                return new ActionResult<>(ActionResultType.SUCCESS, playerIn.getHeldItem(handIn));
+                playerIn.displayClientMessage(new TranslatableComponent("Not linked"), true);
+                return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
             }
         }
-        return new ActionResult<>(ActionResultType.PASS, playerIn.getHeldItem(handIn));
+        return new InteractionResultHolder<>(InteractionResult.PASS, playerIn.getItemInHand(handIn));
     }
 }

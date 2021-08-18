@@ -1,31 +1,33 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
 import me.hypherionmc.hyperlighting.common.init.HLItems;
-import net.minecraft.block.AbstractButtonBlock;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.material.Material;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.SoundEvent;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.ButtonBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 
-public class WallLight extends AbstractButtonBlock {
+import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
-    public WallLight(String name, ItemGroup group) {
-        super(false, Properties.create(Material.ROCK).zeroHardnessAndResistance().doesNotBlockMovement());
-        HLItems.ITEMS.register(name, () -> new BlockItem(this, new Item.Properties().group(group)));
+public class WallLight extends ButtonBlock {
+
+    public WallLight(String name, CreativeModeTab group) {
+        super(false, Properties.of(Material.STONE).instabreak().noCollission());
+        HLItems.ITEMS.register(name, () -> new BlockItem(this, new Item.Properties().tab(group)));
     }
 
     @Override
-    protected SoundEvent getSoundEvent(boolean isOn) {
-        return isOn ? SoundEvents.BLOCK_STONE_BUTTON_CLICK_ON : SoundEvents.BLOCK_STONE_BUTTON_CLICK_OFF;
+    protected SoundEvent getSound(boolean isOn) {
+        return isOn ? SoundEvents.STONE_BUTTON_CLICK_ON : SoundEvents.STONE_BUTTON_CLICK_OFF;
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return 8;
     }
 }

@@ -5,163 +5,176 @@ import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
 import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
+import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileSolarLight;
 import me.hypherionmc.hyperlighting.util.ModUtils;
-import me.hypherionmc.rgblib.api.ColoredLightManager;
-import me.hypherionmc.rgblib.api.RGBLight;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class FenceSolar extends ContainerBlock implements RemoteSwitchable, DyeAble {
+public class FenceSolar extends BaseEntityBlock implements RemoteSwitchable, DyeAble {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final VoxelShape BOUNDING_BOX = Block.makeCuboidShape(6,0,6,10,4.992,10);
+    private static final VoxelShape BOUNDING_BOX = Block.box(6,0,6,10,4.992,10);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
-    public FenceSolar(String name, DyeColor color, ItemGroup group) {
-        super(Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance());
+    public FenceSolar(String name, DyeColor color, CreativeModeTab group) {
+        super(Properties.of(Material.DECORATION).noCollission().instabreak());
 
-        this.setDefaultState(this.getStateContainer().getBaseState().with(LIT, HyperLightingConfig.batteryOnByDefault.get()).with(COLOR, color));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(LIT, HyperLightingConfig.batteryOnByDefault.get()).setValue(COLOR, color));
 
         if (ModUtils.isRGBLibPresent()) {
-            ColoredLightManager.registerProvider(this, this::produceColoredLight);
+            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
         }
 
-        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().group(group)));
+        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().tab(group)));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
         return BOUNDING_BOX;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT, COLOR);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (!worldIn.isClientSide) {
 
-            if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof DyeItem) {
-                state = state.with(COLOR, ((DyeItem)player.getHeldItem(handIn).getItem()).getDyeColor());
-                worldIn.setBlockState(pos, state, 3);
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
+            if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
+                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                worldIn.setBlock(pos, state, 3);
+                worldIn.sendBlockUpdated(pos, state, state, 3);
 
                 if (!player.isCreative()) {
-                    ItemStack stack = player.getHeldItem(handIn);
+                    ItemStack stack = player.getItemInHand(handIn);
                     stack.shrink(1);
-                    player.setHeldItem(handIn, stack);
+                    player.setItemInHand(handIn, stack);
                 }
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             } else {
                 BlockState oldState = state;
-                if (state.get(LIT)) {
-                    state = state.with(LIT, false);
-                    worldIn.setBlockState(pos, state, 3);
+                if (state.getValue(LIT)) {
+                    state = state.setValue(LIT, false);
+                    worldIn.setBlock(pos, state, 3);
                 } else {
-                    if (worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof TileSolarLight && ((TileSolarLight)worldIn.getTileEntity(pos)).getPowerLevel() > 0) {
-                        state = state.with(LIT, true);
-                        worldIn.setBlockState(pos, state, 3);
-                        worldIn.notifyBlockUpdate(pos, oldState, state, 4);
+                    if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileSolarLight && ((TileSolarLight)worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
+                        state = state.setValue(LIT, true);
+                        worldIn.setBlock(pos, state, 3);
+                        worldIn.sendBlockUpdated(pos, oldState, state, 4);
                     } else {
-                        state = state.with(LIT, false);
-                        worldIn.setBlockState(pos, state, 3);
-                        worldIn.notifyBlockUpdate(pos, oldState, state, 4);
-                        player.sendStatusMessage(new TranslationTextComponent("Out of power"), true);
+                        state = state.setValue(LIT, false);
+                        worldIn.setBlock(pos, state, 3);
+                        worldIn.sendBlockUpdated(pos, oldState, state, 4);
+                        player.displayClientMessage(new TranslatableComponent("Out of power"), true);
                     }
                 }
             }
 
         }
-        return ActionResultType.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-       return state.get(LIT) ? 14 : 0;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileSolarLight();
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+       return state.getValue(LIT) ? 14 : 0;
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     // RGBLib Support
-    private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        if (state.get(LIT) && !HyperLightingConfig.batteryColor.get()) {
-            return RGBLight.builder().pos(pos).color(state.get(COLOR).getColorValue(), false).radius(15).build();
+    /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
+        if (state.getValue(LIT) && !HyperLightingConfig.batteryColor.get()) {
+            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getFireworkColor(), false).radius(15).build();
         }
         return null;
-    }
+    }*/
 
     @Override
-    public IBlockColor dyeHandler() {
+    public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            if (state.get(LIT)) {
-                return state.get(COLOR).getColorValue();
+            if (state.getValue(LIT)) {
+                return state.getValue(COLOR).getFireworkColor();
             } else {
-                return DyeColor.BLACK.getColorValue();
+                return DyeColor.BLACK.getFireworkColor();
             }
         };
     }
 
     @Override
     public DyeColor defaultDyeColor() {
-        return this.getDefaultState().get(COLOR);
+        return this.defaultBlockState().getValue(COLOR);
     }
 
     @Override
-    public BlockState remoteSwitched(BlockState state, BlockPos pos, World world) {
-        return state.with(LIT, !state.get(LIT));
+    public BlockState remoteSwitched(BlockState state, BlockPos pos, Level world) {
+        return state.setValue(LIT, !state.getValue(LIT));
     }
 
     @Override
     public boolean getPoweredState(BlockState state) {
-        return state.get(LIT);
+        return state.getValue(LIT);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(TextFormatting.YELLOW + "Dyable"));
-        tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Color: " + defaultDyeColor().name()));
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TextComponent(ChatFormatting.YELLOW + "Dyable"));
+        tooltip.add(new TextComponent(ChatFormatting.GREEN + "Color: " + defaultDyeColor().name()));
+        tooltip.add(new TextComponent(ChatFormatting.BLUE + "Colored Lighting Supported"));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TileSolarLight(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        if (level.isClientSide()) {
+            return null;
+        }
+        return (level1, blockPos, blockState, t) -> {
+            if (t instanceof TileSolarLight tile) {
+                tile.serverTick();
+            }
+        };
     }
 }

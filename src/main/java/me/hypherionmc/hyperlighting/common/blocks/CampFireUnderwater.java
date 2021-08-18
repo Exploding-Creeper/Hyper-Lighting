@@ -1,37 +1,37 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.item.DyeColor;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
 public class CampFireUnderwater extends CampFireBlock {
 
-    public CampFireUnderwater(String name, DyeColor color, ItemGroup group) {
+    public CampFireUnderwater(String name, DyeColor color, CreativeModeTab group) {
         super(name, color, group);
     }
 
     @Override
-    public boolean canBeLit(BlockState state, World world, BlockPos pos) {
+    public boolean canBeLit(BlockState state, Level world, BlockPos pos) {
         return true;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new TranslationTextComponent("tooltip.camp_fire_soul"));
-        tooltip.add(new TranslationTextComponent("tooltip.camp_fire_soul_line1"));
-        tooltip.add(new StringTextComponent(TextFormatting.YELLOW + "Dyable"));
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TranslatableComponent("tooltip.camp_fire_soul"));
+        tooltip.add(new TranslatableComponent("tooltip.camp_fire_soul_line1"));
+        tooltip.add(new TextComponent(ChatFormatting.YELLOW + "Dyable"));
+        tooltip.add(new TextComponent(ChatFormatting.BLUE + "Colored Lighting Supported"));
     }
 }

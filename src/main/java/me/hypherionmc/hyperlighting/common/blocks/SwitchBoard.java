@@ -3,95 +3,83 @@ package me.hypherionmc.hyperlighting.common.blocks;
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.common.containers.ContainerSwitchBoard;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
-import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileSwitchBoard;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.HorizontalBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.INamedContainerProvider;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.Item;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
-public class SwitchBoard extends Block {
+public class SwitchBoard extends BaseEntityBlock {
 
-    public static final DirectionProperty FACING = HorizontalBlock.HORIZONTAL_FACING;
+    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    private static final VoxelShape BOUNDING_BOX = Block.makeCuboidShape(0,0,12.992,16,16,16);
-    private static final VoxelShape AABB_SOUTH = Block.makeCuboidShape(0,0,0,16,16,3.008);
-    private static final VoxelShape AABB_EAST = Block.makeCuboidShape(0,0,0,3.008,16,16);
-    private static final VoxelShape AABB_WEST = Block.makeCuboidShape(12.992,0,0,16,16,16);
+    private static final VoxelShape BOUNDING_BOX = Block.box(0,0,12.992,16,16,16);
+    private static final VoxelShape AABB_SOUTH = Block.box(0,0,0,16,16,3.008);
+    private static final VoxelShape AABB_EAST = Block.box(0,0,0,3.008,16,16);
+    private static final VoxelShape AABB_WEST = Block.box(12.992,0,0,16,16,16);
 
     public SwitchBoard(String name) {
-        super(Properties.create(Material.MISCELLANEOUS));
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH));
+        super(Properties.of(Material.DECORATION));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
 
-        HLItems.ITEMS.register(name, () -> new BlockItem(this, new Item.Properties().group(HyperLighting.machinesTab)));
+        HLItems.ITEMS.register(name, () -> new BlockItem(this, new Item.Properties().tab(HyperLighting.machinesTab)));
     }
 
     @Override
-    public boolean hasTileEntity(BlockState state) {
-        return true;
-    }
-
-    @Nullable
-    @Override
-    public TileEntity createTileEntity(BlockState state, IBlockReader world) {
-        return new TileSwitchBoard();
-    }
-
-    @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if(!worldIn.isRemote)
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if(!worldIn.isClientSide)
         {
-            TileEntity tileEntity = worldIn.getTileEntity(pos);
+            BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             if (tileEntity instanceof TileSwitchBoard) {
-                INamedContainerProvider containerProvider = new INamedContainerProvider() {
+                MenuProvider containerProvider = new MenuProvider() {
                     @Override
-                    public ITextComponent getDisplayName() {
-                        return new TranslationTextComponent("container.switchboard");
+                    public Component getDisplayName() {
+                        return new TranslatableComponent("container.switchboard");
                     }
 
                     @Override
-                    public Container createMenu(int i, PlayerInventory playerInventory, PlayerEntity playerEntity) {
+                    public AbstractContainerMenu createMenu(int i, Inventory playerInventory, Player playerEntity) {
                         return new ContainerSwitchBoard(i, worldIn, pos, playerInventory, playerEntity);
                     }
                 };
-                NetworkHooks.openGui((ServerPlayerEntity) player, containerProvider, tileEntity.getPos());
+                NetworkHooks.openGui((ServerPlayer) player, containerProvider, tileEntity.getBlockPos());
             }
 
         }
-        return ActionResultType.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch ((Direction)state.get(FACING))
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        switch ((Direction)state.getValue(FACING))
         {
             case EAST:
                 return AABB_EAST;
@@ -107,29 +95,35 @@ public class SwitchBoard extends Block {
 
 
     @Override
-    public BlockRenderType getRenderType(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getPlayer().getHorizontalFacing().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getPlayer().getDirection().getOpposite());
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
     
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-        if (!world.isRemote) {
-            if (world.getTileEntity(pos) instanceof TileSwitchBoard) {
-                ((TileSwitchBoard)world.getTileEntity(pos)).dropInventory();
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (!world.isClientSide) {
+            if (world.getBlockEntity(pos) instanceof TileSwitchBoard) {
+                ((TileSwitchBoard)world.getBlockEntity(pos)).dropInventory();
             }
         }
         return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+    }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TileSwitchBoard(pos, state);
     }
 }

@@ -3,12 +3,12 @@ package me.hypherionmc.hyperlighting.common.network;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.network.packets.OpenGUIPacket;
 import me.hypherionmc.hyperlighting.common.network.packets.PacketStateToggle;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.network.NetworkDirection;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.PacketDistributor;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.fmllegacy.network.NetworkDirection;
+import net.minecraftforge.fmllegacy.network.NetworkRegistry;
+import net.minecraftforge.fmllegacy.network.PacketDistributor;
+import net.minecraftforge.fmllegacy.network.simple.SimpleChannel;
 
 public class PacketHandler {
 
@@ -37,8 +37,8 @@ public class PacketHandler {
 
     }
 
-    public static void sendToClient(Object packet, ServerPlayerEntity playerEntity) {
-        INSTANCE.sendTo(packet, playerEntity.connection.netManager, NetworkDirection.PLAY_TO_CLIENT);
+    public static void sendToClient(Object packet, ServerPlayer playerEntity) {
+        INSTANCE.sendTo(packet, playerEntity.connection.connection, NetworkDirection.PLAY_TO_CLIENT);
     }
 
     public static void sendToServer(Object packet) {

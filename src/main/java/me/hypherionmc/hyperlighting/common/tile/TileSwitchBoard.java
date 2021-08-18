@@ -7,16 +7,16 @@ import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.common.network.packets.PacketStateToggle;
-import net.minecraft.block.BlockState;
-import net.minecraft.inventory.InventoryHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.core.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -26,13 +26,13 @@ import net.minecraftforge.items.ItemStackHandler;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class TileSwitchBoard extends TileEntity {
+public class TileSwitchBoard extends BlockEntity {
 
     private final ItemStackHandler itemStackHandler = new SwitchItemStackHandler(6);
     private LazyOptional<IItemHandler> storage = LazyOptional.of(() -> itemStackHandler);
 
-    public TileSwitchBoard() {
-        super(HLTileEntities.TILE_SWITCHBOARD.get());
+    public TileSwitchBoard(BlockPos pos, BlockState state) {
+        super(HLTileEntities.TILE_SWITCHBOARD.get(), pos, state);
     }
 
 
@@ -46,24 +46,24 @@ public class TileSwitchBoard extends TileEntity {
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundTag save(CompoundTag compound) {
+        super.save(compound);
         compound.put("inventory", this.itemStackHandler.serializeNBT());
         return compound;
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.itemStackHandler.deserializeNBT(compound.getCompound("inventory"));
     }
 
     public int getPowerLevel(int SlotID) {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (this.isLinked(SlotID)) {
-            CompoundNBT compound = stack.getTag();
+            CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-            SolarLight solar = (SolarLight) world.getTileEntity(pos);
+            SolarLight solar = (SolarLight) level.getBlockEntity(pos);
             return (int) (((double) solar.getPowerLevel() / solar.getMaxPowerLevel()) * 23);
         }
         return 0;
@@ -72,9 +72,9 @@ public class TileSwitchBoard extends TileEntity {
     public int getPowerLevelPer(int SlotID) {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (this.isLinked(SlotID)) {
-            CompoundNBT compound = stack.getTag();
+            CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-            SolarLight solar = (SolarLight) world.getTileEntity(pos);
+            SolarLight solar = (SolarLight) level.getBlockEntity(pos);
             return (int) (((double) solar.getPowerLevel() / solar.getMaxPowerLevel()) * 100);
         }
         return 0;
@@ -83,10 +83,10 @@ public class TileSwitchBoard extends TileEntity {
     public boolean getState(int SlotID) {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (this.isLinked(SlotID)) {
-            CompoundNBT compound = stack.getTag();
+            CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-            if (world.getBlockState(pos).getBlock() instanceof RemoteSwitchable) {
-                return ((RemoteSwitchable)world.getBlockState(pos).getBlock()).getPoweredState(world.getBlockState(pos));
+            if (level.getBlockState(pos).getBlock() instanceof RemoteSwitchable) {
+                return ((RemoteSwitchable)level.getBlockState(pos).getBlock()).getPoweredState(level.getBlockState(pos));
             }
 
         }
@@ -96,9 +96,9 @@ public class TileSwitchBoard extends TileEntity {
     public boolean getCharging(int SlotID) {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (this.isLinked(SlotID)) {
-            CompoundNBT compound = stack.getTag();
+            CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-            SolarLight solar = (SolarLight) world.getTileEntity(pos);
+            SolarLight solar = (SolarLight) level.getBlockEntity(pos);
             return solar.isCharging();
         }
         return false;
@@ -108,10 +108,10 @@ public class TileSwitchBoard extends TileEntity {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (!stack.isEmpty() && stack.getItem() instanceof SwitchModule) {
             if (stack.getTag() != null) {
-                CompoundNBT compound = stack.getTag();
+                CompoundTag compound = stack.getTag();
                 if (compound.contains("blockx") && compound.contains("blocky") && compound.contains("blockz")) {
                     BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-                    if (world.getTileEntity(pos) != null && world.getTileEntity(pos).hasWorld() && world.getTileEntity(pos) instanceof SolarLight) {
+                    if (level.getBlockEntity(pos) != null && level.getBlockEntity(pos).hasLevel() && level.getBlockEntity(pos) instanceof SolarLight) {
                         return true;
                     }
                 }
@@ -123,14 +123,14 @@ public class TileSwitchBoard extends TileEntity {
     public void toggleState(int SlotID) {
         ItemStack stack = itemStackHandler.getStackInSlot(SlotID);
         if (this.isLinked(SlotID)) {
-            CompoundNBT compound = stack.getTag();
+            CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
             PacketStateToggle msg = new PacketStateToggle(pos);
             if (this.getPowerLevel(SlotID) > 0) {
                 PacketHandler.INSTANCE.sendToServer(msg);
             } else {
-                if (this.world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 1, false) != null) {
-                    this.world.getClosestPlayer(pos.getX(), pos.getY(), pos.getZ(), 1, false).sendStatusMessage(new TranslationTextComponent("Out of power"), true);
+                if (this.level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 1, false) != null) {
+                    this.level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 1, false).displayClientMessage(new TranslatableComponent("Out of power"), true);
                 }
             }
         }
@@ -138,25 +138,25 @@ public class TileSwitchBoard extends TileEntity {
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(this.getBlockState(), pkt.getNbtCompound());
+        handleUpdateTag(pkt.getTag());
     }
 
     public void dropInventory() {
         for (int i = 0; i < itemStackHandler.getSlots(); i++) {
             if (!itemStackHandler.getStackInSlot(i).isEmpty()) {
-                InventoryHelper.spawnItemStack(world, pos.getX(), pos.getY(), pos.getZ(), itemStackHandler.getStackInSlot(i));
+                Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStackHandler.getStackInSlot(i));
             }
         }
     }

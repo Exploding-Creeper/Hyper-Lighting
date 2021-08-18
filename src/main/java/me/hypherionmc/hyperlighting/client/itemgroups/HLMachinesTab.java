@@ -1,18 +1,18 @@
 package me.hypherionmc.hyperlighting.client.itemgroups;
 
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 
-public class HLMachinesTab extends ItemGroup {
+public class HLMachinesTab extends CreativeModeTab {
 
     public HLMachinesTab(String label) {
         super(label);
     }
 
     @Override
-    public ItemStack createIcon() {
-        return new ItemStack(Item.getItemFromBlock(HLBlocks.SOLAR_PANEL.get()));
+    public ItemStack makeIcon() {
+        return new ItemStack(Item.byBlock(HLBlocks.SOLAR_PANEL.get()));
     }
 }

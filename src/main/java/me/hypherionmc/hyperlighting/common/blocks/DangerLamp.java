@@ -1,20 +1,20 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.fml.loading.FMLEnvironment;
 
 public class DangerLamp extends SuspiciousLamp {
 
-    public DangerLamp(String name, ItemGroup group) {
+    public DangerLamp(String name, CreativeModeTab group) {
         super(name, group);
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        if (state.get(POWERED) && FMLEnvironment.dist.isClient()) {
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        if (state.getValue(POWERED) && FMLEnvironment.dist.isClient()) {
             return 15;
         } else {
             return 0;

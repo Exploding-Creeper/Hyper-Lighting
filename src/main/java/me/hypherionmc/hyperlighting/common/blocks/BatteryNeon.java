@@ -10,57 +10,63 @@ import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.common.network.packets.OpenGUIPacket;
 import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.item.*;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.Hand;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
 
-public class BatteryNeon extends ContainerBlock implements RemoteSwitchable, DyeAble {
+public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, DyeAble {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-    private static final VoxelShape DOWN_BOUNDING_BOX = Block.makeCuboidShape(0,0,7.008,16,3.008,8.992);
-    private static final VoxelShape UP_BOUNDING_BOX = Block.makeCuboidShape(0,12.8,7.008,16,16,8.992);
-    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.makeCuboidShape(0,7.008,12.992,16,8.992,16);
-    private static final VoxelShape EAST_BOUNDING_BOX = Block.makeCuboidShape(16,7.008,0,12.8,8.992,16);
-    private static final VoxelShape WEST_BOUNDING_BOX = Block.makeCuboidShape(0,7.008,0,3.2,8.992,16);
-    private static final VoxelShape NORTH_BOUNDING_BOX = Block.makeCuboidShape(0,7.008,0.336,16,8.992,3.328);
+    private static final VoxelShape DOWN_BOUNDING_BOX = Block.box(0,0,7.008,16,3.008,8.992);
+    private static final VoxelShape UP_BOUNDING_BOX = Block.box(0,12.8,7.008,16,16,8.992);
+    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.box(0,7.008,12.992,16,8.992,16);
+    private static final VoxelShape EAST_BOUNDING_BOX = Block.box(0,7.008,16,12.8,8.992,16);
+    private static final VoxelShape WEST_BOUNDING_BOX = Block.box(0,7.008,0,3.2,8.992,16);
+    private static final VoxelShape NORTH_BOUNDING_BOX = Block.box(0,7.008,0.336,16,8.992,3.328);
 
     public BatteryNeon(String name) {
-        super(Properties.create(Material.GLASS).sound(SoundType.GLASS));
-        this.setDefaultState(this.getDefaultState().with(FACING, Direction.NORTH).with(LIT, HyperLightingConfig.batteryOnByDefault.get()));
+        super(Properties.of(Material.GLASS).sound(SoundType.GLASS));
+        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH).setValue(LIT, HyperLightingConfig.batteryOnByDefault.get()));
 
-        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().group(HyperLighting.mainTab)));
+        HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().tab(HyperLighting.mainTab)));
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        switch (state.getValue(FACING)) {
             case UP:
                 return DOWN_BOUNDING_BOX;
             case DOWN:
@@ -78,29 +84,29 @@ public class BatteryNeon extends ContainerBlock implements RemoteSwitchable, Dye
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote && !Screen.hasControlDown()) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (!worldIn.isClientSide && !Screen.hasControlDown()) {
 
-            if (state.get(LIT)) {
+            if (state.getValue(LIT)) {
                 BlockState oldState = state;
-                state = state.with(LIT, false);
-                worldIn.setBlockState(pos, state, 3);
-                worldIn.notifyBlockUpdate(pos, oldState, state, 4);
-                return ActionResultType.CONSUME;
+                state = state.setValue(LIT, false);
+                worldIn.setBlock(pos, state, 3);
+                worldIn.sendBlockUpdated(pos, oldState, state, 4);
+                return InteractionResult.CONSUME;
             } else {
-                if (worldIn.getTileEntity(pos) != null && worldIn.getTileEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon)worldIn.getTileEntity(pos)).getPowerLevel() > 0) {
+                if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon)worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
                     BlockState oldState = state;
-                    state = state.with(LIT, true);
-                    worldIn.setBlockState(pos, state, 3);
-                    worldIn.notifyBlockUpdate(pos, oldState, state, 4);
-                    return ActionResultType.CONSUME;
+                    state = state.setValue(LIT, true);
+                    worldIn.setBlock(pos, state, 3);
+                    worldIn.sendBlockUpdated(pos, oldState, state, 4);
+                    return InteractionResult.CONSUME;
                 } else {
                     BlockState oldState = state;
-                    state = state.with(LIT, false);
-                    worldIn.setBlockState(pos, state, 3);
-                    worldIn.notifyBlockUpdate(pos, oldState, state, 4);
-                    player.sendStatusMessage(new StringTextComponent("Out of power"), true);
-                    return ActionResultType.CONSUME;
+                    state = state.setValue(LIT, false);
+                    worldIn.setBlock(pos, state, 3);
+                    worldIn.sendBlockUpdated(pos, oldState, state, 4);
+                    player.displayClientMessage(new TextComponent("Out of power"), true);
+                    return InteractionResult.CONSUME;
                 }
 
             }
@@ -109,55 +115,49 @@ public class BatteryNeon extends ContainerBlock implements RemoteSwitchable, Dye
             if (Screen.hasControlDown()) {
                 OpenGUIPacket openGUIPacket = new OpenGUIPacket(ModConstants.SOLAR_GUI, pos);
                 PacketHandler.INSTANCE.sendToServer(openGUIPacket);
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
         }
-        return ActionResultType.CONSUME;
+        return InteractionResult.CONSUME;
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(LIT) ? 15 : 0;
-    }
-
-    @Nullable
-    @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.getDefaultState().with(FACING, context.getFace()).with(LIT, false);
-
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(LIT) ? 15 : 0;
     }
 
     @Nullable
     @Override
-    public TileEntity createNewTileEntity(IBlockReader worldIn) {
-        return new TileBatteryNeon();
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(FACING, context.getClickedFace()).setValue(LIT, false);
+
     }
 
     @Override
-    public BlockRenderType getRenderType(BlockState state)
+    public RenderShape getRenderShape(BlockState state)
     {
-        return BlockRenderType.MODEL;
+        return RenderShape.MODEL;
     }
 
     @Override
-    public IBlockColor dyeHandler() {
+    public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            if (state.get(LIT)) {
-                if (world != null && world.getTileEntity(pos) instanceof TileBatteryNeon) {
-                    TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getTileEntity(pos);
-                    return (tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem() instanceof DyeItem ? ((DyeItem) tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem()).getDyeColor().getColorValue() : DyeColor.WHITE.getColorValue());
+            if (state.getValue(LIT)) {
+                if (world != null && world.getBlockEntity(pos) instanceof TileBatteryNeon) {
+                    TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getBlockEntity(pos);
+                    return (tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem() instanceof DyeItem ? ((DyeItem) tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem()).getDyeColor().getFireworkColor() : DyeColor.WHITE.getFireworkColor());
                 }
             } else {
-                return DyeColor.BLACK.getColorValue();
+                return DyeColor.BLACK.getFireworkColor();
             }
-            return DyeColor.BLACK.getColorValue();
+            return DyeColor.BLACK.getFireworkColor();
         };
     }
 
@@ -167,10 +167,10 @@ public class BatteryNeon extends ContainerBlock implements RemoteSwitchable, Dye
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-        if (!world.isRemote) {
-            if (world.getTileEntity(pos) instanceof TileBatteryNeon) {
-                TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getTileEntity(pos);
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (!world.isClientSide) {
+            if (world.getBlockEntity(pos) instanceof TileBatteryNeon) {
+                TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getBlockEntity(pos);
                 tileBatteryNeon.dropInventory();
             }
         }
@@ -178,20 +178,40 @@ public class BatteryNeon extends ContainerBlock implements RemoteSwitchable, Dye
     }
 
     @Override
-    public BlockState remoteSwitched(BlockState state, BlockPos pos, World world) {
-        return state.with(LIT, !state.get(LIT));
+    public BlockState remoteSwitched(BlockState state, BlockPos pos, Level world) {
+        return state.setValue(LIT, !state.getValue(LIT));
     }
 
     @Override
     public boolean getPoweredState(BlockState state) {
-        return state.get(LIT);
+        return state.getValue(LIT);
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(TextFormatting.YELLOW + "Dyable"));
-        tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Color: " + defaultDyeColor().name()));
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TextComponent(ChatFormatting.YELLOW + "Dyable"));
+        tooltip.add(new TextComponent(ChatFormatting.GREEN + "Color: " + defaultDyeColor().name()));
+        tooltip.add(new TextComponent(ChatFormatting.BLUE + "Colored Lighting Supported"));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
+
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new TileBatteryNeon(pos, state);
+    }
+
+    @Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState p_153213_, BlockEntityType<T> p_153214_) {
+        if (level.isClientSide()) {
+            return null;
+        }
+        return (level1, blockPos, blockState, t) -> {
+            if (t instanceof TileBatteryNeon tile) {
+                tile.serverTick();
+            }
+        };
+    }
+
 }

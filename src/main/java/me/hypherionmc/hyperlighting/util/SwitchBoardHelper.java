@@ -1,35 +1,35 @@
 package me.hypherionmc.hyperlighting.util;
 
 
-import net.minecraft.util.math.vector.Vector2f;
+import net.minecraft.world.phys.Vec2;
 
 public class SwitchBoardHelper {
 
-    private final Vector2f barPos;
-    private final Vector2f statepos;
-    private final Vector2f chargePos;
-    private final Vector2f buttonPos;
+    private final Vec2 barPos;
+    private final Vec2 statepos;
+    private final Vec2 chargePos;
+    private final Vec2 buttonPos;
 
-    public SwitchBoardHelper(Vector2f barPos, Vector2f statepos, Vector2f chargePos, Vector2f buttonPos) {
+    public SwitchBoardHelper(Vec2 barPos, Vec2 statepos, Vec2 chargePos, Vec2 buttonPos) {
         this.barPos = barPos;
         this.statepos = statepos;
         this.chargePos = chargePos;
         this.buttonPos = buttonPos;
     }
 
-    public Vector2f getBarPos() {
+    public Vec2 getBarPos() {
         return barPos;
     }
 
-    public Vector2f getButtonPos() {
+    public Vec2 getButtonPos() {
         return buttonPos;
     }
 
-    public Vector2f getChargePos() {
+    public Vec2 getChargePos() {
         return chargePos;
     }
 
-    public Vector2f getStatepos() {
+    public Vec2 getStatepos() {
         return statepos;
     }
 }

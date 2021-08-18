@@ -1,6 +1,6 @@
 package me.hypherionmc.hyperlighting.api.energy;
 
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.energy.IEnergyStorage;
 
 public class ItemEnergyStorage implements IEnergyStorage {

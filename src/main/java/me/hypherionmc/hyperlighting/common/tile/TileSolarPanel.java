@@ -3,16 +3,16 @@ package me.hypherionmc.hyperlighting.common.tile;
 import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
 import me.hypherionmc.hyperlighting.common.blocks.SolarPanel;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.NetworkManager;
-import net.minecraft.network.play.server.SUpdateTileEntityPacket;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.LightType;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.Connection;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -22,45 +22,42 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 
-public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
+public class TileSolarPanel extends BlockEntity {
 
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 0, 1000);
     private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
-    public TileSolarPanel() {
-        super(HLTileEntities.TILE_SOLAR_PANEL.get());
+    public TileSolarPanel(BlockPos pos, BlockState state) {
+        super(HLTileEntities.TILE_SOLAR_PANEL.get(), pos, state);
     }
 
-    @Override
-    public void tick() {
+    public void serverTick() {
 
         Block blockType = this.getBlockState().getBlock();
         if (blockType instanceof SolarPanel)
         {
-            if (world.getDimensionType().hasSkyLight())
+            if (level.dimensionType().hasSkyLight())
             {
-                int i = world.getLightFor(LightType.SKY, pos) - world.getSkylightSubtracted();
-                float f = world.getCelestialAngleRadians(1.0F);
+                int i = level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken();
+                float f = level.getSunAngle(1.0F);
 
                 if (i > 5 && this.energyStorage.getEnergyStored() < this.energyStorage.getMaxEnergyStored()) {
                     float f1 = f < (float)Math.PI ? 0.0F : ((float)Math.PI * 2F);
                     f = f + (f1 - f) * 0.2F;
-                    i = Math.round((float)i * MathHelper.cos(f));
-                    i = MathHelper.clamp(i, 0, 15);
+                    i = Math.round((float)i * Mth.cos(f));
+                    i = Mth.clamp(i, 0, 15);
                     this.energyStorage.receiveEnergyInternal(i, false);
                 }
 
             }
 
-            if (!world.isRemote) {
-                for (Direction direction : Direction.values()) {
-                    direction = direction.getOpposite();
-                    if (world.getTileEntity(getPos().offset(direction)) != null && world.getTileEntity(getPos().offset(direction)).getCapability(CapabilityEnergy.ENERGY).isPresent()) {
-                        IEnergyStorage storage = world.getTileEntity(getPos().offset(direction)).getCapability(CapabilityEnergy.ENERGY).resolve().get();
-                        if (storage.canReceive() && storage.receiveEnergy(200, true) > 0) {
-                            if (this.energyStorage.extractEnergy(200, true) > 0) {
-                                storage.receiveEnergy(this.energyStorage.extractEnergy(200, false), false);
-                            }
+            for (Direction direction : Direction.values()) {
+                direction = direction.getOpposite();
+                if (level.getBlockEntity(getBlockPos().relative(direction)) != null && level.getBlockEntity(getBlockPos().relative(direction)).getCapability(CapabilityEnergy.ENERGY).isPresent()) {
+                    IEnergyStorage storage = level.getBlockEntity(getBlockPos().relative(direction)).getCapability(CapabilityEnergy.ENERGY).resolve().get();
+                    if (storage.canReceive() && storage.receiveEnergy(200, true) > 0) {
+                        if (this.energyStorage.extractEnergy(200, true) > 0) {
+                            storage.receiveEnergy(this.energyStorage.extractEnergy(200, false), false);
                         }
                     }
                 }
@@ -71,39 +68,39 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
     }
 
     @Override
-    public void read(BlockState state, CompoundNBT compound) {
-        super.read(state, compound);
+    public void load(CompoundTag compound) {
+        super.load(compound);
         this.energyStorage.readNBT(compound);
     }
 
     @Override
-    public CompoundNBT write(CompoundNBT compound) {
-        super.write(compound);
+    public CompoundTag save(CompoundTag compound) {
+        super.save(compound);
         this.energyStorage.writeNBT(compound);
         return compound;
     }
 
     @Override
     @Nullable
-    public SUpdateTileEntityPacket getUpdatePacket() {
-        return new SUpdateTileEntityPacket(this.pos, 3, this.getUpdateTag());
+    public ClientboundBlockEntityDataPacket getUpdatePacket() {
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
     }
 
     @Override
-    public CompoundNBT getUpdateTag() {
-        return this.write(new CompoundNBT());
+    public CompoundTag getUpdateTag() {
+        return this.save(new CompoundTag());
     }
 
     @Override
-    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+    public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
         super.onDataPacket(net, pkt);
-        handleUpdateTag(this.getBlockState(), pkt.getNbtCompound());
+        handleUpdateTag(pkt.getTag());
     }
 
     private void sendUpdates() {
-        world.markBlockRangeForRenderUpdate(pos, this.getBlockState(), this.getBlockState());
-        world.notifyBlockUpdate(pos, world.getBlockState(pos), world.getBlockState(pos), 3);
-        markDirty();
+        level.setBlocksDirty(worldPosition, this.getBlockState(), this.getBlockState());
+        level.sendBlockUpdated(worldPosition, level.getBlockState(worldPosition), level.getBlockState(worldPosition), 3);
+        setChanged();
     }
 
     @Nonnull
@@ -127,7 +124,7 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
     }
 
     boolean canTransferEnergyToAllAround() {
-        if (getWorld().isRemote) {
+        if (getLevel().isClientSide) {
             return false;
         }
 
@@ -157,7 +154,7 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
         if (!canTransferEnergyTo(side, energyToTransfer)) {
             return 0;
         }
-        final IEnergyStorage storage = getWorld().getTileEntity(getPos().offset(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
+        final IEnergyStorage storage = getLevel().getBlockEntity(getBlockPos().relative(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
         return this.energyStorage.extractEnergy(storage.receiveEnergy(energyToTransfer, simulate), simulate);
     }
 
@@ -166,19 +163,19 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
             return false;
         }
 
-        if (getWorld() == null) {
+        if (getLevel() == null) {
             return false;
         }
 
-        if (getWorld().isRemote) {
+        if (getLevel().isClientSide) {
             return false;
         }
 
-        if (getWorld().getTileEntity(getPos().offset(side)) == null) {
+        if (getLevel().getBlockEntity(getBlockPos().relative(side)) == null) {
             return false;
         }
 
-        final IEnergyStorage storage = getWorld().getTileEntity(getPos().offset(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
+        final IEnergyStorage storage = getLevel().getBlockEntity(getBlockPos().relative(side)).getCapability(CapabilityEnergy.ENERGY, side.getOpposite()).resolve().get();
 
         if (storage == null) {
             return false;
@@ -192,11 +189,11 @@ public class TileSolarPanel extends TileEntity implements ITickableTileEntity {
     }
 
     boolean isConnectedTo(final Direction side) {
-        if (getWorld() == null) {
+        if (getLevel() == null) {
             return false;
         }
 
-        final TileEntity tile = this.getWorld().getTileEntity(getPos().offset(side));
+        final BlockEntity tile = this.getLevel().getBlockEntity(getBlockPos().relative(side));
 
         if (tile == null) {
             return false;

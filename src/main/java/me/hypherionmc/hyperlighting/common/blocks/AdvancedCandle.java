@@ -8,34 +8,37 @@ import me.hypherionmc.hyperlighting.common.handlers.ParticleRegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemWithColoredLight;
 import me.hypherionmc.hyperlighting.util.ModUtils;
-import me.hypherionmc.rgblib.api.ColoredLightManager;
-import me.hypherionmc.rgblib.api.RGBLight;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.Blocks;
-import net.minecraft.block.material.Material;
-import net.minecraft.client.renderer.color.IBlockColor;
-import net.minecraft.client.util.ITooltipFlag;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.*;
-import net.minecraft.particles.ParticleTypes;
-import net.minecraft.state.BooleanProperty;
-import net.minecraft.state.DirectionProperty;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
+//import me.hypherionmc.rgblib.api.RGBLight;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -53,33 +56,33 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
     });
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
-    protected static final VoxelShape STANDING_AABB = Block.makeCuboidShape(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_NORTH_AABB = Block.makeCuboidShape(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_SOUTH_AABB = Block.makeCuboidShape(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_WEST_AABB = Block.makeCuboidShape(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_EAST_AABB = Block.makeCuboidShape(6,0,6,10,11.696,10);
+    protected static final VoxelShape STANDING_AABB = Block.box(6,0,6,10,11.696,10);
+    protected static final VoxelShape TORCH_NORTH_AABB = Block.box(6,0,6,10,11.696,10);
+    protected static final VoxelShape TORCH_SOUTH_AABB = Block.box(6,0,6,10,11.696,10);
+    protected static final VoxelShape TORCH_WEST_AABB = Block.box(6,0,6,10,11.696,10);
+    protected static final VoxelShape TORCH_EAST_AABB = Block.box(6,0,6,10,11.696,10);
 
-    public AdvancedCandle(String name, DyeColor color, ItemGroup group) {
-        super(Properties.create(Material.MISCELLANEOUS).doesNotBlockMovement().zeroHardnessAndResistance());
+    public AdvancedCandle(String name, DyeColor color, CreativeModeTab group) {
+        super(Properties.of(Material.DECORATION).noCollission().instabreak());
 
-        this.setDefaultState(this.getStateContainer().getBaseState().with(FACING, Direction.UP).with(LIT, HyperLightingConfig.candleOnByDefault.get()).with(COLOR, color));
+        this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.UP).setValue(LIT, HyperLightingConfig.candleOnByDefault.get()).setValue(COLOR, color));
 
         if (ModUtils.isRGBLibPresent()) {
-            ColoredLightManager.registerProvider(this, this::produceColoredLight);
+            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
         }
 
-        HLItems.ITEMS.register(name, () -> new BlockItemWithColoredLight(this, new Item.Properties().group(group)));
+        HLItems.ITEMS.register(name, () -> new BlockItemWithColoredLight(this, new Item.Properties().tab(group)));
     }
 
     @Override
-    protected void fillStateContainer(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT, FACING, COLOR);
-        super.fillStateContainer(builder);
+        super.createBlockStateDefinition(builder);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader worldIn, BlockPos pos, ISelectionContext context) {
-        switch (state.get(FACING))
+    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        switch (state.getValue(FACING))
         {
             case EAST:
                 return TORCH_EAST_AABB;
@@ -95,10 +98,10 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
     }
 
     @Override
-    public void animateTick(BlockState stateIn, World worldIn, BlockPos pos, Random rand) {
+    public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
 
-        if (stateIn.get(LIT)) {
-            DyeColor color = stateIn.get(COLOR);
+        if (stateIn.getValue(LIT)) {
+            DyeColor color = stateIn.getValue(COLOR);
 
             double d0 = (double)pos.getX() + 0.5D;
             double d1 = (double)pos.getY() + 0.7D;
@@ -107,7 +110,7 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
             double d4 = 0.27D;
 
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 + 0.1, d2, 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 + 0.1F, d2, color.getColorComponentValues()[0], color.getColorComponentValues()[1], color.getColorComponentValues()[2]);
+            worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 + 0.1F, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
 
         }
 
@@ -115,97 +118,97 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        if (context.getFace() != Direction.DOWN) {
-            return this.getDefaultState().with(FACING, context.getFace());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        if (context.getClickedFace() != Direction.DOWN) {
+            return this.defaultBlockState().setValue(FACING, context.getClickedFace());
         }
         return null;
     }
 
     @Override
-    public BlockState updatePostPlacement(BlockState stateIn, Direction facing, BlockState facingState, IWorld worldIn, BlockPos currentPos, BlockPos facingPos) {
+    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
         if (facing == Direction.DOWN) {
-            return Blocks.AIR.getDefaultState();
+            return Blocks.AIR.defaultBlockState();
         } else {
             for (Direction direction : Direction.values()) {
                 if (!isValidPosition(stateIn, worldIn, currentPos, direction)) {
-                    return Blocks.AIR.getDefaultState();
+                    return Blocks.AIR.defaultBlockState();
                 }
             }
         }
-        return super.updatePostPlacement(stateIn, facing, facingState, worldIn, currentPos, facingPos);
+        return super.updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
-    public boolean isValidPosition(BlockState state, IWorldReader worldIn, BlockPos pos, Direction direction) {
-        return hasEnoughSolidSide(worldIn, pos.down(), direction);
+    public boolean isValidPosition(BlockState state, LevelReader worldIn, BlockPos pos, Direction direction) {
+        return canSupportCenter(worldIn, pos.below(), direction);
     }
 
     @Override
-    public void toggleLight(World worldIn, BlockState state, BlockPos pos) {
-        state = state.with(LIT, !state.get(LIT));
-        worldIn.setBlockState(pos, state, 2);
-        if (!state.get(LIT)) {
-            worldIn.playSound((PlayerEntity) null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.3f, 1.0f);
+    public void toggleLight(Level worldIn, BlockState state, BlockPos pos) {
+        state = state.setValue(LIT, !state.getValue(LIT));
+        worldIn.setBlock(pos, state, 2);
+        if (!state.getValue(LIT)) {
+            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
-        worldIn.notifyNeighborsOfStateChange(pos, this);
+        worldIn.updateNeighborsAt(pos, this);
     }
 
     @Override
-    public int getLightValue(BlockState state, IBlockReader world, BlockPos pos) {
-        return state.get(LIT) ? 15 : 0;
+    public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
+        return state.getValue(LIT) ? 15 : 0;
     }
 
     // RGBLib Support
-    private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        if (state.get(LIT) && !HyperLightingConfig.candleColor.get()) {
-            return RGBLight.builder().pos(pos).color(state.get(COLOR).getColorValue(), false).radius(15).build();
+    /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
+        if (state.getValue(LIT) && !HyperLightingConfig.candleColor.get()) {
+            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getFireworkColor(), false).radius(15).build();
         }
         return null;
-    }
+    }*/
 
     @Override
-    public IBlockColor dyeHandler() {
+    public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            if (state.get(LIT)) {
-                return state.get(COLOR).getColorValue();
+            if (state.getValue(LIT)) {
+                return state.getValue(COLOR).getFireworkColor();
             } else {
-                return DyeColor.BLACK.getColorValue();
+                return DyeColor.BLACK.getFireworkColor();
             }
         };
     }
 
     @Override
     public DyeColor defaultDyeColor() {
-        return this.getDefaultState().get(COLOR);
+        return this.defaultBlockState().getValue(COLOR);
     }
 
     @Override
-    public ActionResultType onBlockActivated(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand handIn, BlockRayTraceResult hit) {
-        if (!worldIn.isRemote) {
+    public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
+        if (!worldIn.isClientSide) {
 
-            if (!player.getHeldItem(handIn).isEmpty() && player.getHeldItem(handIn).getItem() instanceof DyeItem) {
-                state = state.with(COLOR, ((DyeItem)player.getHeldItem(handIn).getItem()).getDyeColor());
-                worldIn.setBlockState(pos, state, 3);
-                worldIn.notifyBlockUpdate(pos, state, state, 3);
+            if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
+                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                worldIn.setBlock(pos, state, 3);
+                worldIn.sendBlockUpdated(pos, state, state, 3);
 
                 if (!player.isCreative()) {
-                    ItemStack stack = player.getHeldItem(handIn);
+                    ItemStack stack = player.getItemInHand(handIn);
                     stack.shrink(1);
-                    player.setHeldItem(handIn, stack);
+                    player.setItemInHand(handIn, stack);
                 }
 
-                return ActionResultType.CONSUME;
+                return InteractionResult.CONSUME;
             }
 
         }
-        return ActionResultType.PASS;
+        return InteractionResult.PASS;
     }
 
     @Override
-    public void addInformation(ItemStack stack, @Nullable IBlockReader worldIn, List<ITextComponent> tooltip, ITooltipFlag flagIn) {
-        tooltip.add(new StringTextComponent(TextFormatting.YELLOW + "Dyable"));
-        tooltip.add(new StringTextComponent(TextFormatting.GREEN + "Color: " + defaultDyeColor().name()));
-        tooltip.add(new StringTextComponent(TextFormatting.BLUE + "Colored Lighting Supported"));
-        super.addInformation(stack, worldIn, tooltip, flagIn);
+    public void appendHoverText(ItemStack stack, @Nullable BlockGetter worldIn, List<Component> tooltip, TooltipFlag flagIn) {
+        tooltip.add(new TextComponent(ChatFormatting.YELLOW + "Dyable"));
+        tooltip.add(new TextComponent(ChatFormatting.GREEN + "Color: " + defaultDyeColor().name()));
+        tooltip.add(new TextComponent(ChatFormatting.BLUE + "Colored Lighting Supported"));
+        super.appendHoverText(stack, worldIn, tooltip, flagIn);
     }
 }

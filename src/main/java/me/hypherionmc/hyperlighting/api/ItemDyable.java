@@ -1,9 +1,9 @@
 package me.hypherionmc.hyperlighting.api;
 
-import net.minecraft.client.renderer.color.IItemColor;
+import net.minecraft.client.color.item.ItemColor;
 
 public interface ItemDyable {
 
-    public IItemColor dyeHandler();
+    public ItemColor dyeHandler();
 
 }

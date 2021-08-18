@@ -2,9 +2,8 @@ package me.hypherionmc.hyperlighting.common.init;
 
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.items.*;
-import me.hypherionmc.hyperlighting.util.ModUtils;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.Item;
+import net.minecraftforge.fmllegacy.RegistryObject;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
 

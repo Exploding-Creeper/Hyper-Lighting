@@ -8,19 +8,17 @@ import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
 import me.hypherionmc.hyperlighting.common.init.*;
-import me.hypherionmc.hyperlighting.common.integration.top.TOPIntegration;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.color.BlockColors;
-import net.minecraft.client.renderer.color.IItemColor;
-import net.minecraft.client.renderer.color.ItemColors;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.color.block.BlockColors;
+import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class RegistryHandler {
@@ -49,24 +47,24 @@ public class RegistryHandler {
         HLSounds.SOUNDS.register(eventBus);
 
         if (ModList.get().isLoaded(ModConstants.THE_ONE_PROBE)) {
-            new TOPIntegration().setup();
+            //new TOPIntegration().setup();
         }
     }
 
     public static void initClient() {
 
         HyperLighting.logger.info("Registering TESRs...");
-        ClientRegistry.bindTileEntityRenderer(HLTileEntities.TILE_CAMPFIRE.get(), TileCampFireRenderer::new);
+        BlockEntityRenderers.register(HLTileEntities.TILE_CAMPFIRE.get(), TileCampFireRenderer::new);
 
         HLBlocks.BLOCKS.getEntries().forEach(blk -> {
             if (blk.get() instanceof CustomRenderType) {
-                RenderTypeLookup.setRenderLayer(blk.get(), ((CustomRenderType)blk.get()).getRenderType());
+                ItemBlockRenderTypes.setRenderLayer(blk.get(), ((CustomRenderType)blk.get()).getRenderType());
             }
         });
 
         HyperLighting.logger.info("Registering Containers...");
-        ScreenManager.registerFactory(HLContainers.BATTERY_NEON_CONTAINER.get(), GuiBatteryNeon::new);
-        ScreenManager.registerFactory(HLContainers.SWITCHBOARD_CONTAINER.get(), GuiSwitchBoard::new);
+        MenuScreens.register(HLContainers.BATTERY_NEON_CONTAINER.get(), GuiBatteryNeon::new);
+        MenuScreens.register(HLContainers.SWITCHBOARD_CONTAINER.get(), GuiSwitchBoard::new);
 
     }
 
