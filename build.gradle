@@ -156,7 +156,11 @@ publishing {
 }
 
 curseforge {
-    apiKey = System.getenv('CURSE_KEY')
+    if (System.getenv('CURSE_KEY') != null) {
+        apiKey = System.getenv('CURSE_KEY')
+    } else {
+        apiKey = '123'
+    }
     options {
         forgeGradleIntegration = true
     }
