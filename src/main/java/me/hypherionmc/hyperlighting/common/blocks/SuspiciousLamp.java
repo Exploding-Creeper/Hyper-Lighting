@@ -10,7 +10,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.RedstoneLampBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -47,7 +46,7 @@ public class SuspiciousLamp extends Block {
             boolean flag = state.getValue(POWERED);
             if (flag != worldIn.hasNeighborSignal(pos)) {
                 if (flag) {
-                    worldIn.scheduleTick(pos, this, 4);
+                    worldIn.getBlockTicks().scheduleTick(pos, this, 4);
                 } else {
                     worldIn.setBlock(pos, state.cycle(POWERED), 2);
                 }

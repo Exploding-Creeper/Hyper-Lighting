@@ -160,7 +160,7 @@ public class TileCampFire extends BlockEntity implements Clearable {
      */
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, (blockEntity -> this.getUpdateTag()));
+        return new ClientboundBlockEntityDataPacket(this.worldPosition, 13, this.getUpdateTag());
     }
 
     @Override

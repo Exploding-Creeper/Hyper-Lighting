@@ -33,7 +33,7 @@ import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.network.NetworkHooks;
+import net.minecraftforge.fmllegacy.network.NetworkHooks;
 
 import javax.annotation.Nullable;
 
@@ -110,15 +110,15 @@ public class SwitchBoard extends BaseEntityBlock {
         builder.add(FACING);
         super.createBlockStateDefinition(builder);
     }
-
+    
     @Override
-    public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
-        if (!p_60516_.isClientSide) {
-            if (p_60516_.getBlockEntity(p_60517_) instanceof TileSwitchBoard) {
-                ((TileSwitchBoard)p_60516_.getBlockEntity(p_60517_)).dropInventory();
+    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
+        if (!world.isClientSide) {
+            if (world.getBlockEntity(pos) instanceof TileSwitchBoard) {
+                ((TileSwitchBoard)world.getBlockEntity(pos)).dropInventory();
             }
         }
-        super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);
+        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
     @Nullable

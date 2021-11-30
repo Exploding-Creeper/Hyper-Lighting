@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.platform.GlStateManager;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.containers.ContainerBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
@@ -11,7 +12,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.network.chat.Component;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
-import net.minecraftforge.client.gui.GuiUtils;
+import net.minecraftforge.fmlclient.gui.GuiUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,7 +40,7 @@ public class GuiBatteryNeon extends AbstractContainerScreen<ContainerBatteryNeon
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
-        RenderSystem.setShaderTexture(0, TEXTURE);
+        this.minecraft.getTextureManager().bindForSetup(TEXTURE);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + 47, this.topPos + 20, 0, 198, (int)(((float)this.te.getPowerLevel() / this.te.getMaxPowerLevel()) * 110), 16, 1);
 
@@ -72,7 +73,7 @@ public class GuiBatteryNeon extends AbstractContainerScreen<ContainerBatteryNeon
                 for (String desc : description) {
                     list.add(new TranslatableComponent(desc));
                 }
-                //GuiUtils.drawHoveringText(stack, list, (int)mouseX - k, (int)mouseY - l, this.width, this.height, 200, font);
+                GuiUtils.drawHoveringText(stack, list, (int)mouseX - k, (int)mouseY - l, this.width, this.height, 200, font);
             }
         }
     }

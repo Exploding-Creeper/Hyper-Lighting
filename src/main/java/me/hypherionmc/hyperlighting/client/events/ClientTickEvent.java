@@ -1,12 +1,13 @@
 package me.hypherionmc.hyperlighting.client.events;
 
+import me.hypherionmc.hyperlighting.common.config.ClothConfigGUI;
 import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraftforge.client.ClientRegistry;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fmlclient.registry.ClientRegistry;
 import org.lwjgl.glfw.GLFW;
 
 public class ClientTickEvent {
@@ -27,7 +28,7 @@ public class ClientTickEvent {
                 if (Minecraft.getInstance().screen == null && configToggle.consumeClick() && System.currentTimeMillis() >= nextKeyTriggerTime) {
                     nextKeyTriggerTime = System.currentTimeMillis() + 1000L;
                     if (ModUtils.isClothConfigPresent()) {
-                        //Minecraft.getInstance().setScreen(ClothConfigGUI.openGUI(null));
+                        Minecraft.getInstance().setScreen(ClothConfigGUI.openGUI(null));
                     } else {
                         Minecraft.getInstance().player.displayClientMessage(new TextComponent("To access the in-game config, please install Cloth Config. JSON Lights will still be reloaded"), false);
                     }
