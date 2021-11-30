@@ -167,14 +167,14 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
     }
 
     @Override
-    public boolean removedByPlayer(BlockState state, Level world, BlockPos pos, Player player, boolean willHarvest, FluidState fluid) {
-        if (!world.isClientSide) {
-            if (world.getBlockEntity(pos) instanceof TileBatteryNeon) {
-                TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getBlockEntity(pos);
+    public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
+        if (!p_60516_.isClientSide) {
+            if (p_60516_.getBlockEntity(p_60517_) instanceof TileBatteryNeon) {
+                TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) p_60516_.getBlockEntity(p_60517_);
                 tileBatteryNeon.dropInventory();
             }
         }
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
+        super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);
     }
 
     @Override

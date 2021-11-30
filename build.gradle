@@ -6,17 +6,17 @@ buildscript {
     }
     dependencies {
         classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
-        classpath 'me.hypherionmc:CurseGradle:2.0.4'
+        //classpath 'me.hypherionmc:CurseGradle:2.0.4'
     }
 }
 
 apply plugin: 'net.minecraftforge.gradle'
 apply plugin: "maven-publish"
-apply plugin: 'me.hypherionmc.cursegradle'
+//apply plugin: 'me.hypherionmc.cursegradle'
 
 group = 'me.hypherionmc'
 version = mod_version
-archivesBaseName = 'HyperLighting-1.17.1'
+archivesBaseName = 'HyperLighting-1.18.1'
 
 // Jenkins
 if (System.getenv('BUILD_NUMBER') != null) {
@@ -24,17 +24,17 @@ if (System.getenv('BUILD_NUMBER') != null) {
     jar.archiveName = archivesBaseName + "-dev-" + System.getenv('BUILD_NUMBER') + ".jar"
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(16)
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
 minecraft {
-    mappings channel: 'official', version: '1.17.1'
+    mappings channel: 'official', version: '1.18'
 
     runs {
         client {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -50,7 +50,7 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -66,7 +66,7 @@ minecraft {
             workingDirectory project.file('run')
 
             // Recommended logging data for a userdev environment
-            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+            property 'forge.logging.markers', 'REGISTRIES'
 
             // Recommended logging level for the console
             property 'forge.logging.console.level', 'debug'
@@ -92,7 +92,7 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.17.1-37.0.20'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.1'
 
     // The new Hyper Lighting Core - Now known as RGBLib
     /*implementation "me.hypherionmc:RGBLib:${rgblib_version}:api"
@@ -104,7 +104,7 @@ dependencies {
     /*compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1:api")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1")*/
 
-    compileOnly(fg.deobf("me.shedaniel.cloth:cloth-config-forge:5.0.38"))
+    /*compileOnly(fg.deobf("me.shedaniel.cloth:cloth-config-forge:5.0.38"))*/
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..
@@ -155,7 +155,7 @@ publishing {
     }
 }
 
-curseforge {
+/*curseforge {
     if (System.getenv('CURSE_KEY') != null) {
         apiKey = System.getenv('CURSE_KEY')
     } else {
@@ -169,11 +169,11 @@ curseforge {
         changelog = file('changelog.md')
         changelogType = 'markdown'
         releaseType = 'release'
-        addGameVersion("Java 16")
-        addGameVersion("1.17.1")
+        addGameVersion("Java 17")
+        addGameVersion("1.18")
         addGameVersion("Forge")
         mainArtifact(jar) {
-            displayName = "Hyper Lighting Forge 1.17.1 $project.version"
+            displayName = "Hyper Lighting Forge 1.18 $project.version"
         }
     }
-}
+}*/

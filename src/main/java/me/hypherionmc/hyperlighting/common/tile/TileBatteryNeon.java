@@ -83,7 +83,7 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return new ClientboundBlockEntityDataPacket(this.worldPosition, 3, this.getUpdateTag());
+        return ClientboundBlockEntityDataPacket.create(this, (blockEntity -> this.getUpdateTag()));
     }
 
     @Override
