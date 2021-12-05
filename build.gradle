@@ -92,7 +92,7 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.18-38.0.1'
+    minecraft 'net.minecraftforge:forge:1.18-38.0.5'
 
     // The new Hyper Lighting Core - Now known as RGBLib
     /*implementation "me.hypherionmc:RGBLib:${rgblib_version}:api"
@@ -104,7 +104,7 @@ dependencies {
     /*compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1:api")
     runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1")*/
 
-    /*compileOnly(fg.deobf("me.shedaniel.cloth:cloth-config-forge:5.0.38"))*/
+    compileOnly(fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.0.43"))
 }
 
 // Example for how to get properties into the manifest for reading by the runtime..

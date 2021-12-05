@@ -161,7 +161,7 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
     // RGBLib Support
     /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
         if (state.getValue(LIT) && !HyperLightingConfig.candleColor.get()) {
-            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getFireworkColor(), false).radius(15).build();
+            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getMaterialColor().col, false).radius(15).build();
         }
         return null;
     }*/
@@ -170,9 +170,9 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
     public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
             if (state.getValue(LIT)) {
-                return state.getValue(COLOR).getFireworkColor();
+                return state.getValue(COLOR).getMaterialColor().col;
             } else {
-                return DyeColor.BLACK.getFireworkColor();
+                return DyeColor.BLACK.getMaterialColor().col;
             }
         };
     }

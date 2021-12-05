@@ -46,10 +46,10 @@ public class TileSwitchBoard extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.put("inventory", this.itemStackHandler.serializeNBT());
-        return compound;
+        //return compound;
     }
 
     @Override
@@ -145,12 +145,14 @@ public class TileSwitchBoard extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+        //super.onDataPacket(net, pkt);
         handleUpdateTag(pkt.getTag());
     }
 

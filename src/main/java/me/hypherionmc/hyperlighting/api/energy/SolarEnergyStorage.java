@@ -45,8 +45,7 @@ public class SolarEnergyStorage extends EnergyStorage {
         return this.energy;
     }
 
-    public int receiveEnergyInternal(int maxReceive, boolean simulate)
-    {
+    public int receiveEnergyInternal(int maxReceive, boolean simulate) {
         int energyReceived = Math.min(capacity - energy, Math.min(this.maxReceive, maxReceive));
         if (!simulate)
             energy += energyReceived;

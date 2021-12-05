@@ -53,14 +53,12 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
             addWidget(this.buttonImage);
             id++;
         }
-
     }
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
-        //this.minecraft.getTextureManager().bindForSetup(TEXTURE);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);
 
         for (int j = 0; j < 6; j++) {
@@ -86,8 +84,6 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
 
     @Override
     protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-        //String tileName = Objects.requireNonNull(this.te.getDisplayName()).getString();
-        //this.font.drawString(matrixStack, tileName, 7, 4, 4210752);
         this.font.draw(matrixStack, this.player.getDisplayName().getString(), 7, this.imageHeight - 96 + 2, 4210752);
 
         for (int i = 0; i < slots.size(); ++i) {
@@ -111,6 +107,7 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
                 List<TranslatableComponent> list = new ArrayList<>();
                 list.add(new TranslatableComponent(title));
                 list.add(new TranslatableComponent(description));
+                renderComponentTooltip(stack, list, (int)mouseX - k, (int)mouseY - l, font);
                 //GuiUtils.drawHoveringText(stack, list,(int)mouseX - k, (int)mouseY - l, this.width, this.height, 200, font);
             }
         }

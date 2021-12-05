@@ -141,11 +141,10 @@ public class TileCampFire extends BlockEntity implements Clearable {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
+    public void saveAdditional(CompoundTag compound) {
         this.writeItems(compound);
         compound.putIntArray("CookingTimes", this.cookingTimes);
         compound.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-        return compound;
     }
 
     private CompoundTag writeItems(CompoundTag compound) {
@@ -165,7 +164,9 @@ public class TileCampFire extends BlockEntity implements Clearable {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.writeItems(new CompoundTag());
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
     }
 
     public Optional<CampfireCookingRecipe> findMatchingRecipe(ItemStack itemStackIn) {

@@ -52,13 +52,13 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putBoolean("isCharging", this.isCharging);
         this.energyStorage.writeNBT(compound);
         compound.put("inventory", this.itemStackHandler.serializeNBT());
         compound.put("dye", this.dyeHandler.serializeNBT());
-        return compound;
+        //return compound;
     }
 
     public boolean isCharging() {
@@ -83,17 +83,19 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
     @Override
     @Nullable
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this, (blockEntity -> this.getUpdateTag()));
+        return ClientboundBlockEntityDataPacket.create(this, (blockEntity) -> this.getUpdateTag());
     }
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+        //super.onDataPacket(net, pkt);
         handleUpdateTag(pkt.getTag());
     }
 
@@ -239,5 +241,11 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
         if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
             Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStackHandler.getStackInSlot(0));
         }
+    }
+
+    @Override
+    public void setRemoved() {
+        dropInventory();
+        super.setRemoved();
     }
 }

@@ -23,7 +23,7 @@ public class LightSaber extends SwordItem {
     }
 
     /*private RGBLight produceColoredLight(Entity entity, ItemStack stack) {
-        //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(DyeColor.LIGHT_BLUE.getFireworkColor(), false).radius(10).build();
+        //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(DyeColor.LIGHT_BLUE.getMaterialColor().col, false).radius(10).build();
         return null;
     }*/
 

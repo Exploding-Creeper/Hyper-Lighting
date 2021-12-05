@@ -16,7 +16,7 @@ public class BlockItemWithColoredLight extends BlockItemColor {
     /*private RGBLight produceColoredLight(Entity entity, ItemStack stack) {
         if (stack.getItem() instanceof BlockItemWithColoredLight) {
             DyeColor color = ((DyeAble)((BlockItemWithColoredLight) stack.getItem()).getBlock()).defaultDyeColor();
-            //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(color.getFireworkColor(), false).radius(14).build();
+            //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(color.getMaterialColor().col, false).radius(14).build();
         }
         return null;
     }*/

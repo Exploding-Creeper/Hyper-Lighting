@@ -92,12 +92,12 @@ public class TileSolarLight extends BlockEntity implements SolarLight {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         compound.putInt("power", this.powerLevel);
         compound.putBoolean("isCharging", this.isCharging);
         compound.put("energyStorage", this.energyStorage.writeNBT(compound));
-        return compound;
+        //return compound;
     }
 
     @Override
@@ -130,7 +130,9 @@ public class TileSolarLight extends BlockEntity implements SolarLight {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
     }
 
     @Override

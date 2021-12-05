@@ -51,7 +51,7 @@ public class ColoredGlowstone extends Block implements DyeAble {
     @Override
     public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            return state.getValue(COLOR).getFireworkColor();
+            return state.getValue(COLOR).getMaterialColor().col;
         };
     }
 
@@ -62,7 +62,7 @@ public class ColoredGlowstone extends Block implements DyeAble {
 
     // RGBLib Support
     /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getFireworkColor(), false).radius(15).build();
+        //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getMaterialColor().col, false).radius(15).build();
         return null;
     }*/
 

@@ -38,8 +38,8 @@ public class GuiBatteryNeon extends AbstractContainerScreen<ContainerBatteryNeon
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
-        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
+        RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + 47, this.topPos + 20, 0, 198, (int)(((float)this.te.getPowerLevel() / this.te.getMaxPowerLevel()) * 110), 16, 1);
 
@@ -72,6 +72,7 @@ public class GuiBatteryNeon extends AbstractContainerScreen<ContainerBatteryNeon
                 for (String desc : description) {
                     list.add(new TranslatableComponent(desc));
                 }
+                renderComponentTooltip(stack, list, (int)mouseX - k, (int)mouseY - l, font);
                 //GuiUtils.drawHoveringText(stack, list, (int)mouseX - k, (int)mouseY - l, this.width, this.height, 200, font);
             }
         }

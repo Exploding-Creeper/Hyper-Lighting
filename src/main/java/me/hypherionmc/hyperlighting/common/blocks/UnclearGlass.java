@@ -80,7 +80,7 @@ public class UnclearGlass extends Block implements CustomRenderType, DyeAble {
     @Override
     public BlockColor dyeHandler() {
         return (state, world, pos, tintIndex) -> {
-            return state.getValue(COLOR).getFireworkColor();
+            return state.getValue(COLOR).getMaterialColor().col;
         };
     }
 

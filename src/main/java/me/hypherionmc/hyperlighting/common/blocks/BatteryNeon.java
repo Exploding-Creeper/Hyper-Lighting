@@ -13,6 +13,7 @@ import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -20,6 +21,8 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AnvilMenu;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -90,20 +93,20 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
             if (state.getValue(LIT)) {
                 BlockState oldState = state;
                 state = state.setValue(LIT, false);
-                worldIn.setBlock(pos, state, 3);
+                worldIn.setBlock(pos, state, 2);
                 worldIn.sendBlockUpdated(pos, oldState, state, 4);
                 return InteractionResult.CONSUME;
             } else {
                 if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon)worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
                     BlockState oldState = state;
                     state = state.setValue(LIT, true);
-                    worldIn.setBlock(pos, state, 3);
+                    worldIn.setBlock(pos, state, 2);
                     worldIn.sendBlockUpdated(pos, oldState, state, 4);
                     return InteractionResult.CONSUME;
                 } else {
                     BlockState oldState = state;
                     state = state.setValue(LIT, false);
-                    worldIn.setBlock(pos, state, 3);
+                    worldIn.setBlock(pos, state, 2);
                     worldIn.sendBlockUpdated(pos, oldState, state, 4);
                     player.displayClientMessage(new TextComponent("Out of power"), true);
                     return InteractionResult.CONSUME;
@@ -152,29 +155,18 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
             if (state.getValue(LIT)) {
                 if (world != null && world.getBlockEntity(pos) instanceof TileBatteryNeon) {
                     TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) world.getBlockEntity(pos);
-                    return (tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem() instanceof DyeItem ? ((DyeItem) tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem()).getDyeColor().getFireworkColor() : DyeColor.WHITE.getFireworkColor());
+                    return (tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem() instanceof DyeItem ? ((DyeItem) tileBatteryNeon.getDyeHandler().getStackInSlot(0).getItem()).getDyeColor().getMaterialColor().col : DyeColor.WHITE.getTextColor());
                 }
             } else {
-                return DyeColor.BLACK.getFireworkColor();
+                return DyeColor.BLACK.getMaterialColor().col;
             }
-            return DyeColor.BLACK.getFireworkColor();
+            return DyeColor.BLACK.getMaterialColor().col;
         };
     }
 
     @Override
     public DyeColor defaultDyeColor() {
         return DyeColor.WHITE;
-    }
-
-    @Override
-    public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
-        if (!p_60516_.isClientSide) {
-            if (p_60516_.getBlockEntity(p_60517_) instanceof TileBatteryNeon) {
-                TileBatteryNeon tileBatteryNeon = (TileBatteryNeon) p_60516_.getBlockEntity(p_60517_);
-                tileBatteryNeon.dropInventory();
-            }
-        }
-        super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);
     }
 
     @Override

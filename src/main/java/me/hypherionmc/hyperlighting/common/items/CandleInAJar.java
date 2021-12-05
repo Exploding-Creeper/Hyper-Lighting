@@ -15,7 +15,7 @@ public class CandleInAJar extends Item {
     }
 
     /*private RGBLight produceColoredLight(Entity entity, ItemStack stack) {
-        //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(DyeColor.YELLOW.getFireworkColor(), false).radius(14).build();
+        //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(DyeColor.YELLOW.getMaterialColor().col, false).radius(14).build();
         return null;
     }*/
 

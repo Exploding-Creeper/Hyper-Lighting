@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class TileSolarPanel extends BlockEntity {
 
-    private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 0, 1000);
+    private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 50, 1000);
     private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public TileSolarPanel(BlockPos pos, BlockState state) {
@@ -74,10 +74,10 @@ public class TileSolarPanel extends BlockEntity {
     }
 
     @Override
-    public CompoundTag save(CompoundTag compound) {
-        super.save(compound);
+    public void saveAdditional(CompoundTag compound) {
+        super.saveAdditional(compound);
         this.energyStorage.writeNBT(compound);
-        return compound;
+        //return compound;
     }
 
     @Override
@@ -88,12 +88,14 @@ public class TileSolarPanel extends BlockEntity {
 
     @Override
     public CompoundTag getUpdateTag() {
-        return this.save(new CompoundTag());
+        CompoundTag tag = new CompoundTag();
+        this.saveAdditional(tag);
+        return tag;
     }
 
     @Override
     public void onDataPacket(Connection net, ClientboundBlockEntityDataPacket pkt) {
-        super.onDataPacket(net, pkt);
+        //super.onDataPacket(net, pkt);
         handleUpdateTag(pkt.getTag());
     }
 

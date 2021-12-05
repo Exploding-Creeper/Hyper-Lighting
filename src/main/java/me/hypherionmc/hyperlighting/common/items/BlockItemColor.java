@@ -22,7 +22,7 @@ public class BlockItemColor extends BlockItem implements ItemDyable {
             BlockItemColor blockItemColor = (BlockItemColor) stack.getItem();
             if (blockItemColor.getBlock() instanceof DyeAble) {
                 DyeAble dyeAble = (DyeAble) blockItemColor.getBlock();
-                return dyeAble.defaultDyeColor().getFireworkColor();
+                return dyeAble.defaultDyeColor().getMaterialColor().col;
             }
         }
         return 0;

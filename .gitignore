@@ -123,3 +123,4 @@ code.json
 src/generated
 src/main/java/LazyBlockStateStuff.java
 src/main/java/me/hypherionmc/hyperlighting/datagen
+src/main/java/me/hypherionmc/hyperlighting/LazyBlockStates.java

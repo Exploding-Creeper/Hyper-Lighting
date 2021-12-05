@@ -3,10 +3,14 @@ package me.hypherionmc.hyperlighting;
 import me.hypherionmc.hyperlighting.client.events.ClientTickEvent;
 import me.hypherionmc.hyperlighting.client.itemgroups.HLLightingTab;
 import me.hypherionmc.hyperlighting.client.itemgroups.HLMachinesTab;
+import me.hypherionmc.hyperlighting.common.config.ClothConfigGUI;
 import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.handlers.RegistryHandler;
 import me.hypherionmc.hyperlighting.util.ModUtils;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.IExtensionPoint;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.config.ModConfig;
@@ -47,10 +51,12 @@ public class HyperLighting {
 
         ClientTickEvent.registerKeybinds();
 
-        /*if (ModUtils.isClothConfigPresent()) {
+        if (ModUtils.isClothConfigPresent()) {
             logger.info("Adding Cloth Config support");
-            ModLoadingContext.get().registerExtensionPoint(ExtensionPoint.CONFIGGUIFACTORY, () -> (mc, screen) -> ClothConfigGUI.openGUI(screen));
-        }*/
+            ModLoadingContext.get().registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class, () -> new ConfigGuiHandler.ConfigGuiFactory((mc, screen) -> {
+                return ClothConfigGUI.openGUI(screen);
+            }));
+        }
     }
 
     public void setupComplete(final FMLLoadCompleteEvent event) {
