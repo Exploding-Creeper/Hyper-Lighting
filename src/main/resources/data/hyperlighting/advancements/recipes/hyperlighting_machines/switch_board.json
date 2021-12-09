@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:switch_board"
+    ]
+  },
+  "criteria": {
+    "switch_board": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:iron_ingot"
+          },
+          {
+            "item": "minecraft:lever"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:switch_board"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "switch_board",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "hyperlighting",
+  "version": "${version}",
+  "name": "Hyper Lighting",
+  "description": "Hyper Lighting is an advanced Lighting mod for Minecraft featuring lights of all shapes and colors!",
+  "authors": [
+    "HypherionMC"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/hyper-lighting",
+    "issues": "https://github.com/Exploding-Creeper/Hyper-Lighting/issues",
+    "discord": "https://discord.gg/PdVnXf9",
+    "wiki": "https://hyperlighting.firstdarkdev.xyz"
+  },
+  "license": "MIT",
+  "icon": "assets/hyperlighting/logo.png",
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "me.hypherionmc.hyperlighting.client.HyperLightingFabricClient"
+    ],
+    "main": [
+      "me.hypherionmc.hyperlighting.HyperLightingFabric"
+    ],
+    "modmenu": [
+      "me.hypherionmc.hyperlighting.client.gui.ModMenuScreen"
+    ]
+  },
+  "mixins": [
+    "HyperLightingFabric.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.12.8",
+    "fabric": "*",
+    "minecraft": "1.18"
+  }
+}

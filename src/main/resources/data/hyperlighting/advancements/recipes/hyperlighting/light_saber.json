@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:light_saber"
+    ]
+  },
+  "criteria": {
+    "lightsaber": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:diamond"
+          },
+          {
+            "item": "minecraft:ender_eye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:light_saber"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lightsaber",
+      "has_the_recipe"
+    ]
+  ]
+}

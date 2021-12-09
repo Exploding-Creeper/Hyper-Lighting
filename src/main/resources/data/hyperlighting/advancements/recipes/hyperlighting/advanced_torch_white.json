@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:advanced_torch_white"
+    ]
+  },
+  "criteria": {
+    "torch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:torch"
+          },
+          {
+            "item": "minecraft:white_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:advanced_torch_white"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "torch",
+      "has_the_recipe"
+    ]
+  ]
+}

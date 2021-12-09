@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    " E ",
+    " R ",
+    " S "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:daylight_detector"
+    },
+    "R": {
+      "item": "minecraft:glass"
+    },
+    "S": {
+      "item": "minecraft:flower_pot"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:fence_solar"
+  }
+}

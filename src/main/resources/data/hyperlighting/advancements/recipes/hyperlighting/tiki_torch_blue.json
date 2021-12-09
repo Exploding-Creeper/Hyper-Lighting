@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:tiki_torch_blue"
+    ]
+  },
+  "criteria": {
+    "lantern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hyperlighting:tiki_torch_white"
+          },
+          {
+            "item": "minecraft:blue_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:tiki_torch_blue"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lantern",
+      "has_the_recipe"
+    ]
+  ]
+}

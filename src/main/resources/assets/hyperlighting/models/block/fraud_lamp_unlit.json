@@ -1,0 +1,6 @@
+{
+  "parent": "block/cube_all",
+  "textures": {
+    "all": "hyperlighting:block/unlit_quartz_lamp"
+  }
+}

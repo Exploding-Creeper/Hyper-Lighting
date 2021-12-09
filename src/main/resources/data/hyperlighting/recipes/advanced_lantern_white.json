@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "RRR",
+    "RER",
+    "RRR"
+  ],
+  "key": {
+    "E": {
+      "item": "hyperlighting:advanced_torch_white"
+    },
+    "R": {
+      "item": "minecraft:iron_nugget"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:advanced_lantern_white"
+  }
+}

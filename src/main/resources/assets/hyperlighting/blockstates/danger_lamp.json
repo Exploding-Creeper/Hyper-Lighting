@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "powered=false" : {"model": "hyperlighting:block/danger_lamp_unlit" },
+    "powered=true" : {"model": "hyperlighting:block/danger_lamp_lit" }
+  }
+}

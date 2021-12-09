@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:campfire"
+    ]
+  },
+  "criteria": {
+    "campfire": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:acacia_planks"
+          },
+          {
+            "item": "minecraft:coal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:campfire"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "campfire",
+      "has_the_recipe"
+    ]
+  ]
+}

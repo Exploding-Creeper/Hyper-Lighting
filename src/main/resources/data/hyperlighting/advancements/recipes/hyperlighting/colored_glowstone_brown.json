@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:colored_glowstone_brown"
+    ]
+  },
+  "criteria": {
+    "coloredglowstone": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:glowstone"
+          },
+          {
+            "item": "minecraft:brown_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:colored_glowstone_brown"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "coloredglowstone",
+      "has_the_recipe"
+    ]
+  ]
+}

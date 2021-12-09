@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    " R ",
+    " E ",
+    " S "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:coal"
+    },
+    "R": {
+      "item": "minecraft:flower_pot"
+    },
+    "S": {
+      "item": "hyperlighting:tiki_base"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:tiki_torch_orange"
+  }
+}

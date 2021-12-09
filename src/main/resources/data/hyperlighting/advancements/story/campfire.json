@@ -1,0 +1,29 @@
+{
+  "display": {
+    "title": {
+      "text": "C-A-M-P-F-I-R-E SONG SONG",
+      "color": "blue",
+      "bold": true
+    },
+    "description": {
+      "text": "Placed a Spongebob Campfire",
+      "color": "white"
+    },
+    "icon": {
+      "item": "hyperlighting:campfire_underwater"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:textures/gui/advancements/backgrounds/stone.png"
+  },
+  "criteria": {
+    "gotscammed": {
+      "trigger": "minecraft:placed_block",
+      "conditions": {
+        "block": "hyperlighting:campfire_underwater"
+      }
+    }
+  }
+}

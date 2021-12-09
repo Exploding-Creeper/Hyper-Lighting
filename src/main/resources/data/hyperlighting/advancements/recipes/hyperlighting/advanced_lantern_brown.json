@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:advanced_lantern_brown"
+    ]
+  },
+  "criteria": {
+    "lantern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hyperlighting:advanced_torch_brown"
+          },
+          {
+            "item": "minecraft:iron_nugget"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:advanced_lantern_brown"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lantern",
+      "has_the_recipe"
+    ]
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:tiki_torch_orange"
+    ]
+  },
+  "criteria": {
+    "lantern": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hyperlighting:tiki_base"
+          },
+          {
+            "item": "minecraft:flower_pot"
+          },
+          {
+            "item": "minecraft:coal"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:tiki_torch_orange"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lantern",
+      "has_the_recipe"
+    ]
+  ]
+}

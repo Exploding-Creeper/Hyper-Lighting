@@ -1,0 +1,36 @@
+{
+  "item.saber_equip": {
+    "category": "item",
+    "subtitle": "item.saber_equip.sub",
+    "sounds": [
+      {
+        "name": "hyperlighting:item/saber_equip",
+        "stream": "true"
+      }
+    ]
+  },
+  "item.saber_use": {
+    "category": "item",
+    "subtitle": "item.saber_use.sub",
+    "sounds": [
+      {
+        "name": "hyperlighting:item/saber_use",
+        "stream": "true"
+      },
+      {
+        "name": "hyperlighting:item/saber_use2",
+        "stream": "true"
+      }
+    ]
+  },
+  "item.saber_hit": {
+    "category": "item",
+    "subtitle": "item.saber_hit.sub",
+    "sounds": [
+      {
+        "name": "hyperlighting:item/saber_hit",
+        "stream": "true"
+      }
+    ]
+  }
+}

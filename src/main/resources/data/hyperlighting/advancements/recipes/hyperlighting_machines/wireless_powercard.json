@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:wireless_powercard"
+    ]
+  },
+  "criteria": {
+    "battery": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:redstone"
+          },
+          {
+            "item": "minecraft:iron_block"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:wireless_powercard"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "battery",
+      "has_the_recipe"
+    ]
+  ]
+}

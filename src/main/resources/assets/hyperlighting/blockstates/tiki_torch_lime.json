@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=true": {"model": "hyperlighting:block/tikitorch_base"},
+    "lit=false": {"model": "hyperlighting:block/tikitorch_base"}
+  }
+}

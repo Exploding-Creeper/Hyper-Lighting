@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "EEE",
+    "R R",
+    " R "
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:pumpkin"
+    },
+    "E": {
+      "item": "minecraft:hay_block"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:pumpkin_trio_inverted"
+  }
+}

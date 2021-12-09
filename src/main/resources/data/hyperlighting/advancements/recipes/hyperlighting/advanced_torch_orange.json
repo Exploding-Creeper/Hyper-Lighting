@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:advanced_torch_orange"
+    ]
+  },
+  "criteria": {
+    "torch": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:torch"
+          },
+          {
+            "item": "minecraft:orange_dye"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:advanced_torch_orange"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "torch",
+      "has_the_recipe"
+    ]
+  ]
+}

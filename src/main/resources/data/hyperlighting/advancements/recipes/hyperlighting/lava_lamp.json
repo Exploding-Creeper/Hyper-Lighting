@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:lava_lamp"
+    ]
+  },
+  "criteria": {
+    "lava_lamp": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:stone"
+          },
+          {
+            "item": "minecraft:glass"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:lava_lamp"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lava_lamp",
+      "has_the_recipe"
+    ]
+  ]
+}

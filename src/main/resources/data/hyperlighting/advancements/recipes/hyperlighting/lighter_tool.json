@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:lighter_tool"
+    ]
+  },
+  "criteria": {
+    "lighter": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:iron_ingot"
+          },
+          {
+            "item": "minecraft:flint"
+          },
+          {
+            "item": "minecraft:bucket"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:lighter_tool"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "lighter",
+      "has_the_recipe"
+    ]
+  ]
+}

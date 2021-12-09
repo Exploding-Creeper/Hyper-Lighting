@@ -1,0 +1,6 @@
+{
+  "variants": {
+    "lit=false" : {"model": "hyperlighting:block/redstone_lamp_unlit" },
+    "lit=true" : {"model": "hyperlighting:block/redstone_lamp_lit" }
+  }
+}

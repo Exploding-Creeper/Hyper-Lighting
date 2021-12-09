@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:advanced_candle_cyan"
+    ]
+  },
+  "criteria": {
+    "candle": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "hyperlighting:advanced_torch_cyan"
+          },
+          {
+            "item": "minecraft:string"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:advanced_candle_cyan"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "candle",
+      "has_the_recipe"
+    ]
+  ]
+}

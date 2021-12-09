@@ -1,0 +1,38 @@
+{
+  "parent": "minecraft:recipes/root",
+  "rewards": {
+    "recipes": [
+      "hyperlighting:solar_panel"
+    ]
+  },
+  "criteria": {
+    "solarpanel": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:redstone"
+          },
+          {
+            "item": "minecraft:glass"
+          },
+          {
+            "item": "minecraft:stone"
+          }
+        ]
+      }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "hyperlighting:solar_panel"
+      }
+    }
+  },
+  "requirements": [
+    [
+      "solarpanel",
+      "has_the_recipe"
+    ]
+  ]
+}
