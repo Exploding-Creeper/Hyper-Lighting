@@ -25,6 +25,7 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     implementation 'me.hypherionmc.night-config:toml:3.6.5_custom'
+    include 'me.hypherionmc.night-config:core:3.6.5_custom'
     include 'me.hypherionmc.night-config:toml:3.6.5_custom'
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:6.0.45") {
