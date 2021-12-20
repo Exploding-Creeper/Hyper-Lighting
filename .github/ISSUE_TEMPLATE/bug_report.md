@@ -25,11 +25,14 @@ If applicable, add screenshots to help explain your problem.
 
 **Versions (DO NOT USE "LATEST"! I STEAL YOUR KNEE CAPS!):**
  - Minecraft Version:
- - Forge Version:
- - Java Version:
+ - Modloader
+ - [ ] Forge
+ - [ ] Fabric
+ - Mod Loader Version:
  - Mod Version:
  - RGBLib Version [If installed]:
- - Client Side [ ] / Server Side [ ]
+ - [ ] Client Side
+ - [ ] Server Side
 
 **Additional context**
 Add any other context about the problem here.
