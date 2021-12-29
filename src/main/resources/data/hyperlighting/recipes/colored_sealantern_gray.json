@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "   ",
+    "RE ",
+    "   "
+  ],
+  "key": {
+    "E": {
+      "item": "minecraft:sea_lantern"
+    },
+    "R": {
+      "item": "minecraft:gray_dye"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:colored_sealantern_gray"
+  }
+}

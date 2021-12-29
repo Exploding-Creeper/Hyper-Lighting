@@ -136,6 +136,27 @@ public class HLBlocks {
     public static final Block COLORED_GLOWSTONE_BLACK = register("colored_glowstone_black", new ColoredGlowstone("colored_glowstone_black", DyeColor.BLACK, HyperLightingFabric.mainTab));
 
     /**
+     * Sea Lanterns
+     */
+    public static final Block COLORED_SEALANTERN_WHITE = register("colored_sealantern_white", new ColoredSeaLantern("colored_sealantern_white", DyeColor.WHITE, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_ORANGE = register("colored_sealantern_orange", new ColoredSeaLantern("colored_sealantern_orange", DyeColor.ORANGE, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_MAGENTA = register("colored_sealantern_magenta", new ColoredSeaLantern("colored_sealantern_magenta", DyeColor.MAGENTA, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_LIGHT_BLUE = register("colored_sealantern_light_blue", new ColoredSeaLantern("colored_sealantern_light_blue", DyeColor.LIGHT_BLUE, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_YELLOW = register("colored_sealantern_yellow", new ColoredSeaLantern("colored_sealantern_yellow", DyeColor.YELLOW, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_LIME = register("colored_sealantern_lime", new ColoredSeaLantern("colored_sealantern_lime", DyeColor.LIME, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_PINK = register("colored_sealantern_pink", new ColoredSeaLantern("colored_sealantern_pink", DyeColor.PINK, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_GRAY = register("colored_sealantern_gray", new ColoredSeaLantern("colored_sealantern_gray", DyeColor.GRAY, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_LIGHT_GRAY = register("colored_sealantern_light_gray", new ColoredSeaLantern("colored_sealantern_light_gray", DyeColor.LIGHT_GRAY, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_CYAN = register("colored_sealantern_cyan", new ColoredSeaLantern("colored_sealantern_cyan", DyeColor.CYAN, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_PURPLE = register("colored_sealantern_purple", new ColoredSeaLantern("colored_sealantern_purple", DyeColor.PURPLE, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_BLUE = register("colored_sealantern_blue", new ColoredSeaLantern("colored_sealantern_blue", DyeColor.BLUE, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_BROWN = register("colored_sealantern_brown", new ColoredSeaLantern("colored_sealantern_brown", DyeColor.BROWN, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_GREEN = register("colored_sealantern_green", new ColoredSeaLantern("colored_sealantern_green", DyeColor.GREEN, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_RED = register("colored_sealantern_red", new ColoredSeaLantern("colored_sealantern_red", DyeColor.RED, HyperLightingFabric.mainTab));
+    public static final Block COLORED_SEALANTERN_BLACK = register("colored_sealantern_black", new ColoredSeaLantern("colored_sealantern_black", DyeColor.BLACK, HyperLightingFabric.mainTab));
+
+
+    /**
      * Single Lights
      */
     public static final Block FENCE_SOLAR = register("fence_solar", new FenceSolar("fence_solar", DyeColor.WHITE, HyperLightingFabric.mainTab));
