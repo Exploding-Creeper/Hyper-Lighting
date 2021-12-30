@@ -1,6 +1,7 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
 import me.hypherionmc.hyperlighting.HyperLightingFabric;
+import me.hypherionmc.hyperlighting.common.fluids.ColoredWater;
 import me.hypherionmc.hyperlighting.common.handlers.ParticleRegistryHandler;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -9,6 +10,7 @@ import net.minecraft.block.enums.WallMountLocation;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.particle.ParticleTypes;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.BooleanProperty;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.Direction;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldAccess;
 import net.minecraft.world.WorldView;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Random;
 
@@ -77,5 +80,13 @@ public class UnderwaterLantern extends AdvancedLantern implements Waterloggable 
     @Override
     public boolean isValidPosition(BlockState state, WorldView world, BlockPos pos, Direction direction) {
         return true;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        World worldAccess = ctx.getWorld();
+        boolean bl = worldAccess.getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER || worldAccess.getFluidState(ctx.getBlockPos()).getFluid() instanceof ColoredWater;
+        return this.getDefaultState().with(WATERLOGGED, bl).with(FACING, ctx.getPlayerFacing());
     }
 }

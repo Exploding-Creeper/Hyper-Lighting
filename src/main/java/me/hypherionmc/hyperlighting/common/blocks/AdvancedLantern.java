@@ -51,6 +51,7 @@ public class AdvancedLantern extends WallMountedBlock implements DyeAble, Lighta
     public static final BooleanProperty LIT = Properties.LIT;
     public static final DirectionProperty HORIZONTAL_FACING = HorizontalFacingBlock.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
+
     //Bounding Boxes
     private static final VoxelShape BB_TOP = Block.createCuboidShape(4.992, 0, 4, 11.008, 11.008, 11.008);
     private static final VoxelShape BB_NORTH = Block.createCuboidShape(4.992, 3.008, 8, 11.008, 16, 16.992);

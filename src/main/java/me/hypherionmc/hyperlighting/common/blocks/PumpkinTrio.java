@@ -6,7 +6,6 @@ import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.utils.BlockUtils;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.*;
-import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.sound.BlockSoundGroup;

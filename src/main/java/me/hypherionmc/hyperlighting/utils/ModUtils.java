@@ -1,5 +1,7 @@
 package me.hypherionmc.hyperlighting.utils;
 
+import net.minecraft.util.DyeColor;
+
 import java.util.Random;
 
 public class ModUtils {
@@ -20,6 +22,10 @@ public class ModUtils {
             partsLeft--;
         }
         return arr;
+    }
+
+    public static int fluidColorFromDye(DyeColor color) {
+        return color.getMapColor().color | 0xFF000000;
     }
 
 }

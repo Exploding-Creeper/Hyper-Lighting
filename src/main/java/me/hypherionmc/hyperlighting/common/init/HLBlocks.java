@@ -185,7 +185,7 @@ public class HLBlocks {
      */
     public static final Block TIKI_BASE = register("tiki_base", new TikiTorchStick("tiki_base"));
 
-    private static Block register(String name, Block block) {
+    public static Block register(String name, Block block) {
         Block blk = Registry.register(Registry.BLOCK, new Identifier(ModConstants.MOD_ID, name), block);
         BLOCKS.add(blk);
         return blk;

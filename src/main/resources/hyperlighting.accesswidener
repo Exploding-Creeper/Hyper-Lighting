@@ -1,0 +1,3 @@
+accessWidener	v2	named
+accessible    method    net/minecraft/item/Item    raycast    (Lnet/minecraft/world/World;Lnet/minecraft/entity/player/PlayerEntity;Lnet/minecraft/world/RaycastContext$FluidHandling;)Lnet/minecraft/util/hit/BlockHitResult;
+

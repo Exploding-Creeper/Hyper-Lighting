@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "magenta_dye",
+  "ingredients": [
+    {
+      "item": "hyperlighting:purple_water_bottle"
+    },
+    {
+      "item": "minecraft:pink_dye"
+    }
+  ],
+  "result": {
+    "item": "minecraft:magenta_dye",
+    "count": 2
+  }
+}

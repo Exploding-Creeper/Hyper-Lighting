@@ -61,8 +61,17 @@ public class HyperLightingConfig {
     @Path("soulfireconfig.coloredlight")
     @SpecComment("Use Colored Lighting on Underwater Lights with RGBLib installed")
     public boolean underwaterColor = true;
+
     @Path("soulfireconfig.litonplaced")
     @SpecComment("Must Underwater Lights be lit when placed")
     public boolean underwaterOnByDefault = false;
+
+    @Path("worldgen.genColoredLakes")
+    @SpecComment("Must colored water lakes be generated")
+    public boolean genColoredLakes = true;
+
+    @Path("worldgen.genColoredGlowingLakes")
+    @SpecComment("Must glowing colored water lakes be generated")
+    public boolean genColoredGlowingLakes = true;
 
 }

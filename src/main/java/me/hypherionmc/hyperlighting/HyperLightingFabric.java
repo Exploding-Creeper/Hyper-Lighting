@@ -3,11 +3,13 @@ package me.hypherionmc.hyperlighting;
 import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.handlers.RegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
+import me.hypherionmc.hyperlighting.common.init.HLItems;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.DyeColor;
 import net.minecraft.util.Identifier;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -24,6 +26,10 @@ public class HyperLightingFabric implements ModInitializer {
     public static ItemGroup machinesTab = FabricItemGroupBuilder.build(
             new Identifier(ModConstants.MOD_ID, "hyperlighting_machines"),
             () -> new ItemStack(Item.fromBlock(HLBlocks.SOLAR_PANEL)));
+
+    public static ItemGroup fluidsTab = FabricItemGroupBuilder.build(
+            new Identifier(ModConstants.MOD_ID, "hyperlighting_fluids"),
+            () -> new ItemStack(HLItems.WATER_BOTTLES.get(DyeColor.CYAN)));
 
     @Override
     public void onInitialize() {

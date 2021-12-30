@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:water_bucket"
+    },
+    {
+      "item": "hyperlighting:orange_water_bottle"
+    }
+  ],
+  "result": {
+    "item": "hyperlighting:orange_colored_water_bucket"
+  }
+}

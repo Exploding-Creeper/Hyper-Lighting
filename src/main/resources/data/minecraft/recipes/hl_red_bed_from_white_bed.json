@@ -1,0 +1,15 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "group": "dyed_bed",
+  "ingredients": [
+    {
+      "item": "minecraft:white_bed"
+    },
+    {
+      "item": "hyperlighting:red_water_bottle"
+    }
+  ],
+  "result": {
+    "item": "minecraft:red_bed"
+  }
+}

@@ -4,9 +4,13 @@
   "package": "me.hypherionmc.hyperlighting.mixin",
   "compatibilityLevel": "JAVA_16",
   "mixins": [
+    "coloredwater.EntityMixin",
+    "coloredwater.GlassBottleItemMixin",
+    "coloredwater.WaterFluidMixin"
   ],
   "client": [
-    "MinecraftClientMixin"
+    "MinecraftClientMixin",
+    "coloredwater.InGameOverlayRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -129,6 +129,21 @@ public class ClothConfigScreen {
                 .setSaveConsumer(newValue -> HyperLightingFabric.hyperLightingConfig.underwaterOnByDefault = newValue)
                 .build());
 
+        ConfigCategory woldgenConfig = builder.getOrCreateCategory(new LiteralText("World Gen Config"));
+        woldgenConfig.addEntry(configEntryBuilder.startBooleanToggle(new LiteralText("Generate Colored Water Lakes"), HyperLightingFabric.hyperLightingConfig.genColoredLakes)
+                .setDefaultValue(true)
+                .requireRestart()
+                .setTooltip(new LiteralText("Enable/Disable Colored Water lakes from spawning"))
+                .setSaveConsumer(newValue -> HyperLightingFabric.hyperLightingConfig.genColoredLakes = newValue)
+                .build());
+
+        woldgenConfig.addEntry(configEntryBuilder.startBooleanToggle(new LiteralText("Generate Glowing Colored Water Lakes"), HyperLightingFabric.hyperLightingConfig.genColoredGlowingLakes)
+                .setDefaultValue(true)
+                .requireRestart()
+                .setTooltip(new LiteralText("Enable/Disable Glowing Colored Water lakes from spawning"))
+                .setSaveConsumer(newValue -> HyperLightingFabric.hyperLightingConfig.genColoredGlowingLakes = newValue)
+                .build());
+
         builder.setSavingRunnable(() -> {
             ConfigHandler.saveConfig(HyperLightingFabric.hyperLightingConfig);
         });

@@ -1,10 +1,12 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
+import me.hypherionmc.hyperlighting.common.fluids.ColoredWater;
 import net.minecraft.block.BlockState;
 import net.minecraft.client.item.TooltipContext;
 import net.minecraft.fluid.FluidState;
 import net.minecraft.fluid.Fluids;
 import net.minecraft.item.ItemGroup;
+import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
@@ -54,5 +56,13 @@ public class CampFireUnderwater extends CampFireBlock {
             return state.with(SIGNAL_FIRE, this.isHayBlock(neighborState));
         }
         return state;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getPlacementState(ItemPlacementContext ctx) {
+        World worldAccess = ctx.getWorld();
+        boolean bl = worldAccess.getFluidState(ctx.getBlockPos()).getFluid() == Fluids.WATER || worldAccess.getFluidState(ctx.getBlockPos()).getFluid() instanceof ColoredWater;
+        return this.getDefaultState().with(WATERLOGGED, bl).with(FACING, ctx.getPlayerFacing());
     }
 }
