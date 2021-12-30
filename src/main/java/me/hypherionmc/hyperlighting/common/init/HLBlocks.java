@@ -133,6 +133,25 @@ public class HLBlocks {
     public static final RegistryObject<Block> COLORED_GLOWSTONE_RED = BLOCKS.register("colored_glowstone_red", () -> new ColoredGlowstone("colored_glowstone_red", DyeColor.RED, HyperLighting.mainTab));
     public static final RegistryObject<Block> COLORED_GLOWSTONE_BLACK = BLOCKS.register("colored_glowstone_black", () -> new ColoredGlowstone("colored_glowstone_black", DyeColor.BLACK, HyperLighting.mainTab));
 
+    /**
+     * Sea Lanterns
+     */
+    public static final RegistryObject<Block> COLORED_SEALANTERN_WHITE = BLOCKS.register("colored_sealantern_white", () -> new ColoredSeaLantern("colored_sealantern_white", DyeColor.WHITE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_ORANGE = BLOCKS.register("colored_sealantern_orange", () -> new ColoredSeaLantern("colored_sealantern_orange", DyeColor.ORANGE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_MAGENTA = BLOCKS.register("colored_sealantern_magenta", () -> new ColoredSeaLantern("colored_sealantern_magenta", DyeColor.MAGENTA, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_LIGHT_BLUE = BLOCKS.register("colored_sealantern_light_blue", () -> new ColoredSeaLantern("colored_sealantern_light_blue", DyeColor.LIGHT_BLUE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_YELLOW = BLOCKS.register("colored_sealantern_yellow", () -> new ColoredSeaLantern("colored_sealantern_yellow", DyeColor.YELLOW, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_LIME = BLOCKS.register("colored_sealantern_lime", () -> new ColoredSeaLantern("colored_sealantern_lime", DyeColor.LIME, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_PINK = BLOCKS.register("colored_sealantern_pink", () -> new ColoredSeaLantern("colored_sealantern_pink", DyeColor.PINK, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_GRAY = BLOCKS.register("colored_sealantern_gray", () -> new ColoredSeaLantern("colored_sealantern_gray", DyeColor.GRAY, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_LIGHT_GRAY = BLOCKS.register("colored_sealantern_light_gray", () -> new ColoredSeaLantern("colored_sealantern_light_gray", DyeColor.LIGHT_GRAY, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_CYAN = BLOCKS.register("colored_sealantern_cyan", () -> new ColoredSeaLantern("colored_sealantern_cyan", DyeColor.CYAN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_PURPLE = BLOCKS.register("colored_sealantern_purple", () -> new ColoredSeaLantern("colored_sealantern_purple", DyeColor.PURPLE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_BLUE = BLOCKS.register("colored_sealantern_blue", () -> new ColoredSeaLantern("colored_sealantern_blue", DyeColor.BLUE, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_BROWN = BLOCKS.register("colored_sealantern_brown", () -> new ColoredSeaLantern("colored_sealantern_brown", DyeColor.BROWN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_GREEN = BLOCKS.register("colored_sealantern_green", () -> new ColoredSeaLantern("colored_sealantern_green", DyeColor.GREEN, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_RED = BLOCKS.register("colored_sealantern_red", () -> new ColoredSeaLantern("colored_sealantern_red", DyeColor.RED, HyperLighting.mainTab));
+    public static final RegistryObject<Block> COLORED_SEALANTERN_BLACK = BLOCKS.register("colored_sealantern_black", () -> new ColoredSeaLantern("colored_sealantern_black", DyeColor.BLACK, HyperLighting.mainTab));
 
     /**
      * Single Lights

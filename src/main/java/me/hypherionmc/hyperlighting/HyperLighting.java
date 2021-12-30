@@ -24,7 +24,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(ModConstants.MODID)
 public class HyperLighting {
 
-    public static final Logger logger = LogManager.getLogger(ModConstants.MODID);
+    public static final Logger logger = LogManager.getLogger("Hyper Lighting");
     public static HLLightingTab mainTab = new HLLightingTab("hyperlighting");
     public static HLMachinesTab machinesTab = new HLMachinesTab("hyperlighting_machines");
 
