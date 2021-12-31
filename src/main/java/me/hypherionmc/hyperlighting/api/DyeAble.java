@@ -5,7 +5,8 @@ import net.minecraft.world.item.DyeColor;
 
 public interface DyeAble {
 
-    public BlockColor dyeHandler();
-    public DyeColor defaultDyeColor();
+    BlockColor dyeHandler();
+
+    DyeColor defaultDyeColor();
 
 }

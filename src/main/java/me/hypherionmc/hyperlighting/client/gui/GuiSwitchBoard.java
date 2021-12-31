@@ -6,16 +6,15 @@ import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.containers.ContainerSwitchBoard;
 import me.hypherionmc.hyperlighting.common.tile.TileSwitchBoard;
 import me.hypherionmc.hyperlighting.util.SwitchBoardHelper;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec2;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.phys.Vec2;
 import net.minecraftforge.client.gui.GuiUtils;
 
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
     private final Inventory player;
     private final TileSwitchBoard te;
     private ImageButton buttonImage;
-    private List<SwitchBoardHelper> slots = new ArrayList<>();
+    private final List<SwitchBoardHelper> slots = new ArrayList<>();
 
     public GuiSwitchBoard(ContainerSwitchBoard containerSwitchBoard, Inventory inventory, Component title) {
         super(containerSwitchBoard, inventory, title);
@@ -49,7 +48,7 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
         int id = 0;
         for (SwitchBoardHelper itm : this.slots) {
             int finalId = id;
-            this.buttonImage = new ImageButton(this.leftPos + (int)itm.getButtonPos().x, this.topPos + (int)itm.getButtonPos().y, 16, 16, 176, 0,0, TEXTURE, (button) -> this.actionPerformed(button, finalId));
+            this.buttonImage = new ImageButton(this.leftPos + (int) itm.getButtonPos().x, this.topPos + (int) itm.getButtonPos().y, 16, 16, 176, 0, 0, TEXTURE, (button) -> this.actionPerformed(button, finalId));
             addWidget(this.buttonImage);
             id++;
         }
@@ -66,16 +65,16 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
 
                 int i = this.te.getPowerLevel(j);
                 SwitchBoardHelper helper = slots.get(j);
-                GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int)helper.getBarPos().x, this.topPos + (int)helper.getBarPos().y - i + 1, 176, 39 - i, 4, i + 1, 1);
+                GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int) helper.getBarPos().x, this.topPos + (int) helper.getBarPos().y - i + 1, 176, 39 - i, 4, i + 1, 1);
 
                 if (this.te.getCharging(j)) {
-                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int)helper.getChargePos().x, this.topPos + (int)helper.getChargePos().y, 189, 17, 4, 4, 2);
+                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int) helper.getChargePos().x, this.topPos + (int) helper.getChargePos().y, 189, 17, 4, 4, 2);
                 }
 
                 if (this.te.getState(j)) {
-                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int)helper.getStatepos().x, this.topPos + (int)helper.getStatepos().y, 181, 17, 4, 4, 3);
+                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int) helper.getStatepos().x, this.topPos + (int) helper.getStatepos().y, 181, 17, 4, 4, 3);
                 } else {
-                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int)helper.getStatepos().x, this.topPos + (int)helper.getStatepos().y, 185, 17, 4, 4, 3);
+                    GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos + (int) helper.getStatepos().x, this.topPos + (int) helper.getStatepos().y, 185, 17, 4, 4, 3);
 
                 }
             }
@@ -89,25 +88,24 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
         for (int i = 0; i < slots.size(); ++i) {
             if (this.menu.slots.get(i).hasItem() && this.te.isLinked(i)) {
                 SwitchBoardHelper helper = slots.get(i);
-                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int)helper.getBarPos().x, this.topPos + (int)helper.getBarPos().y - 22, 4, 23, "Battery Level", ChatFormatting.YELLOW + "" + Math.round(this.te.getPowerLevelPer(i)) + "%");
-                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int)helper.getChargePos().x,this.topPos + (int)helper.getChargePos().y, 4, 4, "Charging State", (this.te.getCharging(i) ? ChatFormatting.GREEN + "Charging" : ChatFormatting.RED + "Not Charging"));
-                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int)helper.getStatepos().x,this.topPos + (int)helper.getStatepos().y, 4, 4, "Power State", (this.te.getState(i) ? ChatFormatting.GREEN + "On" : ChatFormatting.RED + "Off"));
+                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int) helper.getBarPos().x, this.topPos + (int) helper.getBarPos().y - 22, 4, 23, "Battery Level", ChatFormatting.YELLOW + "" + Math.round(this.te.getPowerLevelPer(i)) + "%");
+                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int) helper.getChargePos().x, this.topPos + (int) helper.getChargePos().y, 4, 4, "Charging State", (this.te.getCharging(i) ? ChatFormatting.GREEN + "Charging" : ChatFormatting.RED + "Not Charging"));
+                this.drawPowerToolTip(matrixStack, mouseX, mouseY, this.leftPos + (int) helper.getStatepos().x, this.topPos + (int) helper.getStatepos().y, 4, 4, "Power State", (this.te.getState(i) ? ChatFormatting.GREEN + "On" : ChatFormatting.RED + "Off"));
 
             }
         }
     }
 
-    private void drawPowerToolTip (PoseStack stack, int mouseX, int mouseY, int startX, int startY, int sizeX, int sizeY, String title, String description) {
+    private void drawPowerToolTip(PoseStack stack, int mouseX, int mouseY, int startX, int startY, int sizeX, int sizeY, String title, String description) {
         int k = (this.width - this.imageWidth) / 2; //X asis on GUI
         int l = (this.height - this.imageHeight) / 2; //Y asis on GUI
         if (mouseX > startX && mouseX < startX + sizeX) //Basically checking if mouse is in the correct area
         {
-            if (mouseY > startY && mouseY < startY + sizeY)
-            {
+            if (mouseY > startY && mouseY < startY + sizeY) {
                 List<TranslatableComponent> list = new ArrayList<>();
                 list.add(new TranslatableComponent(title));
                 list.add(new TranslatableComponent(description));
-                renderComponentTooltip(stack, list, (int)mouseX - k, (int)mouseY - l, font);
+                renderComponentTooltip(stack, list, mouseX - k, mouseY - l, font);
                 //GuiUtils.drawHoveringText(stack, list,(int)mouseX - k, (int)mouseY - l, this.width, this.height, 200, font);
             }
         }
@@ -116,22 +114,34 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
     protected void actionPerformed(Button button, int bid) {
         switch (bid) {
             case 0:
-                if (this.menu.slots.get(0).hasItem()) { this.te.toggleState(0); }
+                if (this.menu.slots.get(0).hasItem()) {
+                    this.te.toggleState(0);
+                }
                 break;
             case 1:
-                if (this.menu.slots.get(1).hasItem()) { this.te.toggleState(1); }
+                if (this.menu.slots.get(1).hasItem()) {
+                    this.te.toggleState(1);
+                }
                 break;
             case 2:
-                if (this.menu.slots.get(2).hasItem()) { this.te.toggleState(2); }
+                if (this.menu.slots.get(2).hasItem()) {
+                    this.te.toggleState(2);
+                }
                 break;
             case 3:
-                if (this.menu.slots.get(3).hasItem()) { this.te.toggleState(3); }
+                if (this.menu.slots.get(3).hasItem()) {
+                    this.te.toggleState(3);
+                }
                 break;
             case 4:
-                if (this.menu.slots.get(4).hasItem()) { this.te.toggleState(4); }
+                if (this.menu.slots.get(4).hasItem()) {
+                    this.te.toggleState(4);
+                }
                 break;
             case 5:
-                if (this.menu.slots.get(5).hasItem()) { this.te.toggleState(5); }
+                if (this.menu.slots.get(5).hasItem()) {
+                    this.te.toggleState(5);
+                }
                 break;
 
         }

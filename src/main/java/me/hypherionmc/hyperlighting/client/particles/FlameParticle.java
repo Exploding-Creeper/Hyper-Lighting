@@ -1,7 +1,7 @@
 package me.hypherionmc.hyperlighting.client.particles;
 
-import net.minecraft.client.particle.*;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.util.Mth;
 import net.minecraftforge.api.distmarker.Dist;
@@ -16,22 +16,21 @@ public class FlameParticle extends TextureSheetParticle {
         this.xd = this.xd * 0.009999999776482582D;
         this.yd = this.yd * 0.009999999776482582D;
         this.zd = this.zd * 0.009999999776482582D;
-        this.x += (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.05F);
-        this.y += (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.05F);
-        this.z += (double)((this.random.nextFloat() - this.random.nextFloat()) * 0.05F);
+        this.x += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
+        this.y += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
+        this.z += (this.random.nextFloat() - this.random.nextFloat()) * 0.05F;
         this.rCol = 1.0F;
         this.gCol = 1.0F;
         this.bCol = 1.0F;
         this.alpha = 1.0F;
-        this.lifetime = (int)(8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
+        this.lifetime = (int) (8.0D / (Math.random() * 0.8D + 0.2D)) + 4;
         this.setSize(1F, 1F);
 
         this.setColor((float) colorR, (float) colorG, (float) colorB);
     }
 
     @Override
-    public void move(double x, double y, double z)
-    {
+    public void move(double x, double y, double z) {
         this.setBoundingBox(this.getBoundingBox().move(x, y, z));
         this.setLocationFromBoundingbox();
     }
@@ -42,17 +41,15 @@ public class FlameParticle extends TextureSheetParticle {
     }
 
     @Override
-    public int getLightColor(float partialTick)
-    {
-        float f = ((float)this.age + partialTick) / (float)this.lifetime;
+    public int getLightColor(float partialTick) {
+        float f = ((float) this.age + partialTick) / (float) this.lifetime;
         f = Mth.clamp(f, 0.0F, 1.0F);
         int i = super.getLightColor(partialTick);
         int j = i & 255;
         int k = i >> 16 & 255;
-        j = j + (int)(f * 15.0F * 16.0F);
+        j = j + (int) (f * 15.0F * 16.0F);
 
-        if (j > 240)
-        {
+        if (j > 240) {
             j = 240;
         }
 
@@ -60,14 +57,12 @@ public class FlameParticle extends TextureSheetParticle {
     }
 
     @Override
-    public void tick()
-    {
+    public void tick() {
         this.xo = this.x;
         this.yo = this.y;
         this.zo = this.z;
 
-        if (this.age++ >= this.lifetime)
-        {
+        if (this.age++ >= this.lifetime) {
             this.remove();
         }
 
@@ -76,8 +71,7 @@ public class FlameParticle extends TextureSheetParticle {
         this.yd *= 0.9599999785423279D;
         this.zd *= 0.9599999785423279D;
 
-        if (this.onGround)
-        {
+        if (this.onGround) {
             this.xd *= 0.699999988079071D;
             this.zd *= 0.699999988079071D;
         }

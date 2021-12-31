@@ -8,7 +8,6 @@ import me.hypherionmc.hyperlighting.common.handlers.ParticleRegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemWithColoredLight;
 import me.hypherionmc.hyperlighting.util.ModUtils;
-//import me.hypherionmc.rgblib.api.RGBLight;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.core.BlockPos;
@@ -47,20 +46,18 @@ import java.util.Random;
 public class AdvancedCandle extends Block implements DyeAble, Lightable {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final DirectionProperty FACING = DirectionProperty.create("facing", new Predicate<Direction>()
-    {
-        public boolean apply(@Nullable Direction p_apply_1_)
-        {
+    public static final DirectionProperty FACING = DirectionProperty.create("facing", new Predicate<Direction>() {
+        public boolean apply(@Nullable Direction p_apply_1_) {
             return p_apply_1_ != Direction.DOWN;
         }
     });
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
-    protected static final VoxelShape STANDING_AABB = Block.box(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_NORTH_AABB = Block.box(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_SOUTH_AABB = Block.box(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_WEST_AABB = Block.box(6,0,6,10,11.696,10);
-    protected static final VoxelShape TORCH_EAST_AABB = Block.box(6,0,6,10,11.696,10);
+    protected static final VoxelShape STANDING_AABB = Block.box(6, 0, 6, 10, 11.696, 10);
+    protected static final VoxelShape TORCH_NORTH_AABB = Block.box(6, 0, 6, 10, 11.696, 10);
+    protected static final VoxelShape TORCH_SOUTH_AABB = Block.box(6, 0, 6, 10, 11.696, 10);
+    protected static final VoxelShape TORCH_WEST_AABB = Block.box(6, 0, 6, 10, 11.696, 10);
+    protected static final VoxelShape TORCH_EAST_AABB = Block.box(6, 0, 6, 10, 11.696, 10);
 
     public AdvancedCandle(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.DECORATION).noCollission().instabreak());
@@ -82,8 +79,7 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING))
-        {
+        switch (state.getValue(FACING)) {
             case EAST:
                 return TORCH_EAST_AABB;
             case WEST:
@@ -103,9 +99,9 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
         if (stateIn.getValue(LIT)) {
             DyeColor color = stateIn.getValue(COLOR);
 
-            double d0 = (double)pos.getX() + 0.5D;
-            double d1 = (double)pos.getY() + 0.7D;
-            double d2 = (double)pos.getZ() + 0.5D;
+            double d0 = (double) pos.getX() + 0.5D;
+            double d1 = (double) pos.getY() + 0.7D;
+            double d2 = (double) pos.getZ() + 0.5D;
             double d3 = 0.22D;
             double d4 = 0.27D;
 
@@ -148,7 +144,7 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
         if (!state.getValue(LIT)) {
-            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
+            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
         worldIn.updateNeighborsAt(pos, this);
     }
@@ -187,7 +183,7 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

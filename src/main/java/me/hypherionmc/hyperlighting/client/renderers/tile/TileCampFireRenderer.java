@@ -24,7 +24,7 @@ public class TileCampFireRenderer implements BlockEntityRenderer<TileCampFire> {
         Direction direction = tileEntityIn.getBlockState().getValue(CampfireBlock.FACING);
         NonNullList<ItemStack> nonnulllist = tileEntityIn.getInventory();
 
-        for(int i = 0; i < nonnulllist.size(); ++i) {
+        for (int i = 0; i < nonnulllist.size(); ++i) {
             ItemStack itemstack = nonnulllist.get(i);
             if (itemstack != ItemStack.EMPTY) {
                 matrixStackIn.pushPose();

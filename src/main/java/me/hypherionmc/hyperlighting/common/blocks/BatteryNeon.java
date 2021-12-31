@@ -13,7 +13,6 @@ import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -21,8 +20,6 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AnvilMenu;
-import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -39,7 +36,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -53,12 +49,12 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-    private static final VoxelShape DOWN_BOUNDING_BOX = Block.box(0,0,7.008,16,3.008,8.992);
-    private static final VoxelShape UP_BOUNDING_BOX = Block.box(0,12.8,7.008,16,16,8.992);
-    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.box(0,7.008,12.992,16,8.992,16);
-    private static final VoxelShape EAST_BOUNDING_BOX = Block.box(0,7.008,16,12.8,8.992,16);
-    private static final VoxelShape WEST_BOUNDING_BOX = Block.box(0,7.008,0,3.2,8.992,16);
-    private static final VoxelShape NORTH_BOUNDING_BOX = Block.box(0,7.008,0.336,16,8.992,3.328);
+    private static final VoxelShape DOWN_BOUNDING_BOX = Block.box(0, 0, 7.008, 16, 3.008, 8.992);
+    private static final VoxelShape UP_BOUNDING_BOX = Block.box(0, 12.8, 7.008, 16, 16, 8.992);
+    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.box(0, 7.008, 12.992, 16, 8.992, 16);
+    private static final VoxelShape EAST_BOUNDING_BOX = Block.box(0, 7.008, 16, 12.8, 8.992, 16);
+    private static final VoxelShape WEST_BOUNDING_BOX = Block.box(0, 7.008, 0, 3.2, 8.992, 16);
+    private static final VoxelShape NORTH_BOUNDING_BOX = Block.box(0, 7.008, 0.336, 16, 8.992, 3.328);
 
     public BatteryNeon(String name) {
         super(Properties.of(Material.GLASS).sound(SoundType.GLASS));
@@ -97,7 +93,7 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
                 worldIn.sendBlockUpdated(pos, oldState, state, 4);
                 return InteractionResult.CONSUME;
             } else {
-                if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon)worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
+                if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon) worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
                     BlockState oldState = state;
                     state = state.setValue(LIT, true);
                     worldIn.setBlock(pos, state, 2);
@@ -144,8 +140,7 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState state)
-    {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

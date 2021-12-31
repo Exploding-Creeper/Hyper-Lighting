@@ -1,5 +1,6 @@
 package me.hypherionmc.hyperlighting.util;
 
+import net.minecraft.world.item.DyeColor;
 import net.minecraftforge.fml.ModList;
 
 import java.util.Random;
@@ -9,14 +10,14 @@ public class ModUtils {
     public static boolean isRGBLibPresent() {
         return ModList.get().isLoaded("rgblib");
     }
+
     public static boolean isClothConfigPresent() {
         return ModList.get().isLoaded("cloth-config");
     }
 
-    public static float floatInRange(float min, float max)
-    {
+    public static float floatInRange(float min, float max) {
         Random r = new Random();
-        return(min + (max - min) * r.nextFloat());
+        return (min + (max - min) * r.nextFloat());
     }
 
     public static int[] splitIntoParts(final int whole, final int parts) {
@@ -30,6 +31,10 @@ public class ModUtils {
             partsLeft--;
         }
         return arr;
+    }
+
+    public static int fluidColorFromDye(DyeColor color) {
+        return color.getMaterialColor().col | 0xFF000000;
     }
 
 }

@@ -34,6 +34,9 @@ public class HyperLightingConfig {
     public static ForgeConfigSpec.BooleanValue underwaterColor;
     public static ForgeConfigSpec.BooleanValue underwaterOnByDefault;
 
+    public static ForgeConfigSpec.BooleanValue genColoredWater;
+    public static ForgeConfigSpec.BooleanValue genGlowingColoredWater;
+
     static {
         ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         builder.comment("Hyper Lighting Config");
@@ -130,6 +133,17 @@ public class HyperLightingConfig {
         underwaterOnByDefault = builder
                 .comment("Should Underwater Lights be lit when placed")
                 .define("onByDefault", false);
+
+        builder.pop();
+
+        builder.push("World Gen Config");
+        genColoredWater = builder
+                .comment("Disables/Enables Glowing Colored Water from spawning")
+                .define("genColoredWater", true);
+
+        genGlowingColoredWater = builder
+                .comment("Disables/Enables Glowing Colored Water from spawning")
+                .define("genGlowingColoredWater", true);
 
         builder.pop();
         spec = builder.build();

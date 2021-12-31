@@ -4,42 +4,34 @@ import me.hypherionmc.hyperlighting.api.DyeAble;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionHand;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 
 import javax.annotation.Nullable;
 import java.util.List;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 
 public class UnclearGlass extends Block implements CustomRenderType, DyeAble {
 
@@ -74,7 +66,7 @@ public class UnclearGlass extends Block implements CustomRenderType, DyeAble {
     @Override
     @OnlyIn(Dist.CLIENT)
     public boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
-        return adjacentBlockState.is(this) ? true : super.skipRendering(state, adjacentBlockState, side);
+        return adjacentBlockState.is(this) || super.skipRendering(state, adjacentBlockState, side);
     }
 
     @Override
@@ -100,7 +92,7 @@ public class UnclearGlass extends Block implements CustomRenderType, DyeAble {
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

@@ -1,8 +1,8 @@
 package me.hypherionmc.hyperlighting.client.itemgroups;
 
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 public class HLMachinesTab extends CreativeModeTab {

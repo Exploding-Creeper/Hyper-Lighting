@@ -2,14 +2,12 @@ package me.hypherionmc.hyperlighting.common.items;
 
 import me.hypherionmc.hyperlighting.api.DyeAble;
 import me.hypherionmc.hyperlighting.api.ItemDyable;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.client.color.item.ItemColor;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-
-import net.minecraft.world.item.Item.Properties;
 
 public class BlockItemColor extends BlockItem implements ItemDyable {
 

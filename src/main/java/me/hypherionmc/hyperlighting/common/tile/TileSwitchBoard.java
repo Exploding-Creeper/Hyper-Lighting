@@ -3,20 +3,19 @@ package me.hypherionmc.hyperlighting.common.tile;
 import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
 import me.hypherionmc.hyperlighting.api.SolarLight;
 import me.hypherionmc.hyperlighting.api.SwitchModule;
-import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.common.network.packets.PacketStateToggle;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.Containers;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.world.Containers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -29,7 +28,7 @@ import javax.annotation.Nullable;
 public class TileSwitchBoard extends BlockEntity {
 
     private final ItemStackHandler itemStackHandler = new SwitchItemStackHandler(6);
-    private LazyOptional<IItemHandler> storage = LazyOptional.of(() -> itemStackHandler);
+    private final LazyOptional<IItemHandler> storage = LazyOptional.of(() -> itemStackHandler);
 
     public TileSwitchBoard(BlockPos pos, BlockState state) {
         super(HLTileEntities.TILE_SWITCHBOARD.get(), pos, state);
@@ -86,7 +85,7 @@ public class TileSwitchBoard extends BlockEntity {
             CompoundTag compound = stack.getTag();
             BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
             if (level.getBlockState(pos).getBlock() instanceof RemoteSwitchable) {
-                return ((RemoteSwitchable)level.getBlockState(pos).getBlock()).getPoweredState(level.getBlockState(pos));
+                return ((RemoteSwitchable) level.getBlockState(pos).getBlock()).getPoweredState(level.getBlockState(pos));
             }
 
         }
@@ -111,9 +110,7 @@ public class TileSwitchBoard extends BlockEntity {
                 CompoundTag compound = stack.getTag();
                 if (compound.contains("blockx") && compound.contains("blocky") && compound.contains("blockz")) {
                     BlockPos pos = new BlockPos(compound.getInt("blockx"), compound.getInt("blocky"), compound.getInt("blockz"));
-                    if (level.getBlockEntity(pos) != null && level.getBlockEntity(pos).hasLevel() && level.getBlockEntity(pos) instanceof SolarLight) {
-                        return true;
-                    }
+                    return level.getBlockEntity(pos) != null && level.getBlockEntity(pos).hasLevel() && level.getBlockEntity(pos) instanceof SolarLight;
                 }
             }
         }

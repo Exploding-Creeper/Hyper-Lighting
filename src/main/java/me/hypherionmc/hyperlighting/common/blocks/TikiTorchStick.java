@@ -2,21 +2,19 @@ package me.hypherionmc.hyperlighting.common.blocks;
 
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.world.level.BlockGetter;
-
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
 
 public class TikiTorchStick extends Block {
 
-    private static final VoxelShape BOUNDING_BOX = Block.box(7.008,0,7.008,8.992,16,8.992);
+    private static final VoxelShape BOUNDING_BOX = Block.box(7.008, 0, 7.008, 8.992, 16, 8.992);
 
     public TikiTorchStick(String name) {
         super(Properties.of(Material.WOOD));

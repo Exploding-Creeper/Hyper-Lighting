@@ -37,7 +37,7 @@ public class LightSaber extends SwordItem {
         if (!target.fireImmune()) {
             target.setSecondsOnFire(10);
             if (!attacker.level.isClientSide) {
-                attacker.level.playSound((Player) null, attacker.blockPosition(), HLSounds.SABER_HIT.get(), SoundSource.VOICE, 0.4f, ModUtils.floatInRange(0.8f, 1.0f));
+                attacker.level.playSound(null, attacker.blockPosition(), HLSounds.SABER_HIT.get(), SoundSource.VOICE, 0.4f, ModUtils.floatInRange(0.8f, 1.0f));
             }
             return true;
         }
@@ -47,11 +47,10 @@ public class LightSaber extends SwordItem {
     @Override
     public boolean onEntitySwing(ItemStack stack, LivingEntity entity) {
         if (!entity.level.isClientSide) {
-            entity.level.playSound((Player) null, entity.blockPosition(), HLSounds.SABER_USE.get(), SoundSource.VOICE, 0.4f, ModUtils.floatInRange(0.8f, 1.0f));
+            entity.level.playSound(null, entity.blockPosition(), HLSounds.SABER_USE.get(), SoundSource.VOICE, 0.4f, ModUtils.floatInRange(0.8f, 1.0f));
         }
         return super.onEntitySwing(stack, entity);
     }
-
 
 
 }

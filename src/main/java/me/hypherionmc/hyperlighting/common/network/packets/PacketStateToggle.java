@@ -1,9 +1,9 @@
 package me.hypherionmc.hyperlighting.common.network.packets;
 
 import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 
@@ -11,7 +11,7 @@ import java.util.function.Supplier;
 
 public class PacketStateToggle {
 
-    private BlockPos posToSet;
+    private final BlockPos posToSet;
 
     public PacketStateToggle(FriendlyByteBuf buffer) {
         posToSet = buffer.readBlockPos();
@@ -32,7 +32,7 @@ public class PacketStateToggle {
                 BlockState oldstate = te;
                 if (!(te.getBlock() instanceof RemoteSwitchable))
                     return;
-                BlockState newState = ((RemoteSwitchable)te.getBlock()).remoteSwitched(te, posToSet, ctx.get().getSender().level);
+                BlockState newState = ((RemoteSwitchable) te.getBlock()).remoteSwitched(te, posToSet, ctx.get().getSender().level);
                 ctx.get().getSender().getLevel().setBlock(posToSet, newState, 3);
                 ctx.get().getSender().getLevel().sendBlockUpdated(posToSet, oldstate, newState, 3);
             }

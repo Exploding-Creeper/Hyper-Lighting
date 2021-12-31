@@ -5,23 +5,19 @@ import net.minecraftforge.energy.EnergyStorage;
 
 public class SolarEnergyStorage extends EnergyStorage {
 
-    public SolarEnergyStorage(int capacity)
-    {
+    public SolarEnergyStorage(int capacity) {
         super(capacity, capacity, capacity, 0);
     }
 
-    public SolarEnergyStorage(int capacity, int maxTransfer)
-    {
+    public SolarEnergyStorage(int capacity, int maxTransfer) {
         super(capacity, maxTransfer, maxTransfer, 0);
     }
 
-    public SolarEnergyStorage(int capacity, int maxReceive, int maxExtract)
-    {
+    public SolarEnergyStorage(int capacity, int maxReceive, int maxExtract) {
         super(capacity, maxReceive, maxExtract, 0);
     }
 
-    public SolarEnergyStorage(int capacity, int maxReceive, int maxExtract, int energy)
-    {
+    public SolarEnergyStorage(int capacity, int maxReceive, int maxExtract, int energy) {
         super(capacity, maxReceive, maxExtract, energy);
     }
 

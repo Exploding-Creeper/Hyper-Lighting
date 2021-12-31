@@ -44,18 +44,17 @@ import java.util.Random;
 
 public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock implements DyeAble, Lightable, CustomRenderType {
 
-    //Bounding Boxes
-    private static final VoxelShape BB_TOP = Block.box(4.992,0,4,11.008,11.008,11.008);
-    private static final VoxelShape BB_NORTH = Block.box(4.992,3.008,8,11.008,16,16.992);
-    private static final VoxelShape BB_SOUTH = Block.box(4.992,3.008,-0.992,11.008,16,8);
-    private static final VoxelShape BB_EAST = Block.box(-0.992,3.008,4.992,8,16,11.008);
-    private static final VoxelShape BB_WEST = Block.box(8,3.008,4.992,16.992,16,11.008);
-    private static final VoxelShape BB_CEILING = Block.box(4.912,3.008,5.088,11.904,16,11.088);
-
     //Properties
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final DirectionProperty HORIZONTAL_FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+    //Bounding Boxes
+    private static final VoxelShape BB_TOP = Block.box(4.992, 0, 4, 11.008, 11.008, 11.008);
+    private static final VoxelShape BB_NORTH = Block.box(4.992, 3.008, 8, 11.008, 16, 16.992);
+    private static final VoxelShape BB_SOUTH = Block.box(4.992, 3.008, -0.992, 11.008, 16, 8);
+    private static final VoxelShape BB_EAST = Block.box(-0.992, 3.008, 4.992, 8, 16, 11.008);
+    private static final VoxelShape BB_WEST = Block.box(8, 3.008, 4.992, 16.992, 16, 11.008);
+    private static final VoxelShape BB_CEILING = Block.box(4.912, 3.008, 5.088, 11.904, 16, 11.088);
 
     public AdvancedLantern(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.DECORATION).noCollission().instabreak());
@@ -77,12 +76,12 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch(state.getValue(FACE)) {
+        switch (state.getValue(FACE)) {
             case FLOOR:
             default:
                 return BB_TOP;
             case WALL:
-                switch(state.getValue(HORIZONTAL_FACING)) {
+                switch (state.getValue(HORIZONTAL_FACING)) {
                     case EAST:
                         return BB_EAST;
                     case WEST:
@@ -117,7 +116,7 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
         if (!state.getValue(LIT)) {
-            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
+            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
         worldIn.updateNeighborsAt(pos, this);
     }
@@ -156,7 +155,7 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 
@@ -185,8 +184,8 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
 
             if (state.getValue(FACE) == AttachFace.WALL) {
                 Direction direction1 = direction.getOpposite();
-                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double)direction1.getStepX(), d1 , d2 + 0.27D * (double)direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0 + 0.27D * (double)direction1.getStepX(), d1 - 0.3D, d2 + 0.27D * (double)direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double) direction1.getStepX(), d1, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0 + 0.27D * (double) direction1.getStepX(), d1 - 0.3D, d2 + 0.27D * (double) direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             } else if (state.getValue(FACE) == AttachFace.FLOOR) {
                 worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 - 0.3D, d2, 0.0D, 0.0D, 0.0D);
                 worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 - 0.5D, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);

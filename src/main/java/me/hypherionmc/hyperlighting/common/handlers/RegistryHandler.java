@@ -8,17 +8,18 @@ import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
 import me.hypherionmc.hyperlighting.common.init.*;
-import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.MenuScreens;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.color.block.BlockColors;
 import net.minecraft.client.color.item.ItemColors;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public class RegistryHandler {
@@ -32,10 +33,13 @@ public class RegistryHandler {
         HyperLighting.logger.info("Registering Items...");
         HLItems.ITEMS.register(eventBus);
 
+        HyperLighting.logger.info("Registering Fluids...");
+        HLFluids.registerWaterColors(eventBus);
+
         HyperLighting.logger.info("Registering Containers...");
         HLContainers.CONTAINERS.register(eventBus);
 
-        ParticleRegistryHandler.PARTICLES.register(eventBus);
+        ParticleRegistryHandler.registerParticles(eventBus);
 
         HyperLighting.logger.info("Registering Tile Entities...");
         HLTileEntities.TILES.register(eventBus);
@@ -58,8 +62,14 @@ public class RegistryHandler {
 
         HLBlocks.BLOCKS.getEntries().forEach(blk -> {
             if (blk.get() instanceof CustomRenderType) {
-                ItemBlockRenderTypes.setRenderLayer(blk.get(), ((CustomRenderType)blk.get()).getRenderType());
+                ItemBlockRenderTypes.setRenderLayer(blk.get(), ((CustomRenderType) blk.get()).getRenderType());
             }
+        });
+
+        HLFluids.getFluidMap().forEach((dyeColor, entry) -> {
+            ItemBlockRenderTypes.setRenderLayer(entry.getBLOCK().get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(entry.getSTILL(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(entry.getFLOWING(), RenderType.translucent());
         });
 
         HyperLighting.logger.info("Registering Containers...");
@@ -74,7 +84,7 @@ public class RegistryHandler {
         HyperLighting.logger.info("Registering DyeColor handlers...");
         HLBlocks.BLOCKS.getEntries().forEach(blockRegistryObject -> {
             if (blockRegistryObject.get() instanceof DyeAble) {
-                colors.register(((DyeAble)blockRegistryObject.get()).dyeHandler(), blockRegistryObject.get());
+                colors.register(((DyeAble) blockRegistryObject.get()).dyeHandler(), blockRegistryObject.get());
             }
         });
 
@@ -85,10 +95,15 @@ public class RegistryHandler {
 
         HyperLighting.logger.info("Registering Item DyeColor handlers...");
         HLItems.ITEMS.getEntries().forEach(itemRegistryObject -> {
-            if (itemRegistryObject.get() instanceof BlockItemColor) {
-                itemColors.register(((ItemDyable) itemRegistryObject.get()).dyeHandler(), itemRegistryObject.get());
+            if (itemRegistryObject.get() instanceof ItemDyable itemDyable) {
+                itemColors.register(itemDyable.dyeHandler(), itemRegistryObject.get());
             }
         });
 
+    }
+
+    public static void commonSetup(FMLCommonSetupEvent event) {
+        HyperLighting.logger.info("Registering Worldgen...");
+        HLWorldGen.register();
     }
 }

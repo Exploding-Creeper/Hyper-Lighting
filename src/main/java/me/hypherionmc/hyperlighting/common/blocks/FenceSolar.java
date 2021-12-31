@@ -5,7 +5,6 @@ import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
 import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
-import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileSolarLight;
 import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.ChatFormatting;
@@ -42,8 +41,8 @@ import java.util.List;
 public class FenceSolar extends BaseEntityBlock implements RemoteSwitchable, DyeAble {
 
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
-    private static final VoxelShape BOUNDING_BOX = Block.box(6,0,6,10,4.992,10);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+    private static final VoxelShape BOUNDING_BOX = Block.box(6, 0, 6, 10, 4.992, 10);
 
     public FenceSolar(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.DECORATION).noCollission().instabreak());
@@ -73,7 +72,7 @@ public class FenceSolar extends BaseEntityBlock implements RemoteSwitchable, Dye
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 
@@ -90,7 +89,7 @@ public class FenceSolar extends BaseEntityBlock implements RemoteSwitchable, Dye
                     state = state.setValue(LIT, false);
                     worldIn.setBlock(pos, state, 3);
                 } else {
-                    if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileSolarLight && ((TileSolarLight)worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
+                    if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileSolarLight && ((TileSolarLight) worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
                         state = state.setValue(LIT, true);
                         worldIn.setBlock(pos, state, 3);
                         worldIn.sendBlockUpdated(pos, oldState, state, 4);
@@ -109,7 +108,7 @@ public class FenceSolar extends BaseEntityBlock implements RemoteSwitchable, Dye
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
-       return state.getValue(LIT) ? 14 : 0;
+        return state.getValue(LIT) ? 14 : 0;
     }
 
     @Override

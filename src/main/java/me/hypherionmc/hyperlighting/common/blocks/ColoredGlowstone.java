@@ -84,7 +84,7 @@ public class ColoredGlowstone extends Block implements DyeAble {
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

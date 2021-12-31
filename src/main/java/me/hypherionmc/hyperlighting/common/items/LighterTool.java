@@ -2,12 +2,10 @@ package me.hypherionmc.hyperlighting.common.items;
 
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.api.Lightable;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.InteractionResult;
-
-import net.minecraft.world.item.Item.Properties;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class LighterTool extends Item {
 

@@ -66,12 +66,12 @@ import java.util.Random;
 @SuppressWarnings("deprecation")
 public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedBlock, DyeAble, CustomRenderType, Lightable {
 
-    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final BooleanProperty SIGNAL_FIRE = BlockStateProperties.SIGNAL_FIRE;
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    protected static final VoxelShape SHAPE = Block.box(0.0D, 0.0D, 0.0D, 16.0D, 7.0D, 16.0D);
     private final boolean smokey;
     private final int fireDamage;
 
@@ -88,12 +88,38 @@ public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedB
         HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().tab(group)));
     }
 
+    public static void extinguish(LevelAccessor world, BlockPos pos, BlockState state) {
+        if (world.isClientSide() && state.getValue(LIT)) {
+            for (int i = 0; i < 20; ++i) {
+                spawnSmokeParticles((Level) world, pos, state.getValue(SIGNAL_FIRE), true);
+            }
+            world.setBlock(pos, state.setValue(LIT, false), 3);
+            world.blockUpdated(pos, state.getBlock());
+        }
+
+        BlockEntity tileentity = world.getBlockEntity(pos);
+        if (tileentity instanceof TileCampFire) {
+            ((TileCampFire) tileentity).dropAllItems();
+        }
+
+    }
+
+    public static void spawnSmokeParticles(Level worldIn, BlockPos pos, boolean isSignalFire, boolean spawnExtraSmoke) {
+        Random random = worldIn.getRandom();
+        SimpleParticleType basicparticletype = isSignalFire ? ParticleTypes.CAMPFIRE_SIGNAL_SMOKE : ParticleTypes.CAMPFIRE_COSY_SMOKE;
+        worldIn.addAlwaysVisibleParticle(basicparticletype, true, (double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + random.nextDouble() + random.nextDouble(), (double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.07D, 0.0D);
+        if (spawnExtraSmoke) {
+            worldIn.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
+        }
+
+    }
+
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
 
         if (!worldIn.isClientSide) {
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 
@@ -196,27 +222,11 @@ public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedB
 
             if (this.smokey && rand.nextInt(5) == 0) {
                 for (int i = 0; i < rand.nextInt(1) + 1; ++i) {
-                    worldIn.addParticle(ParticleTypes.LAVA, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, (double) (rand.nextFloat() / 2.0F), 5.0E-5D, (double) (rand.nextFloat() / 2.0F));
+                    worldIn.addParticle(ParticleTypes.LAVA, (double) pos.getX() + 0.5D, (double) pos.getY() + 0.5D, (double) pos.getZ() + 0.5D, rand.nextFloat() / 2.0F, 5.0E-5D, rand.nextFloat() / 2.0F);
                 }
             }
 
         }
-    }
-
-    public static void extinguish(LevelAccessor world, BlockPos pos, BlockState state) {
-        if (world.isClientSide() && state.getValue(LIT)) {
-            for (int i = 0; i < 20; ++i) {
-                spawnSmokeParticles((Level) world, pos, state.getValue(SIGNAL_FIRE), true);
-            }
-            world.setBlock(pos, state.setValue(LIT, false), 3);
-            world.blockUpdated(pos, state.getBlock());
-        }
-
-        BlockEntity tileentity = world.getBlockEntity(pos);
-        if (tileentity instanceof TileCampFire) {
-            ((TileCampFire) tileentity).dropAllItems();
-        }
-
     }
 
     @Override
@@ -225,7 +235,7 @@ public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedB
             boolean flag = state.getValue(LIT);
             if (flag) {
                 if (!worldIn.isClientSide()) {
-                    worldIn.playSound((Player) null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    worldIn.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 1.0F, 1.0F);
                 }
 
                 extinguish(worldIn, pos, state);
@@ -248,16 +258,6 @@ public class CampFireBlock extends BaseEntityBlock implements SimpleWaterloggedB
                 BlockPos blockpos = hit.getBlockPos();
                 worldIn.setBlock(blockpos, state.setValue(BlockStateProperties.LIT, Boolean.valueOf(true)), 11);
             }
-        }
-
-    }
-
-    public static void spawnSmokeParticles(Level worldIn, BlockPos pos, boolean isSignalFire, boolean spawnExtraSmoke) {
-        Random random = worldIn.getRandom();
-        SimpleParticleType basicparticletype = isSignalFire ? ParticleTypes.CAMPFIRE_SIGNAL_SMOKE : ParticleTypes.CAMPFIRE_COSY_SMOKE;
-        worldIn.addAlwaysVisibleParticle(basicparticletype, true, (double) pos.getX() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + random.nextDouble() + random.nextDouble(), (double) pos.getZ() + 0.5D + random.nextDouble() / 3.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.07D, 0.0D);
-        if (spawnExtraSmoke) {
-            worldIn.addParticle(ParticleTypes.SMOKE, (double) pos.getX() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), (double) pos.getY() + 0.4D, (double) pos.getZ() + 0.25D + random.nextDouble() / 2.0D * (double) (random.nextBoolean() ? 1 : -1), 0.0D, 0.005D, 0.0D);
         }
 
     }

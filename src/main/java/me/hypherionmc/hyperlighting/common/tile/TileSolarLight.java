@@ -5,15 +5,15 @@ import me.hypherionmc.hyperlighting.api.energy.SolarEnergyStorage;
 import me.hypherionmc.hyperlighting.common.blocks.FenceSolar;
 import me.hypherionmc.hyperlighting.common.init.HLTileEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
@@ -24,12 +24,11 @@ import javax.annotation.Nullable;
 
 public class TileSolarLight extends BlockEntity implements SolarLight {
 
-    private int powerLevel = 0;
-    private boolean isCharging = false;
     private final int maxPowerLevel = 500;
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(500, 100, 0);
-
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
+    private int powerLevel = 0;
+    private boolean isCharging = false;
 
     public TileSolarLight(BlockPos pos, BlockState state) {
         super(HLTileEntities.TILE_SOLAR_LIGHT.get(), pos, state);
@@ -49,9 +48,9 @@ public class TileSolarLight extends BlockEntity implements SolarLight {
                     float f = level.getSunAngle(1.0F);
 
                     if (i > 5 && this.powerLevel < this.maxPowerLevel) {
-                        float f1 = f < (float)Math.PI ? 0.0F : ((float)Math.PI * 2F);
+                        float f1 = f < (float) Math.PI ? 0.0F : ((float) Math.PI * 2F);
                         f = f + (f1 - f) * 0.2F;
-                        i = Math.round((float)i * Mth.cos(f));
+                        i = Math.round((float) i * Mth.cos(f));
                         i = Mth.clamp(i, 0, 15);
                         this.isCharging = true;
                         this.powerLevel += i;

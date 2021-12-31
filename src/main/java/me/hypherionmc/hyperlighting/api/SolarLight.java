@@ -2,11 +2,11 @@ package me.hypherionmc.hyperlighting.api;
 
 public interface SolarLight {
 
-    public boolean isCharging();
+    boolean isCharging();
 
-    public int getMaxPowerLevel();
+    int getMaxPowerLevel();
 
-    public int getPowerLevel();
+    int getPowerLevel();
 
 
 }

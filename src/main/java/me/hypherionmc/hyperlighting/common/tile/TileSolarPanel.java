@@ -25,7 +25,7 @@ import java.util.ArrayList;
 public class TileSolarPanel extends BlockEntity {
 
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(2000, 50, 1000);
-    private LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
+    private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
 
     public TileSolarPanel(BlockPos pos, BlockState state) {
         super(HLTileEntities.TILE_SOLAR_PANEL.get(), pos, state);
@@ -34,17 +34,15 @@ public class TileSolarPanel extends BlockEntity {
     public void serverTick() {
 
         Block blockType = this.getBlockState().getBlock();
-        if (blockType instanceof SolarPanel)
-        {
-            if (level.dimensionType().hasSkyLight())
-            {
+        if (blockType instanceof SolarPanel) {
+            if (level.dimensionType().hasSkyLight()) {
                 int i = level.getBrightness(LightLayer.SKY, worldPosition) - level.getSkyDarken();
                 float f = level.getSunAngle(1.0F);
 
                 if (i > 5 && this.energyStorage.getEnergyStored() < this.energyStorage.getMaxEnergyStored()) {
-                    float f1 = f < (float)Math.PI ? 0.0F : ((float)Math.PI * 2F);
+                    float f1 = f < (float) Math.PI ? 0.0F : ((float) Math.PI * 2F);
                     f = f + (f1 - f) * 0.2F;
-                    i = Math.round((float)i * Mth.cos(f));
+                    i = Math.round((float) i * Mth.cos(f));
                     i = Mth.clamp(i, 0, 15);
                     this.energyStorage.receiveEnergyInternal(i, false);
                 }
@@ -134,10 +132,7 @@ public class TileSolarPanel extends BlockEntity {
             return false;
         }
 
-        if (this.energyStorage.getEnergyStored() <= 0) {
-            return false;
-        }
-        return true;
+        return this.energyStorage.getEnergyStored() > 0;
     }
 
     ArrayList<Direction> getConnectedSides() {
@@ -183,11 +178,7 @@ public class TileSolarPanel extends BlockEntity {
             return false;
         }
 
-        if (!storage.canReceive()) {
-            return false;
-        }
-
-        return true;
+        return storage.canReceive();
     }
 
     boolean isConnectedTo(final Direction side) {

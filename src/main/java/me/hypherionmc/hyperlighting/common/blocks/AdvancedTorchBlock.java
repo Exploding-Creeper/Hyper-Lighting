@@ -87,7 +87,7 @@ public class AdvancedTorchBlock extends HorizontalDirectionalBlock implements Li
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction direction = context.getClickedFace();
         if (direction == Direction.UP) {
-           return this.defaultBlockState().setValue(ATTACH_FACE, AttachFace.FLOOR);
+            return this.defaultBlockState().setValue(ATTACH_FACE, AttachFace.FLOOR);
         } else {
             return this.defaultBlockState().setValue(ATTACH_FACE, AttachFace.WALL).setValue(FACING, direction);
         }
@@ -116,7 +116,7 @@ public class AdvancedTorchBlock extends HorizontalDirectionalBlock implements Li
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
         if (!state.getValue(LIT)) {
-            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
+            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
         worldIn.updateNeighborsAt(pos, this);
     }
@@ -129,25 +129,25 @@ public class AdvancedTorchBlock extends HorizontalDirectionalBlock implements Li
             DyeColor color = stateIn.getValue(COLOR);
 
             if (stateIn.getValue(ATTACH_FACE) == AttachFace.FLOOR) {
-                double d0 = (double)pos.getX() + 0.5D;
-                double d1 = (double)pos.getY() + 0.7D;
-                double d2 = (double)pos.getZ() + 0.5D;
+                double d0 = (double) pos.getX() + 0.5D;
+                double d1 = (double) pos.getY() + 0.7D;
+                double d2 = (double) pos.getZ() + 0.5D;
                 worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
 
                 // xSpeed, ySpeed and zSpeed here is used to pass color data. This isn't the proper way, but I don't wanna add a bunch of extra code for something so simple
                 worldIn.addParticle(particleData, d0, d1, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             } else {
                 Direction direction = stateIn.getValue(FACING);
-                double d0 = (double)pos.getX() + 0.5D;
-                double d1 = (double)pos.getY() + 0.7D;
-                double d2 = (double)pos.getZ() + 0.5D;
+                double d0 = (double) pos.getX() + 0.5D;
+                double d1 = (double) pos.getY() + 0.7D;
+                double d2 = (double) pos.getZ() + 0.5D;
                 double d3 = 0.22D;
                 double d4 = 0.27D;
                 Direction direction1 = direction.getOpposite();
-                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double)direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double)direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
 
                 // xSpeed, ySpeed and zSpeed here is used to pass color data. This isn't the proper way, but I don't wanna add a bunch of extra code for something so simple
-                worldIn.addParticle(particleData, d0 + 0.27D * (double)direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double)direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+                worldIn.addParticle(particleData, d0 + 0.27D * (double) direction1.getStepX(), d1 + 0.22D, d2 + 0.27D * (double) direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             }
         }
     }
@@ -186,7 +186,7 @@ public class AdvancedTorchBlock extends HorizontalDirectionalBlock implements Li
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

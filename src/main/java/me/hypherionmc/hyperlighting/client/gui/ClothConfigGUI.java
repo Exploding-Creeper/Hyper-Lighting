@@ -1,5 +1,6 @@
-package me.hypherionmc.hyperlighting.common.config;
+package me.hypherionmc.hyperlighting.client.gui;
 
+import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -125,6 +126,21 @@ public class ClothConfigGUI {
                 .setDefaultValue(false)
                 .setTooltip(new TextComponent("Should Lights be lit when placed"))
                 .setSaveConsumer(newValue -> HyperLightingConfig.underwaterOnByDefault.set(newValue))
+                .build());
+
+        ConfigCategory woldgenConfig = builder.getOrCreateCategory(new TextComponent("World Gen Config"));
+        woldgenConfig.addEntry(configEntryBuilder.startBooleanToggle(new TextComponent("Generate Colored Water Lakes"), HyperLightingConfig.genColoredWater.get())
+                .setDefaultValue(true)
+                .requireRestart()
+                .setTooltip(new TextComponent("Enable/Disable Colored Water lakes from spawning"))
+                .setSaveConsumer(newValue -> HyperLightingConfig.genColoredWater.set(newValue))
+                .build());
+
+        woldgenConfig.addEntry(configEntryBuilder.startBooleanToggle(new TextComponent("Generate Glowing Colored Water Lakes"), HyperLightingConfig.genGlowingColoredWater.get())
+                .setDefaultValue(true)
+                .requireRestart()
+                .setTooltip(new TextComponent("Enable/Disable Glowing Colored Water lakes from spawning"))
+                .setSaveConsumer(newValue -> HyperLightingConfig.genGlowingColoredWater.set(newValue))
                 .build());
 
         return builder.build();

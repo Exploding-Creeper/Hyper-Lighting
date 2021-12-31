@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -41,10 +40,10 @@ public class SwitchBoard extends BaseEntityBlock {
 
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
 
-    private static final VoxelShape BOUNDING_BOX = Block.box(0,0,12.992,16,16,16);
-    private static final VoxelShape AABB_SOUTH = Block.box(0,0,0,16,16,3.008);
-    private static final VoxelShape AABB_EAST = Block.box(0,0,0,3.008,16,16);
-    private static final VoxelShape AABB_WEST = Block.box(12.992,0,0,16,16,16);
+    private static final VoxelShape BOUNDING_BOX = Block.box(0, 0, 12.992, 16, 16, 16);
+    private static final VoxelShape AABB_SOUTH = Block.box(0, 0, 0, 16, 16, 3.008);
+    private static final VoxelShape AABB_EAST = Block.box(0, 0, 0, 3.008, 16, 16);
+    private static final VoxelShape AABB_WEST = Block.box(12.992, 0, 0, 16, 16, 16);
 
     public SwitchBoard(String name) {
         super(Properties.of(Material.DECORATION));
@@ -55,8 +54,7 @@ public class SwitchBoard extends BaseEntityBlock {
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if(!worldIn.isClientSide)
-        {
+        if (!worldIn.isClientSide) {
             BlockEntity tileEntity = worldIn.getBlockEntity(pos);
             if (tileEntity instanceof TileSwitchBoard) {
                 MenuProvider containerProvider = new MenuProvider() {
@@ -79,8 +77,7 @@ public class SwitchBoard extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch ((Direction)state.getValue(FACING))
-        {
+        switch (state.getValue(FACING)) {
             case EAST:
                 return AABB_EAST;
             case WEST:
@@ -115,7 +112,7 @@ public class SwitchBoard extends BaseEntityBlock {
     public void onRemove(BlockState p_60515_, Level p_60516_, BlockPos p_60517_, BlockState p_60518_, boolean p_60519_) {
         if (!p_60516_.isClientSide) {
             if (p_60516_.getBlockEntity(p_60517_) instanceof TileSwitchBoard) {
-                ((TileSwitchBoard)p_60516_.getBlockEntity(p_60517_)).dropInventory();
+                ((TileSwitchBoard) p_60516_.getBlockEntity(p_60517_)).dropInventory();
             }
         }
         super.onRemove(p_60515_, p_60516_, p_60517_, p_60518_, p_60519_);

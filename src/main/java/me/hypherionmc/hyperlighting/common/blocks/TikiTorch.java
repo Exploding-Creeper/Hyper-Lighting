@@ -7,51 +7,43 @@ import me.hypherionmc.hyperlighting.common.handlers.ParticleRegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.util.ModUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.color.block.BlockColor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.*;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
-import net.minecraft.client.color.block.BlockColor;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.ChatFormatting;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.world.level.block.state.BlockBehaviour.Properties;
-
-import net.minecraft.core.Direction;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.DyeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-
 public class TikiTorch extends Block implements DyeAble, Lightable {
 
-    public static BooleanProperty LIT = BlockStateProperties.LIT;
-    protected static final VoxelShape STANDING_AABB = Block.box(6,0,6,10,16,10);
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+    protected static final VoxelShape STANDING_AABB = Block.box(6, 0, 6, 10, 16, 10);
+    public static BooleanProperty LIT = BlockStateProperties.LIT;
 
     public TikiTorch(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.DECORATION).noCollission().instabreak());
@@ -90,7 +82,7 @@ public class TikiTorch extends Block implements DyeAble, Lightable {
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
         if (!state.getValue(LIT)) {
-            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
+            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
         worldIn.updateNeighborsAt(pos, this);
     }
@@ -129,7 +121,7 @@ public class TikiTorch extends Block implements DyeAble, Lightable {
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 
@@ -151,12 +143,12 @@ public class TikiTorch extends Block implements DyeAble, Lightable {
         if (stateIn.getValue(LIT)) {
             DyeColor color = stateIn.getValue(COLOR);
 
-            double d0 = (double)pos.getX() + 0.5D;
-            double d1 = (double)pos.getY() + 0.6D;
-            double d2 = (double)pos.getZ() + 0.5D;
+            double d0 = (double) pos.getX() + 0.5D;
+            double d1 = (double) pos.getY() + 0.6D;
+            double d2 = (double) pos.getZ() + 0.5D;
 
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 + 0.4f, d2, 0.0D, 0.0D, 0.0D);
-            worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(),  d0, d1 + 0.4f, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+            worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 + 0.4f, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
 
         }
     }

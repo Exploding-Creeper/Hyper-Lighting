@@ -28,12 +28,11 @@ import javax.annotation.Nullable;
 
 public class TileBatteryNeon extends BlockEntity implements SolarLight {
 
-    private boolean isCharging = false;
     private final SolarEnergyStorage energyStorage = new SolarEnergyStorage(500, 20, 1);
     private final ItemStackHandler itemStackHandler = new ItemHandler(1);
     private final ItemStackHandler dyeHandler = new DyeHandler(1);
-
     private final LazyOptional<IEnergyStorage> energy = LazyOptional.of(() -> energyStorage);
+    private boolean isCharging = false;
 
     public TileBatteryNeon(BlockPos pos, BlockState state) {
         super(HLTileEntities.TILE_BATTERY_NEON.get(), pos, state);
@@ -191,6 +190,30 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
         level.getMaxLocalRawBrightness(worldPosition);
     }
 
+    public ItemStackHandler getItemStackHandler() {
+        return itemStackHandler;
+    }
+
+    public ItemStackHandler getDyeHandler() {
+        return dyeHandler;
+    }
+
+    public void dropInventory() {
+        if (!dyeHandler.getStackInSlot(0).isEmpty()) {
+            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), dyeHandler.getStackInSlot(0));
+        }
+
+        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
+            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStackHandler.getStackInSlot(0));
+        }
+    }
+
+    @Override
+    public void setRemoved() {
+        dropInventory();
+        super.setRemoved();
+    }
+
     class ItemHandler extends ItemStackHandler {
 
         public ItemHandler(int size) {
@@ -223,29 +246,5 @@ public class TileBatteryNeon extends BlockEntity implements SolarLight {
         public boolean isItemValid(int slot, @Nonnull ItemStack stack) {
             return stack.getItem() instanceof DyeItem;
         }
-    }
-
-    public ItemStackHandler getItemStackHandler() {
-        return itemStackHandler;
-    }
-
-    public ItemStackHandler getDyeHandler() {
-        return dyeHandler;
-    }
-
-    public void dropInventory() {
-        if (!dyeHandler.getStackInSlot(0).isEmpty()) {
-            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), dyeHandler.getStackInSlot(0));
-        }
-
-        if (!itemStackHandler.getStackInSlot(0).isEmpty()) {
-            Containers.dropItemStack(level, worldPosition.getX(), worldPosition.getY(), worldPosition.getZ(), itemStackHandler.getStackInSlot(0));
-        }
-    }
-
-    @Override
-    public void setRemoved() {
-        dropInventory();
-        super.setRemoved();
     }
 }

@@ -1,7 +1,6 @@
 package me.hypherionmc.hyperlighting.common.blocks;
 
 import me.hypherionmc.hyperlighting.api.DyeAble;
-import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.util.ModUtils;
@@ -92,7 +91,7 @@ public class ColoredRedstone extends RedstoneLampBlock implements DyeAble {
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

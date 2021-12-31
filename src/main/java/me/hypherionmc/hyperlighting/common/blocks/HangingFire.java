@@ -2,7 +2,6 @@ package me.hypherionmc.hyperlighting.common.blocks;
 
 import me.hypherionmc.hyperlighting.api.DyeAble;
 import me.hypherionmc.hyperlighting.api.Lightable;
-import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
@@ -41,9 +40,9 @@ import java.util.List;
 
 public class HangingFire extends Block implements CustomRenderType, DyeAble, Lightable {
 
+    public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
     public static EnumProperty<AttachFace> ATTACH_FACE = BlockStateProperties.ATTACH_FACE;
     public static BooleanProperty LIT = BlockStateProperties.LIT;
-    public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
     public HangingFire(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.METAL).noOcclusion().noCollission().sound(SoundType.METAL));
@@ -89,7 +88,7 @@ public class HangingFire extends Block implements CustomRenderType, DyeAble, Lig
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
         if (!state.getValue(LIT)) {
-            worldIn.playSound((Player) null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
+            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
         }
         worldIn.updateNeighborsAt(pos, this);
     }
@@ -128,7 +127,7 @@ public class HangingFire extends Block implements CustomRenderType, DyeAble, Lig
         if (!worldIn.isClientSide) {
 
             if (!player.getItemInHand(handIn).isEmpty() && player.getItemInHand(handIn).getItem() instanceof DyeItem) {
-                state = state.setValue(COLOR, ((DyeItem)player.getItemInHand(handIn).getItem()).getDyeColor());
+                state = state.setValue(COLOR, ((DyeItem) player.getItemInHand(handIn).getItem()).getDyeColor());
                 worldIn.setBlock(pos, state, 3);
                 worldIn.sendBlockUpdated(pos, state, state, 3);
 

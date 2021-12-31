@@ -2,15 +2,15 @@ package me.hypherionmc.hyperlighting.common.network.packets;
 
 import me.hypherionmc.hyperlighting.common.containers.ContainerBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.MenuProvider;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkHooks;
 
@@ -18,8 +18,8 @@ import java.util.function.Supplier;
 
 public class OpenGUIPacket {
 
-    private BlockPos posToSet;
-    private int guiid;
+    private final BlockPos posToSet;
+    private final int guiid;
 
     public OpenGUIPacket(FriendlyByteBuf buffer) {
         posToSet = buffer.readBlockPos();

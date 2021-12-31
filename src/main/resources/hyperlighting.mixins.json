@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "me.hypherionmc.hyperlighting.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "refmap": "hyperlighting.refmap.json",
+  "mixins": [
+    "coloredwater.BottleItemMixin",
+    "coloredwater.EntityMixin",
+    "coloredwater.WaterFluidMixin"
+  ],
+  "client": [
+    "coloredwater.ScreenEffectRendererMixin"
+  ],
+  "minVersion": "0.8"
+}
