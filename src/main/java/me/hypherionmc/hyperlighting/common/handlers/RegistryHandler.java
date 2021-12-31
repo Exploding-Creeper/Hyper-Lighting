@@ -8,6 +8,7 @@ import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
 import me.hypherionmc.hyperlighting.common.init.*;
+import me.hypherionmc.hyperlighting.common.integration.top.TOPIntegration;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
 import net.minecraft.client.Minecraft;
@@ -51,7 +52,7 @@ public class RegistryHandler {
         HLSounds.SOUNDS.register(eventBus);
 
         if (ModList.get().isLoaded(ModConstants.THE_ONE_PROBE)) {
-            //new TOPIntegration().setup();
+            new TOPIntegration().setup();
         }
     }
 

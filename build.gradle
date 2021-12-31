@@ -80,8 +80,9 @@ minecraft {
 repositories {
     maven { url = "https://maven.hypherionmc.me" }
     maven { url = "https://dvs1.progwml6.com/files/maven/" }
-    maven { url "https://maven.tterrag.com/" }
-    maven { url "https://maven.shedaniel.me/" }
+    maven { url = "https://maven.tterrag.com/" }
+    maven { url = "https://maven.shedaniel.me/" }
+    maven { url = "https://maven.k-4u.nl" }
 }
 
 dependencies {
@@ -92,13 +93,10 @@ dependencies {
     /*implementation "me.hypherionmc:RGBLib:${rgblib_version}:api"
     runtimeOnly "me.hypherionmc:RGBLib:${rgblib_version}"*/
 
-    /*compileOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}:api")
-    runtimeOnly fg.deobf("mezz.jei:jei-1.16.4:${jei_version}")*/
+    //implementation "mezz.jei:jei-1.18.1:${jei_version}"
+    implementation "mcjty.theoneprobe:theoneprobe:${top_version}:api"
+    implementation "me.shedaniel.cloth:cloth-config-forge:${cconfig_version}"
 
-    /*compileOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1:api")
-    runtimeOnly fg.deobf("mcjty.theoneprobe:TheOneProbe-1.17:1.17-4.0.1")*/
-
-    compileOnly(fg.deobf("me.shedaniel.cloth:cloth-config-forge:6.0.43"))
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 }
 

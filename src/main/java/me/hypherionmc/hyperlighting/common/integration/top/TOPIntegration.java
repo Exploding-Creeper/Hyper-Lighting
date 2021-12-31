@@ -1,6 +1,18 @@
 package me.hypherionmc.hyperlighting.common.integration.top;
 
-/*public class TOPIntegration implements Function<ITheOneProbe, Void> {
+import mcjty.theoneprobe.api.IProbeConfig;
+import mcjty.theoneprobe.api.ITheOneProbe;
+import me.hypherionmc.hyperlighting.HyperLighting;
+import me.hypherionmc.hyperlighting.ModConstants;
+import me.hypherionmc.hyperlighting.common.integration.top.overrides.TOPBlockInfoProvider;
+import me.hypherionmc.hyperlighting.common.integration.top.overrides.TOPCampfireInfoProvider;
+import net.minecraftforge.fml.InterModComms;
+import net.minecraftforge.fml.event.lifecycle.InterModEnqueueEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+
+import java.util.function.Function;
+
+public class TOPIntegration implements Function<ITheOneProbe, Void> {
 
     private static ITheOneProbe theOneProbe;
 
@@ -29,4 +41,4 @@ package me.hypherionmc.hyperlighting.common.integration.top;
         return theOneProbe.createProbeConfig();
     }
 
-}*/
+}
