@@ -176,3 +176,7 @@ mixin {
     add sourceSets.main, "hyperlighting.refmap.json"
     config 'hyperlighting.mixins.json'
 }
+
+task jenkinsClean {
+    delete "$buildDir/libs"
+}
