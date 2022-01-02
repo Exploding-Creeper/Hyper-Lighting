@@ -9,6 +9,7 @@
     "coloredwater.WaterFluidMixin"
   ],
   "client": [
+    "coloredwater.LiquidBlockRendererMixin",
     "coloredwater.ScreenEffectRendererMixin"
   ],
   "minVersion": "0.8"
