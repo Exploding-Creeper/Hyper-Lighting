@@ -73,6 +73,12 @@ public class RegistryHandler {
             ItemBlockRenderTypes.setRenderLayer(entry.getFLOWING(), RenderType.translucent());
         });
 
+        HLFluids.getGlowingFluidMap().forEach((dyeColor, entry) -> {
+            ItemBlockRenderTypes.setRenderLayer(entry.getBLOCK().get(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(entry.getSTILL(), RenderType.translucent());
+            ItemBlockRenderTypes.setRenderLayer(entry.getFLOWING(), RenderType.translucent());
+        });
+
         HyperLighting.logger.info("Registering Containers...");
         MenuScreens.register(HLContainers.BATTERY_NEON_CONTAINER.get(), GuiBatteryNeon::new);
         MenuScreens.register(HLContainers.SWITCHBOARD_CONTAINER.get(), GuiSwitchBoard::new);
