@@ -3,6 +3,7 @@ package me.hypherionmc.hyperlighting.common.handlers;
 import me.hypherionmc.hyperlighting.HyperLightingFabric;
 import me.hypherionmc.hyperlighting.api.DyeAble;
 import me.hypherionmc.hyperlighting.api.ItemDyable;
+import me.hypherionmc.hyperlighting.client.particles.ParticleClientRegistryHandler;
 import me.hypherionmc.hyperlighting.client.renderers.CampFireRenderer;
 import me.hypherionmc.hyperlighting.common.config.ConfigHandler;
 import me.hypherionmc.hyperlighting.common.init.*;
@@ -54,7 +55,7 @@ public class RegistryHandler {
 
     public static void initClient() {
         HyperLightingFabric.logger.info("Registering Particles (Client)...");
-        ParticleRegistryHandler.registerClient();
+        ParticleClientRegistryHandler.registerClient();
 
         HyperLightingFabric.logger.info("Registering BESRs...");
         BlockEntityRendererRegistry.register(HLBlockEntities.TILE_CAMPFIRE, CampFireRenderer::new);
