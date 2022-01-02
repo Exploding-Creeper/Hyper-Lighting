@@ -7,6 +7,8 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
 import java.util.function.Supplier;
 
@@ -22,6 +24,7 @@ public class ColoredWaterBucketItem extends BucketItem implements ItemDyable {
     }
 
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public ItemColor dyeHandler() {
         return new ItemColor() {
