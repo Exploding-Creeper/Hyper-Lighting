@@ -4,9 +4,11 @@ import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.api.DyeAble;
 import me.hypherionmc.hyperlighting.api.ItemDyable;
+import me.hypherionmc.hyperlighting.client.gui.FogMachineGui;
 import me.hypherionmc.hyperlighting.client.gui.GuiBatteryNeon;
 import me.hypherionmc.hyperlighting.client.gui.GuiSwitchBoard;
 import me.hypherionmc.hyperlighting.client.renderers.tile.TileCampFireRenderer;
+import me.hypherionmc.hyperlighting.client.renderers.tile.TileFogMachineRenderer;
 import me.hypherionmc.hyperlighting.common.init.*;
 import me.hypherionmc.hyperlighting.common.integration.top.TOPIntegration;
 import me.hypherionmc.hyperlighting.common.network.PacketHandler;
@@ -60,6 +62,7 @@ public class RegistryHandler {
 
         HyperLighting.logger.info("Registering TESRs...");
         BlockEntityRenderers.register(HLTileEntities.TILE_CAMPFIRE.get(), TileCampFireRenderer::new);
+        BlockEntityRenderers.register(HLTileEntities.TILE_FOG_MACHINE.get(), TileFogMachineRenderer::new);
 
         HLBlocks.BLOCKS.getEntries().forEach(blk -> {
             if (blk.get() instanceof CustomRenderType) {
@@ -82,6 +85,7 @@ public class RegistryHandler {
         HyperLighting.logger.info("Registering Containers...");
         MenuScreens.register(HLContainers.BATTERY_NEON_CONTAINER.get(), GuiBatteryNeon::new);
         MenuScreens.register(HLContainers.SWITCHBOARD_CONTAINER.get(), GuiSwitchBoard::new);
+        MenuScreens.register(HLContainers.FOG_MACHINE_CONTAINER.get(), FogMachineGui::new);
 
     }
 

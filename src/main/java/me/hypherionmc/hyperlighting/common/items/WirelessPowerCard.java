@@ -94,4 +94,28 @@ public class WirelessPowerCard extends Item implements SwitchModule {
         }
         return new InteractionResultHolder<>(InteractionResult.SUCCESS, playerIn.getItemInHand(handIn));
     }
+
+    public boolean isLinked(ItemStack stack, Level level) {
+        CompoundTag compound = stack.getTag();
+        if (compound != null && stack.getItem() instanceof WirelessPowerCard) {
+            int x, y, z;
+            x = compound.getInt("blockx");
+            y = compound.getInt("blocky");
+            z = compound.getInt("blockz");
+            BlockPos pos = new BlockPos(x, y, z);
+            return level.getBlockState(pos).getBlock() instanceof SolarPanel;
+        } else {
+            return false;
+        }
+    }
+
+    public BlockPos getLinkedPos(ItemStack stack, Level level) {
+        CompoundTag compound = stack.getTag();
+        int x, y, z;
+        x = compound.getInt("blockx");
+        y = compound.getInt("blocky");
+        z = compound.getInt("blockz");
+        return new BlockPos(x, y, z);
+    }
+
 }

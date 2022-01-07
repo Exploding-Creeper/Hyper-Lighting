@@ -19,4 +19,6 @@ public class HLItems {
     public static final RegistryObject<Item> LIGHT_SABER = ITEMS.register("light_saber", LightSaber::new);
     public static final RegistryObject<Item> HANDHELD_LANTERN = ITEMS.register("handheld_lantern", CandleInAJar::new);
 
+    public static final RegistryObject<Item> FOG_REMOTE = ITEMS.register("fog_remote", () -> new FogMachineRemote("fog_remote"));
+
 }

@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.common.items;
 
 import me.hypherionmc.hyperlighting.api.ItemDyable;
 import net.minecraft.client.color.item.ItemColor;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -9,6 +10,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.capabilities.ICapabilityProvider;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
@@ -46,5 +49,13 @@ public class ColoredWaterBucketItem extends BucketItem implements ItemDyable {
 
     public DyeColor getColor() {
         return color;
+    }
+
+    @Override
+    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
+        if (this.getClass() == ColoredWaterBucketItem.class)
+            return new net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper(stack);
+        else
+        return super.initCapabilities(stack, nbt);
     }
 }

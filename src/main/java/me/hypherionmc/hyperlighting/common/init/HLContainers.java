@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.common.init;
 
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.common.containers.ContainerBatteryNeon;
+import me.hypherionmc.hyperlighting.common.containers.ContainerFogMachine;
 import me.hypherionmc.hyperlighting.common.containers.ContainerSwitchBoard;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.inventory.MenuType;
@@ -25,6 +26,12 @@ public class HLContainers {
         BlockPos pos = data.readBlockPos();
         Level world = inv.player.getCommandSenderWorld();
         return new ContainerSwitchBoard(windowId, world, pos, inv, inv.player);
+    }));
+
+    public static final RegistryObject<MenuType<ContainerFogMachine>> FOG_MACHINE_CONTAINER = CONTAINERS.register("fogmachine", () -> IForgeMenuType.create((windowId, inv, data) -> {
+        BlockPos pos = data.readBlockPos();
+        Level world = inv.player.getCommandSenderWorld();
+        return new ContainerFogMachine(windowId, world, pos, inv, inv.player);
     }));
 
 }

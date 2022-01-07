@@ -1,8 +1,7 @@
 package me.hypherionmc.hyperlighting.common.network;
 
 import me.hypherionmc.hyperlighting.ModConstants;
-import me.hypherionmc.hyperlighting.common.network.packets.OpenGUIPacket;
-import me.hypherionmc.hyperlighting.common.network.packets.PacketStateToggle;
+import me.hypherionmc.hyperlighting.common.network.packets.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
@@ -34,6 +33,11 @@ public class PacketHandler {
         // Server Packets
         INSTANCE.messageBuilder(OpenGUIPacket.class, nextID()).encoder(OpenGUIPacket::toBytes).decoder(OpenGUIPacket::new).consumer(OpenGUIPacket::handle).add();
         INSTANCE.messageBuilder(PacketStateToggle.class, nextID()).encoder(PacketStateToggle::toBytes).decoder(PacketStateToggle::new).consumer(PacketStateToggle::handle).add();
+
+        /* Fog Machine Packets */
+        INSTANCE.messageBuilder(FogMachineAutoFirePacket.class, nextID()).encoder(FogMachineAutoFirePacket::toBytes).decoder(FogMachineAutoFirePacket::new).consumer(FogMachineAutoFirePacket::handle).add();
+        INSTANCE.messageBuilder(FogMachineFirePacket.class, nextID()).encoder(FogMachineFirePacket::toBytes).decoder(FogMachineFirePacket::new).consumer(FogMachineFirePacket::handle).add();
+        INSTANCE.messageBuilder(FogMachineAutoFireTimerPacket.class, nextID()).encoder(FogMachineAutoFireTimerPacket::toBytes).decoder(FogMachineAutoFireTimerPacket::new).consumer(FogMachineAutoFireTimerPacket::handle).add();
 
     }
 

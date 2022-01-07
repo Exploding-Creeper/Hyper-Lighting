@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "EEE",
+    "RES",
+    "EEE"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:bucket"
+    },
+    "S": {
+      "item": "minecraft:torch"
+    },
+    "E": {
+      "item": "minecraft:iron_ingot"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:fog_machine"
+  }
+}

@@ -123,6 +123,10 @@ public class TileSolarPanel extends BlockEntity {
 
     }
 
+    public SolarEnergyStorage getEnergyStorage() {
+        return energyStorage;
+    }
+
     boolean canTransferEnergyToAllAround() {
         if (getLevel().isClientSide) {
             return false;

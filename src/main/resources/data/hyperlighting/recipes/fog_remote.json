@@ -1,0 +1,23 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "group": "hyperlighting",
+  "pattern": [
+    "ERE",
+    "ESE",
+    "EEE"
+  ],
+  "key": {
+    "R": {
+      "item": "minecraft:redstone"
+    },
+    "S": {
+      "item": "minecraft:lever"
+    },
+    "E": {
+      "item": "minecraft:black_wool"
+    }
+  },
+  "result": {
+    "item": "hyperlighting:fog_remote"
+  }
+}

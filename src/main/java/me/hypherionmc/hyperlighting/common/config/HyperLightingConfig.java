@@ -34,6 +34,8 @@ public class HyperLightingConfig {
     public static ForgeConfigSpec.BooleanValue underwaterColor;
     public static ForgeConfigSpec.BooleanValue underwaterOnByDefault;
 
+    public static ForgeConfigSpec.BooleanValue neonHum;
+
     public static ForgeConfigSpec.BooleanValue genColoredWater;
     public static ForgeConfigSpec.BooleanValue genGlowingColoredWater;
 
@@ -134,6 +136,12 @@ public class HyperLightingConfig {
                 .comment("Should Underwater Lights be lit when placed")
                 .define("onByDefault", false);
 
+        builder.pop();
+
+        builder.push("Neon Sign Config");
+        neonHum = builder
+                .comment("Enable/Disable the neon hum sound")
+                .define("neonHum", true);
         builder.pop();
 
         builder.push("World Gen Config");

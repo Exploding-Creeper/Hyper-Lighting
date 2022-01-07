@@ -5,6 +5,7 @@ import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.client.particles.ColoredWaterBubbleParticle;
 import me.hypherionmc.hyperlighting.client.particles.ColoredWaterSplashParticle;
 import me.hypherionmc.hyperlighting.client.particles.FlameParticle;
+import me.hypherionmc.hyperlighting.client.particles.FogMachineSmoke;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -26,6 +27,7 @@ public class ParticleRegistryHandler {
     public static final DeferredRegister<ParticleType<?>> PARTICLES = DeferredRegister.create(ForgeRegistries.PARTICLE_TYPES, ModConstants.MODID);
     public static final HashMap<DyeColor, RegistryObject<SimpleParticleType>> COLORED_WATER_BUBBLES = new HashMap<>();
     public static final HashMap<DyeColor, RegistryObject<SimpleParticleType>> COLORED_WATER_SPLASH = new HashMap<>();
+    public static final HashMap<DyeColor, RegistryObject<SimpleParticleType>> FOG_MACHINE_PARTICLES = new HashMap<>();
 
     public static RegistryObject<SimpleParticleType> CUSTOM_FLAME;
 
@@ -36,6 +38,9 @@ public class ParticleRegistryHandler {
             RegistryObject<SimpleParticleType> SPLASH = PARTICLES.register(color.name().toLowerCase() + "_splash", () -> new SimpleParticleType(false));
             COLORED_WATER_BUBBLES.put(color, BUBBLE);
             COLORED_WATER_SPLASH.put(color, SPLASH);
+
+            RegistryObject<SimpleParticleType> COLORED_FOG = PARTICLES.register(color.getName().toLowerCase() + "_fog", () -> new SimpleParticleType(false));
+            FOG_MACHINE_PARTICLES.put(color, COLORED_FOG);
         }
 
         PARTICLES.register(bus);
@@ -60,6 +65,10 @@ public class ParticleRegistryHandler {
             COLORED_WATER_SPLASH.forEach((color, splash) -> {
                 float[] colorVal = color.getTextureDiffuseColors();
                 Minecraft.getInstance().particleEngine.register(splash.get(), pSprites -> new ColoredWaterSplashParticle.Provider(pSprites, colorVal[0], colorVal[1], colorVal[2]));
+            });
+
+            FOG_MACHINE_PARTICLES.forEach((color, fog) -> {
+                Minecraft.getInstance().particleEngine.register(fog.get(), pSprites -> new FogMachineSmoke.Provider(pSprites, color));
             });
         }
     }

@@ -241,6 +241,8 @@
     "item.hyperlighting.black_water_bottle": "Black Water Bottle",
     "item.hyperlighting.black_glowing_water_bottle": "Black Glowing Water Bottle",
 
+    "item.hyperlighting.fog_remote": "Fog Machine Remote",
+
     "itemGroup.hyperlighting": "Hyper Lighting Lights",
     "itemGroup.hyperlighting_machines": "Hyper Lighting Machines",
     "itemGroup.hyperlighting_fluids": "Hyper Lighting Fluids",
@@ -248,5 +250,27 @@
     "tooltip.camp_fire": "A campfire that can be used to cook food and provide light",
     "tooltip.camp_fire_line1": "Gets put out by rain",
     "tooltip.camp_fire_soul": "A campfire straight out of Spongebob. It cooks, provides light and works underwater!",
-    "tooltip.camp_fire_soul_line1": "Does not get put out by rain"
+    "tooltip.camp_fire_soul_line1": "Does not get put out by rain",
+
+    "block.hyperlighting.fog_machine": "Fog Machine",
+    "gui.fogger.fluidtooltipname": "Fluid Level",
+    "gui.fogger.cooldownstatetipname": "Cooldown State",
+    "gui.fogger.cooldownstatereheating": "Reheating",
+    "gui.fogger.cooldownstatecooldown": "Cooling Down",
+    "gui.fogger.statetooltipname": "State",
+    "gui.fogger.stateready": "Ready",
+    "gui.fogger.statenotready": "Not Ready",
+    "gui.fogger.statustooltipname": "Status",
+    "gui.fogger.firing": "Firing",
+    "gui.foger.outoffluid": "Out of Fluid",
+    "gui.fogger.autofiretooltipname": "Auto Fire",
+    "gui.fogger.autofiretooltip1": "Enable or disable",
+    "gui.fogger.autofiretooltip2": "the auto fire timer",
+    "gui.fogger.autofiretimetooltipname": "Auto Fire Time",
+    "gui.fogger.autofiretimetooltipline1": "Set the time after which",
+    "gui.fogger.autofiretimetooltipline2": "the fogger will auto fire",
+    "gui.fogger.dyetooltipname": "Dye Slot",
+    "gui.fogger.dyetooltipline1": "Place dye in this slot",
+    "gui.fogger.dyetooltipline2": "to change the smoke color",
+    "container.fogmachine": "Fog Machine"
 }

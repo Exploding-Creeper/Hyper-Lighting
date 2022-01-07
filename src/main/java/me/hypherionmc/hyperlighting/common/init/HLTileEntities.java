@@ -17,5 +17,6 @@ public class HLTileEntities {
     public static final RegistryObject<BlockEntityType<TileSwitchBoard>> TILE_SWITCHBOARD = TILES.register("tileswitchboard", () -> BlockEntityType.Builder.of(TileSwitchBoard::new, HLBlocks.SWITCHBOARD.get()).build(null));
 
     public static final RegistryObject<BlockEntityType<TileCampFire>> TILE_CAMPFIRE = TILES.register("tilecampfire", () -> BlockEntityType.Builder.of(TileCampFire::new, HLBlocks.CAMPFIRE.get(), HLBlocks.CAMPFIRE_UNDERWATER.get()).build(null));
+    public static final RegistryObject<BlockEntityType<TileFogMachine>> TILE_FOG_MACHINE = TILES.register("tilefogmachine", () -> BlockEntityType.Builder.of(TileFogMachine::new, HLBlocks.FOG_MACHINE.get()).build(null));
 
 }
