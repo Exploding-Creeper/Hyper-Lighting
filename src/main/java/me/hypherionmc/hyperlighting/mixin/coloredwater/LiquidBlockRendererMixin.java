@@ -3,6 +3,8 @@ package me.hypherionmc.hyperlighting.mixin.coloredwater;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import me.hypherionmc.hyperlighting.common.fluids.ColoredWater;
 import me.hypherionmc.hyperlighting.util.ModUtils;
+import me.hypherionmc.hyperlighting.util.OptiHacks;
+import me.hypherionmc.hyperlighting.util.RenderUtils;
 import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
@@ -40,10 +42,9 @@ public class LiquidBlockRendererMixin {
 
     @Inject(at = @At("HEAD"), method = "tesselate", cancellable = true)
     public void tesselate(BlockAndTintGetter pLevel, BlockPos pPos, VertexConsumer pConsumer, FluidState pFluidState, CallbackInfoReturnable<Boolean> cir) {
-        // Only apply when fluid is Colored Water
-        if (pFluidState.getType() instanceof ColoredWater coloredWater) {
-            boolean flag = pFluidState.is(FluidTags.LAVA);
-            TextureAtlasSprite[] atextureatlassprite = net.minecraftforge.client.ForgeHooksClient.getFluidSprites(pLevel, pPos, pFluidState);
+        // Only apply when fluid is Colored Water and Optifine is present
+        if (pFluidState.getType() instanceof ColoredWater coloredWater && OptiHacks.hasOptiFine()) {
+            TextureAtlasSprite[] atextureatlassprite = RenderUtils.getFluidTextures(coloredWater);
             BlockState blockstate = pLevel.getBlockState(pPos);
             int i = ModUtils.fluidColorFromDye(coloredWater.getColor());
             float alpha = (float)(i >> 24 & 255) / 255.0F;
@@ -68,11 +69,25 @@ public class LiquidBlockRendererMixin {
                 float f8 = this.getWaterHeight(pLevel, pPos.south(), pFluidState.getType());
                 float f9 = this.getWaterHeight(pLevel, pPos.east().south(), pFluidState.getType());
                 float f10 = this.getWaterHeight(pLevel, pPos.east(), pFluidState.getType());
-                double d0 = (double)(pPos.getX() & 15);
-                double d1 = (double)(pPos.getY() & 15);
-                double d2 = (double)(pPos.getZ() & 15);
-                float f11 = 0.001F;
+                double d0 = pPos.getX() & 15;
+                double d1 = pPos.getY() & 15;
+                double d2 = pPos.getZ() & 15;
                 float f12 = flag2 ? 0.001F : 0.0F;
+
+                if (OptiHacks.isRenderRegions()) {
+                    int pj = pPos.getX() >> 4 << 4;
+                    int kk = pPos.getY() >> 4 << 4;
+                    int ll = pPos.getZ() >> 4 << 4;
+                    int ii1 = 8;
+                    int j1 = pj >> ii1 << ii1;
+                    int k1 = ll >> ii1 << ii1;
+                    int l1 = pj - j1;
+                    int i2 = ll - k1;
+                    d0 += l1;
+                    d1 += kk;
+                    d2 += i2;
+                }
+
                 if (flag1 && !isFaceOccludedByNeighbor(pLevel, pPos, Direction.UP, Math.min(Math.min(f7, f8), Math.min(f9, f10)))) {
                     flag7 = true;
                     f7 -= 0.001F;
@@ -104,14 +119,14 @@ public class LiquidBlockRendererMixin {
                         float f22 = Mth.sin(f21) * 0.25F;
                         float f23 = Mth.cos(f21) * 0.25F;
                         float f24 = 8.0F;
-                        f13 = textureatlassprite.getU((double)(8.0F + (-f23 - f22) * 16.0F));
-                        f17 = textureatlassprite.getV((double)(8.0F + (-f23 + f22) * 16.0F));
-                        f14 = textureatlassprite.getU((double)(8.0F + (-f23 + f22) * 16.0F));
-                        f18 = textureatlassprite.getV((double)(8.0F + (f23 + f22) * 16.0F));
-                        f15 = textureatlassprite.getU((double)(8.0F + (f23 + f22) * 16.0F));
-                        f19 = textureatlassprite.getV((double)(8.0F + (f23 - f22) * 16.0F));
-                        f16 = textureatlassprite.getU((double)(8.0F + (f23 - f22) * 16.0F));
-                        f20 = textureatlassprite.getV((double)(8.0F + (-f23 - f22) * 16.0F));
+                        f13 = textureatlassprite.getU(8.0F + (-f23 - f22) * 16.0F);
+                        f17 = textureatlassprite.getV(8.0F + (-f23 + f22) * 16.0F);
+                        f14 = textureatlassprite.getU(8.0F + (-f23 + f22) * 16.0F);
+                        f18 = textureatlassprite.getV(8.0F + (f23 + f22) * 16.0F);
+                        f15 = textureatlassprite.getU(8.0F + (f23 + f22) * 16.0F);
+                        f19 = textureatlassprite.getV(8.0F + (f23 - f22) * 16.0F);
+                        f16 = textureatlassprite.getU(8.0F + (f23 - f22) * 16.0F);
+                        f20 = textureatlassprite.getV(8.0F + (-f23 - f22) * 16.0F);
                     }
 
                     float f44 = (f13 + f14 + f15 + f16) / 4.0F;

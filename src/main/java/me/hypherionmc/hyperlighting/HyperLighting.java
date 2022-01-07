@@ -9,6 +9,7 @@ import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.handlers.RegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLWorldGen;
 import me.hypherionmc.hyperlighting.util.ModUtils;
+import me.hypherionmc.hyperlighting.util.OptiHacks;
 import net.minecraftforge.client.ConfigGuiHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BiomeLoadingEvent;
@@ -56,6 +57,8 @@ public class HyperLighting {
         RegistryHandler.registerItemColors();
 
         ClientTickEvent.registerKeybinds();
+
+        OptiHacks.checkOptifine();
 
         if (ModUtils.isClothConfigPresent()) {
             logger.info("Adding Cloth Config support");

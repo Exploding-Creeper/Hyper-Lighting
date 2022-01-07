@@ -41,4 +41,13 @@ public class RenderUtils {
         return new ResourceLocation(resourceLocation.getNamespace(), "textures/" + resourceLocation.getPath() + ".png");
     }
 
+    public static TextureAtlasSprite[] getFluidTextures(Fluid fluid) {
+        TextureAtlasSprite[] sprites = new TextureAtlasSprite[3];
+        FluidAttributes attributes = fluid.getAttributes();
+        sprites[0] = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(attributes.getStillTexture());
+        sprites[1] = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(attributes.getFlowingTexture());
+        sprites[2] = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(attributes.getOverlayTexture());
+        return sprites;
+    }
+
 }
