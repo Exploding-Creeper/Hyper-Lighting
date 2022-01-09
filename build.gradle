@@ -180,3 +180,11 @@ mixin {
 task jenkinsClean {
     delete "$buildDir/libs"
 }
+
+processResources {
+    filesMatching ('META-INF/mods.toml') {
+        expand(
+                'modver': project.version
+        )
+    }
+}

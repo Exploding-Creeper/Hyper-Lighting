@@ -87,7 +87,7 @@ public class TileSolarLight extends BlockEntity implements SolarLight {
         super.load(compound);
         this.powerLevel = compound.getInt("power");
         this.isCharging = compound.getBoolean("isCharging");
-        this.energyStorage.readNBT(compound.getCompound("energyStorage"));
+        this.energyStorage.readNBT(compound);
     }
 
     @Override
@@ -95,8 +95,7 @@ public class TileSolarLight extends BlockEntity implements SolarLight {
         super.saveAdditional(compound);
         compound.putInt("power", this.powerLevel);
         compound.putBoolean("isCharging", this.isCharging);
-        compound.put("energyStorage", this.energyStorage.writeNBT(compound));
-        //return compound;
+        this.energyStorage.writeNBT(compound);
     }
 
     @Override

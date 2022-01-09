@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/Exploding-Creeper/Hyper-Lighting/issues" #op
 [[mods]] #mandatory
 # The modid of the mod
 modId = "hyperlighting" #mandatory
-version = "${file.jarVersion}" #mandatory
+version = "${modver}" #mandatory
 displayName = "Hyper Lighting" #mandatory
 #updateJSONURL="http://myurl.me/" #optional
 displayURL="https://github.com/Exploding-Creeper/Hyper-Lighting/" #optional
