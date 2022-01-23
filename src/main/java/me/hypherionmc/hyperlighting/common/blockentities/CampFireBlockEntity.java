@@ -152,7 +152,7 @@ public class CampFireBlockEntity extends BlockEntity implements Clearable {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        Inventories.writeNbt(nbtCompound, this.inventory, true);
+        this.writeNbt(nbtCompound);
         return nbtCompound;
     }
 
