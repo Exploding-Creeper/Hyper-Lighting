@@ -72,39 +72,34 @@ public class BatteryNeon extends Block implements BlockEntityProvider, RemoteSwi
 
     @Override
     public ActionResult onUse(BlockState state, World worldIn, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!worldIn.isClient && !Screen.hasControlDown()) {
-
+        if (worldIn.isClient && Screen.hasControlDown()) {
+            NetworkHandler.sendOpenGuiPacket(pos);
+            return ActionResult.SUCCESS;
+        } else if (!worldIn.isClient) {
             if (state.get(LIT)) {
                 BlockState oldState = state;
                 state = state.with(LIT, false);
                 worldIn.setBlockState(pos, state, 2);
                 worldIn.updateListeners(pos, oldState, state, 4);
-                return ActionResult.CONSUME;
+                return ActionResult.SUCCESS;
             } else {
                 if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof BatteryNeonBlockEntity te && te.getPowerLevel() > 0) {
                     BlockState oldState = state;
                     state = state.with(LIT, true);
                     worldIn.setBlockState(pos, state, 2);
                     worldIn.updateListeners(pos, oldState, state, 4);
-                    return ActionResult.CONSUME;
+                    return ActionResult.SUCCESS;
                 } else {
                     BlockState oldState = state;
                     state = state.with(LIT, false);
                     worldIn.setBlockState(pos, state, 2);
                     worldIn.updateListeners(pos, oldState, state, 4);
                     player.sendMessage(new LiteralText("Out of power"), true);
-                    return ActionResult.CONSUME;
+                    return ActionResult.SUCCESS;
                 }
-
-            }
-
-        } else if (worldIn.isClient) {
-            if (Screen.hasControlDown()) {
-                NetworkHandler.sendOpenGuiPacket(pos);
-                return ActionResult.CONSUME;
             }
         }
-        return ActionResult.CONSUME;
+        return ActionResult.SUCCESS;
     }
 
     @Override
