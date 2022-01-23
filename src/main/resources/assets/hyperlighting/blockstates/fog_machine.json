@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "hyperlighting:block/fogmachine" },
+    "facing=south": { "model": "hyperlighting:block/fogmachine", "y": 180 },
+    "facing=west": { "model": "hyperlighting:block/fogmachine", "y": 270 },
+    "facing=east": { "model": "hyperlighting:block/fogmachine", "y": 90 }
+  }
+}

@@ -21,6 +21,7 @@ public class HLItems {
     public static final Item WIRELESS_POWERCARD = register("wireless_powercard", new WirelessPowerCard());
     public static final Item WIRELESS_SWITCH_POWERCARD = register("wireless_switch_card", new WirelessSwitchCard());
     public static final Item LIGHT_SABER = register("light_saber", new LightSaber());
+    public static final Item FOG_REMOTE = register("fog_remote", new FogMachineRemote());
 
     public static Item register(String name, Item item) {
         Item itm = Registry.register(Registry.ITEM, new Identifier(ModConstants.MOD_ID, name), item);

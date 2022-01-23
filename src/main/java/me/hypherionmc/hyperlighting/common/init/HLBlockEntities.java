@@ -14,6 +14,7 @@ public class HLBlockEntities {
     public static BlockEntityType<SolarPanelBlockEntity> TILE_SOLAR_PANEL;
     public static BlockEntityType<SwitchBoardBlockEntity> TILE_SWITCH_BOARD;
     public static BlockEntityType<BatteryNeonBlockEntity> TILE_BATTERY_NEON;
+    public static BlockEntityType<FogMachineBlockEntity> TILE_FOG_MACHINE;
 
     public static void register() {
         TILE_CAMPFIRE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.MOD_ID, "campfire"), FabricBlockEntityTypeBuilder.create(CampFireBlockEntity::new, HLBlocks.CAMPFIRE, HLBlocks.CAMPFIRE_UNDERWATER).build());
@@ -21,6 +22,7 @@ public class HLBlockEntities {
         TILE_SOLAR_PANEL = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.MOD_ID, "solar_panel"), FabricBlockEntityTypeBuilder.create(SolarPanelBlockEntity::new, HLBlocks.SOLAR_PANEL).build());
         TILE_SWITCH_BOARD = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.MOD_ID, "switch_board"), FabricBlockEntityTypeBuilder.create(SwitchBoardBlockEntity::new, HLBlocks.SWITCHBOARD).build());
         TILE_BATTERY_NEON = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.MOD_ID, "battery_neon"), FabricBlockEntityTypeBuilder.create(BatteryNeonBlockEntity::new, HLBlocks.BATTERY_NEON).build());
+        TILE_FOG_MACHINE = Registry.register(Registry.BLOCK_ENTITY_TYPE, new Identifier(ModConstants.MOD_ID, "fog_machine"), FabricBlockEntityTypeBuilder.create(FogMachineBlockEntity::new, HLBlocks.FOG_MACHINE).build());
     }
 
 }

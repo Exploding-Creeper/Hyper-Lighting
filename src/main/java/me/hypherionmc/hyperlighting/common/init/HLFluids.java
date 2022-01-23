@@ -59,6 +59,7 @@ public class HLFluids {
     public static HashMap<DyeColor, ColoredWaterEntry> getFluidMap() {
         return COLORED_WATER;
     }
+
     public static HashMap<DyeColor, ColoredWaterEntry> getGlowingFluidMap() {
         return GLOWING_COLORED_WATER;
     }
@@ -66,8 +67,8 @@ public class HLFluids {
     public static class ColoredWaterEntry {
         private final FlowableFluid STILL;
         private final FlowableFluid FLOWING;
-        private Block BLOCK = null;
         private final Item BUCKET;
+        private Block BLOCK = null;
 
         public ColoredWaterEntry(DyeColor color, boolean isGlowing) {
             STILL = Registry.register(Registry.FLUID, new Identifier(ModConstants.MOD_ID, color.getName().toLowerCase() + (isGlowing ? "_colored_glowing_water_still" : "_colored_water_still")), new ColoredWater.Still(color, isGlowing));

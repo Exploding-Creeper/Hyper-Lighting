@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.common.network;
 
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
+import me.hypherionmc.hyperlighting.common.blockentities.FogMachineBlockEntity;
 import me.hypherionmc.hyperlighting.common.init.HLSounds;
 import me.hypherionmc.hyperlighting.utils.ModUtils;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -52,6 +53,21 @@ public class NetworkHandler {
                 }
             });
         });
+
+        ServerPlayNetworking.registerGlobalReceiver(new Identifier(ModConstants.MOD_ID, "fogpacket"), (server, player, handler, buf, responseSender) -> {
+            BlockPos pos = buf.readBlockPos();
+            FogMachinePacketType type = FogMachinePacketType.values()[buf.readInt()];
+            int timer = buf.readInt();
+            server.execute(() -> {
+                if (!player.world.isClient && player.world.getBlockEntity(pos) instanceof FogMachineBlockEntity fogMachine) {
+                    switch (type) {
+                        case FIRE -> fogMachine.setFireMachine(true);
+                        case AUTO_FIRE -> fogMachine.setAutoFireEnabled(!fogMachine.autoFireEnabled);
+                        case AUTO_FIRE_TIMER -> fogMachine.setAutoFireTime(timer);
+                    }
+                }
+            });
+        });
     }
 
     public static void sendStateTogglePacket(BlockPos pos) {
@@ -62,6 +78,14 @@ public class NetworkHandler {
     public static void sendOpenGuiPacket(BlockPos pos) {
         PacketByteBuf byteBuf = PacketByteBufs.create();
         ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "opengui"), byteBuf.writeBlockPos(pos));
+    }
+
+    public static void sendFogMachinePacket(BlockPos pos, int time, FogMachinePacketType type) {
+        PacketByteBuf byteBuf = PacketByteBufs.create();
+        byteBuf.writeBlockPos(pos);
+        byteBuf.writeInt(type.ordinal());
+        byteBuf.writeInt(time);
+        ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "fogpacket"), byteBuf);
     }
 
     // SERIOUSLY? There has to be a better way of doing this

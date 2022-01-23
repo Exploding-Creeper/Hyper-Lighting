@@ -10,7 +10,7 @@ import net.minecraft.util.Identifier;
 
 public class ParticleClientRegistryHandler {
 
-    @Environment(value= EnvType.CLIENT)
+    @Environment(value = EnvType.CLIENT)
     public static void registerClient() {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
             registry.register(new Identifier("hyperlighting", "particle/flame_base"));
@@ -31,6 +31,10 @@ public class ParticleClientRegistryHandler {
         ParticleRegistryHandler.COLORED_WATER_SPLASH.forEach((color, defaultParticleType) -> {
             float[] colors = color.getColorComponents();
             ParticleFactoryRegistry.getInstance().register(defaultParticleType, (factory) -> new ColoredWaterSplashParticle.SplashFactory(factory, colors[0], colors[1], colors[2]));
+        });
+
+        ParticleRegistryHandler.FOG_MACHINE_PARTICLES.forEach((color, fog) -> {
+            ParticleFactoryRegistry.getInstance().register(fog, pSprites -> new FogMachineSmoke.Provider(pSprites, color));
         });
     }
 
