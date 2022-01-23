@@ -2,6 +2,7 @@ package me.hypherionmc.hyperlighting.mixin.coloredwater;
 
 import me.hypherionmc.hyperlighting.common.fluids.ColoredWater;
 import me.hypherionmc.hyperlighting.utils.ModUtils;
+import me.hypherionmc.hyperlighting.utils.OptiHacks;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.LeavesBlock;
@@ -31,20 +32,43 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(FluidRenderer.class)
 public class FluidRendererMixin {
 
-    @Shadow @Final private Sprite[] lavaSprites;
-    @Shadow @Final private Sprite[] waterSprites;
-    @Shadow private Sprite waterOverlaySprite;
+    @Shadow
+    @Final
+    private Sprite[] lavaSprites;
+    @Shadow
+    @Final
+    private Sprite[] waterSprites;
+    @Shadow
+    private Sprite waterOverlaySprite;
 
-    @Shadow private static boolean isSameFluid(BlockView world, BlockPos pos, Direction side, FluidState state) { return false; }
-    @Shadow private static boolean isSideCovered(BlockView world, BlockPos pos, Direction direction, float maxDeviation) { return false; }
-    @Shadow private float getNorthWestCornerFluidHeight(BlockView world, BlockPos pos, Fluid fluid) { return 0f; }
-    @Shadow private int getLight(BlockRenderView world, BlockPos pos) { return 0; }
-    @Shadow private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v, int light) { }
+    @Shadow
+    private static boolean isSameFluid(BlockView world, BlockPos pos, Direction side, FluidState state) {
+        return false;
+    }
+
+    @Shadow
+    private static boolean isSideCovered(BlockView world, BlockPos pos, Direction direction, float maxDeviation) {
+        return false;
+    }
+
+    @Shadow
+    private float getNorthWestCornerFluidHeight(BlockView world, BlockPos pos, Fluid fluid) {
+        return 0f;
+    }
+
+    @Shadow
+    private int getLight(BlockRenderView world, BlockPos pos) {
+        return 0;
+    }
+
+    @Shadow
+    private void vertex(VertexConsumer vertexConsumer, double x, double y, double z, float red, float green, float blue, float u, float v, int light) {
+    }
 
     @Inject(at = @At("HEAD"), method = "render", cancellable = true)
     public void render(BlockRenderView world, BlockPos pos, VertexConsumer vertexConsumer, FluidState state, CallbackInfoReturnable<Boolean> cir) {
-        // Only apply if fluid is Colored Water
-        if (state.getFluid() instanceof ColoredWater coloredWater) {
+        // Only apply if fluid is Colored Water and Optifine is present
+        if (state.getFluid() instanceof ColoredWater coloredWater && OptiHacks.hasOptifine()) {
             float aj;
             float ai;
             float ab;
@@ -60,9 +84,9 @@ public class FluidRendererMixin {
             Sprite spr;
             BlockState blockState = world.getBlockState(pos);
             int i = bl ? 0xFFFFFF : ModUtils.fluidColorFromDye(coloredWater.getColor());
-            float f = (float)(i >> 16 & 0xFF) / 255.0f;
-            float g = (float)(i >> 8 & 0xFF) / 255.0f;
-            float h = (float)(i & 0xFF) / 255.0f;
+            float f = (float) (i >> 16 & 0xFF) / 255.0f;
+            float g = (float) (i >> 8 & 0xFF) / 255.0f;
+            float h = (float) (i & 0xFF) / 255.0f;
             boolean bl2 = !isSameFluid(world, pos, Direction.UP, state);
             boolean bl3 = FluidRenderer.shouldRenderSide(world, pos, state, blockState, Direction.DOWN) && !isSideCovered(world, pos, Direction.DOWN, 0.8888889f);
             boolean bl4 = FluidRenderer.shouldRenderSide(world, pos, state, blockState, Direction.NORTH);
@@ -86,6 +110,21 @@ public class FluidRendererMixin {
             double r = pos.getZ() & 0xF;
             float s = 0.001f;
             float f2 = t = bl3 ? 0.001f : 0.0f;
+
+            if (OptiHacks.isRenderRegions()) {
+                int pj = pos.getX() >> 4 << 4;
+                int kk = pos.getY() >> 4 << 4;
+                int ll = pos.getZ() >> 4 << 4;
+                int ii1 = 8;
+                int j1 = pj >> ii1 << ii1;
+                int k1 = ll >> ii1 << ii1;
+                int l1 = pj - j1;
+                int i2 = ll - k1;
+                d += l1;
+                e += kk;
+                r += i2;
+            }
+
             if (bl2 && !isSideCovered(world, pos, Direction.UP, Math.min(Math.min(n, o), Math.min(p, q)))) {
                 float af;
                 float ae;
@@ -125,8 +164,8 @@ public class FluidRendererMixin {
                 }
                 float sprite = (u + w + y + aa) / 4.0f;
                 ac = (v + x + z + ab) / 4.0f;
-                ad = (float)sprites[0].getWidth() / (sprites[0].getMaxU() - sprites[0].getMinU());
-                ae = (float)sprites[0].getHeight() / (sprites[0].getMaxV() - sprites[0].getMinV());
+                ad = (float) sprites[0].getWidth() / (sprites[0].getMaxU() - sprites[0].getMinU());
+                ae = (float) sprites[0].getHeight() / (sprites[0].getMaxV() - sprites[0].getMinV());
                 af = 4.0f / Math.max(ae, ad);
                 u = MathHelper.lerp(af, u, sprite);
                 w = MathHelper.lerp(af, w, sprite);
@@ -140,15 +179,15 @@ public class FluidRendererMixin {
                 float ah = k * f;
                 ai = k * g;
                 aj = k * h;
-                this.vertex(vertexConsumer, d + 0.0, e + (double)n, r + 0.0, ah, ai, aj, u, v, ag);
-                this.vertex(vertexConsumer, d + 0.0, e + (double)o, r + 1.0, ah, ai, aj, w, x, ag);
-                this.vertex(vertexConsumer, d + 1.0, e + (double)p, r + 1.0, ah, ai, aj, y, z, ag);
-                this.vertex(vertexConsumer, d + 1.0, e + (double)q, r + 0.0, ah, ai, aj, aa, ab, ag);
+                this.vertex(vertexConsumer, d + 0.0, e + (double) n, r + 0.0, ah, ai, aj, u, v, ag);
+                this.vertex(vertexConsumer, d + 0.0, e + (double) o, r + 1.0, ah, ai, aj, w, x, ag);
+                this.vertex(vertexConsumer, d + 1.0, e + (double) p, r + 1.0, ah, ai, aj, y, z, ag);
+                this.vertex(vertexConsumer, d + 1.0, e + (double) q, r + 0.0, ah, ai, aj, aa, ab, ag);
                 if (state.method_15756(world, pos.up())) {
-                    this.vertex(vertexConsumer, d + 0.0, e + (double)n, r + 0.0, ah, ai, aj, u, v, ag);
-                    this.vertex(vertexConsumer, d + 1.0, e + (double)q, r + 0.0, ah, ai, aj, aa, ab, ag);
-                    this.vertex(vertexConsumer, d + 1.0, e + (double)p, r + 1.0, ah, ai, aj, y, z, ag);
-                    this.vertex(vertexConsumer, d + 0.0, e + (double)o, r + 1.0, ah, ai, aj, w, x, ag);
+                    this.vertex(vertexConsumer, d + 0.0, e + (double) n, r + 0.0, ah, ai, aj, u, v, ag);
+                    this.vertex(vertexConsumer, d + 1.0, e + (double) q, r + 0.0, ah, ai, aj, aa, ab, ag);
+                    this.vertex(vertexConsumer, d + 1.0, e + (double) p, r + 1.0, ah, ai, aj, y, z, ag);
+                    this.vertex(vertexConsumer, d + 0.0, e + (double) o, r + 1.0, ah, ai, aj, w, x, ag);
                 }
             }
             if (bl3) {
@@ -160,10 +199,10 @@ public class FluidRendererMixin {
                 x = j * f;
                 z = j * g;
                 ab = j * h;
-                this.vertex(vertexConsumer, d, e + (double)t, r + 1.0, x, z, ab, u, aa, v);
-                this.vertex(vertexConsumer, d, e + (double)t, r, x, z, ab, u, y, v);
-                this.vertex(vertexConsumer, d + 1.0, e + (double)t, r, x, z, ab, w, y, v);
-                this.vertex(vertexConsumer, d + 1.0, e + (double)t, r + 1.0, x, z, ab, w, aa, v);
+                this.vertex(vertexConsumer, d, e + (double) t, r + 1.0, x, z, ab, u, aa, v);
+                this.vertex(vertexConsumer, d, e + (double) t, r, x, z, ab, u, y, v);
+                this.vertex(vertexConsumer, d + 1.0, e + (double) t, r, x, z, ab, w, y, v);
+                this.vertex(vertexConsumer, d + 1.0, e + (double) t, r + 1.0, x, z, ab, w, aa, v);
                 bl8 = true;
             }
             int u2 = this.getLight(world, pos);
@@ -180,8 +219,8 @@ public class FluidRendererMixin {
                     aa = q;
                     v = d;
                     vec3d = d + 1.0;
-                    z2 = r + (double)0.001f;
-                    ac = r + (double)0.001f;
+                    z2 = r + (double) 0.001f;
+                    ac = r + (double) 0.001f;
                     ae = Direction.NORTH;
                     af = bl4;
                 } else if (w2 == 1) {
@@ -189,15 +228,15 @@ public class FluidRendererMixin {
                     aa = o;
                     v = d + 1.0;
                     vec3d = d;
-                    z2 = r + 1.0 - (double)0.001f;
-                    ac = r + 1.0 - (double)0.001f;
+                    z2 = r + 1.0 - (double) 0.001f;
+                    ac = r + 1.0 - (double) 0.001f;
                     ae = Direction.SOUTH;
                     af = bl5;
                 } else if (w2 == 2) {
                     y = o;
                     aa = n;
-                    v = d + (double)0.001f;
-                    vec3d = d + (double)0.001f;
+                    v = d + (double) 0.001f;
+                    vec3d = d + (double) 0.001f;
                     z2 = r + 1.0;
                     ac = r;
                     ae = Direction.WEST;
@@ -205,8 +244,8 @@ public class FluidRendererMixin {
                 } else {
                     y = q;
                     aa = p;
-                    v = d + 1.0 - (double)0.001f;
-                    vec3d = d + 1.0 - (double)0.001f;
+                    v = d + 1.0 - (double) 0.001f;
+                    vec3d = d + 1.0 - (double) 0.001f;
                     z2 = r;
                     ac = r + 1.0;
                     ae = Direction.EAST;
@@ -228,15 +267,15 @@ public class FluidRendererMixin {
                 float ao = k * an * f;
                 float ap = k * an * g;
                 float aq = k * an * h;
-                this.vertex(vertexConsumer, v, e + (double)y, z2, ao, ap, aq, ai, ak, u2);
-                this.vertex(vertexConsumer, vec3d, e + (double)aa, ac, ao, ap, aq, aj, al, u2);
-                this.vertex(vertexConsumer, vec3d, e + (double)t, ac, ao, ap, aq, aj, am, u2);
-                this.vertex(vertexConsumer, v, e + (double)t, z2, ao, ap, aq, ai, am, u2);
+                this.vertex(vertexConsumer, v, e + (double) y, z2, ao, ap, aq, ai, ak, u2);
+                this.vertex(vertexConsumer, vec3d, e + (double) aa, ac, ao, ap, aq, aj, al, u2);
+                this.vertex(vertexConsumer, vec3d, e + (double) t, ac, ao, ap, aq, aj, am, u2);
+                this.vertex(vertexConsumer, v, e + (double) t, z2, ao, ap, aq, ai, am, u2);
                 if (ah == this.waterOverlaySprite) continue;
-                this.vertex(vertexConsumer, v, e + (double)t, z2, ao, ap, aq, ai, am, u2);
-                this.vertex(vertexConsumer, vec3d, e + (double)t, ac, ao, ap, aq, aj, am, u2);
-                this.vertex(vertexConsumer, vec3d, e + (double)aa, ac, ao, ap, aq, aj, al, u2);
-                this.vertex(vertexConsumer, v, e + (double)y, z2, ao, ap, aq, ai, ak, u2);
+                this.vertex(vertexConsumer, v, e + (double) t, z2, ao, ap, aq, ai, am, u2);
+                this.vertex(vertexConsumer, vec3d, e + (double) t, ac, ao, ap, aq, aj, am, u2);
+                this.vertex(vertexConsumer, vec3d, e + (double) aa, ac, ao, ap, aq, aj, al, u2);
+                this.vertex(vertexConsumer, v, e + (double) y, z2, ao, ap, aq, ai, ak, u2);
             }
             cir.setReturnValue(bl8);
         }
