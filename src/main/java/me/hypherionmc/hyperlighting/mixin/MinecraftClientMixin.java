@@ -15,7 +15,8 @@ public class MinecraftClientMixin {
 
     // TODO: FIND A BETTER WAY OF DOING THIS... Seriously
 
-    @Shadow public ClientPlayerEntity player;
+    @Shadow
+    public ClientPlayerEntity player;
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"))
     public void swingHand(CallbackInfo ci) {

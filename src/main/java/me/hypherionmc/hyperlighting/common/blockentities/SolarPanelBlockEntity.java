@@ -63,7 +63,7 @@ public class SolarPanelBlockEntity extends BlockEntity {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        this.energyStorage.writeNBT(nbtCompound);
+        this.writeNbt(nbtCompound);
         return nbtCompound;
     }
 

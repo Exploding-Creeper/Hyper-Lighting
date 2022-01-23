@@ -4,6 +4,7 @@ import me.hypherionmc.hyperlighting.common.config.HyperLightingConfig;
 import me.hypherionmc.hyperlighting.common.handlers.RegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLBlocks;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
+import me.hypherionmc.hyperlighting.utils.OptiHacks;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.client.itemgroup.FabricItemGroupBuilder;
 import net.minecraft.item.Item;
@@ -34,5 +35,6 @@ public class HyperLightingFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         RegistryHandler.init();
+        OptiHacks.checkOptifine();
     }
 }

@@ -9,7 +9,7 @@ import net.minecraft.client.particle.SpriteProvider;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particle.DefaultParticleType;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class ColoredWaterSplashParticle extends RainSplashParticle {
 
     ColoredWaterSplashParticle(ClientWorld clientWorld, double d, double e, double f, double g, double h, double i, float r, float gg, float b) {
@@ -25,7 +25,7 @@ public class ColoredWaterSplashParticle extends RainSplashParticle {
         this.colorBlue = b;
     }
 
-    @Environment(value=EnvType.CLIENT)
+    @Environment(value = EnvType.CLIENT)
     public static class SplashFactory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
         private final float r, gg, b;

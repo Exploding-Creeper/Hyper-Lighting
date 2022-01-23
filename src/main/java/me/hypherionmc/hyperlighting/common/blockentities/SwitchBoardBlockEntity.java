@@ -159,7 +159,7 @@ public class SwitchBoardBlockEntity extends BlockEntity implements ExtendedScree
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        Inventories.writeNbt(nbtCompound, inventory);
+        this.writeNbt(nbtCompound);
         return nbtCompound;
     }
 

@@ -9,7 +9,7 @@ import java.io.File;
 
 public class ConfigHandler {
 
-    private static int configVer = 1;
+    private static final int configVer = 1;
 
     public static HyperLightingConfig initConfig() {
         CommentedFileConfig config = CommentedFileConfig.builder("config/hyperlighting.toml").build();

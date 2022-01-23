@@ -27,8 +27,8 @@ public class SwitchBoardScreen extends HandledScreen<SwitchBoardScreenHandler> {
     private static final Identifier TEXTURE = new Identifier(ModConstants.MOD_ID, "textures/gui/switchboard_gui.png");
     private final Inventory player;
     private final SwitchBoardBlockEntity te;
-    private TexturedButtonWidget buttonImage;
     private final List<SwitchBoardHelper> slots = new ArrayList<>();
+    private TexturedButtonWidget buttonImage;
 
     public SwitchBoardScreen(SwitchBoardScreenHandler handler, PlayerInventory inventory, Text title) {
         super(handler, inventory, title);

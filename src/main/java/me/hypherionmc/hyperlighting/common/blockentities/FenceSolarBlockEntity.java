@@ -98,8 +98,7 @@ public class FenceSolarBlockEntity extends BlockEntity implements SolarLight {
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        nbtCompound.putBoolean("isCharging", this.isCharging);
-        this.energyStorage.writeNBT(nbtCompound);
+        this.writeNbt(nbtCompound);
         return nbtCompound;
     }
 }

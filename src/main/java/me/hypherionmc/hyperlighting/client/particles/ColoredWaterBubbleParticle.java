@@ -8,17 +8,17 @@ import net.minecraft.particle.DefaultParticleType;
 import net.minecraft.tag.FluidTags;
 import net.minecraft.util.math.BlockPos;
 
-@Environment(value= EnvType.CLIENT)
+@Environment(value = EnvType.CLIENT)
 public class ColoredWaterBubbleParticle extends SpriteBillboardParticle {
 
     public ColoredWaterBubbleParticle(ClientWorld world, double d, double e, double f, double g, double h, double i, float r, float gg, float b) {
         super(world, d, e, f);
         this.setBoundingBoxSpacing(0.02f, 0.02f);
         this.scale *= this.random.nextFloat() * 0.6f + 0.2f;
-        this.velocityX = g * (double)0.2f + (Math.random() * 2.0 - 1.0) * (double)0.02f;
-        this.velocityY = h * (double)0.2f + (Math.random() * 2.0 - 1.0) * (double)0.02f;
-        this.velocityZ = i * (double)0.2f + (Math.random() * 2.0 - 1.0) * (double)0.02f;
-        this.maxAge = (int)(8.0 / (Math.random() * 0.8 + 0.2));
+        this.velocityX = g * (double) 0.2f + (Math.random() * 2.0 - 1.0) * (double) 0.02f;
+        this.velocityY = h * (double) 0.2f + (Math.random() * 2.0 - 1.0) * (double) 0.02f;
+        this.velocityZ = i * (double) 0.2f + (Math.random() * 2.0 - 1.0) * (double) 0.02f;
+        this.maxAge = (int) (8.0 / (Math.random() * 0.8 + 0.2));
 
         this.colorRed = r;
         this.colorGreen = gg;
@@ -49,7 +49,7 @@ public class ColoredWaterBubbleParticle extends SpriteBillboardParticle {
         return ParticleTextureSheet.PARTICLE_SHEET_OPAQUE;
     }
 
-    @Environment(value= EnvType.CLIENT)
+    @Environment(value = EnvType.CLIENT)
     public static class Factory implements ParticleFactory<DefaultParticleType> {
         private final SpriteProvider spriteProvider;
         private final float r, gg, b;

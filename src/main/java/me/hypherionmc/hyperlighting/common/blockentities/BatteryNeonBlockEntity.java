@@ -69,9 +69,7 @@ public class BatteryNeonBlockEntity extends BlockEntity implements ImplementedIn
     @Override
     public NbtCompound toInitialChunkDataNbt() {
         NbtCompound nbtCompound = new NbtCompound();
-        nbtCompound.putBoolean("isCharging", this.isCharging);
-        this.energyStorage.writeNBT(nbtCompound);
-        Inventories.writeNbt(nbtCompound, inventory);
+        this.writeNbt(nbtCompound);
         return nbtCompound;
     }
 
