@@ -12,6 +12,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.network.PacketByteBuf;
 import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.BlockPos;
@@ -78,6 +79,11 @@ public class NetworkHandler {
     public static void sendOpenGuiPacket(BlockPos pos) {
         PacketByteBuf byteBuf = PacketByteBufs.create();
         ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "opengui"), byteBuf.writeBlockPos(pos));
+    }
+
+    public static void sendOpenGuiPacket(ServerPlayerEntity player, BlockPos pos) {
+        PacketByteBuf byteBuf = PacketByteBufs.create();
+        ServerPlayNetworking.send(player, new Identifier(ModConstants.MOD_ID, "opengui"), byteBuf.writeBlockPos(pos));
     }
 
     public static void sendFogMachinePacket(BlockPos pos, int time, FogMachinePacketType type) {

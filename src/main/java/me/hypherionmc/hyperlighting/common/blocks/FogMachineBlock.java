@@ -15,6 +15,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -86,7 +87,7 @@ public class FogMachineBlock extends Block implements BlockEntityProvider, Custo
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
         if (!world.isClient) {
             if (!(world.getBlockEntity(hit.getBlockPos()) instanceof FogMachineBlockEntity fogMachine && fogMachine.onPlayerUse(player, hand))) {
-                NetworkHandler.sendOpenGuiPacket(pos);
+                NetworkHandler.sendOpenGuiPacket((ServerPlayerEntity) player, pos);
                 return ActionResult.SUCCESS;
             }
         }
