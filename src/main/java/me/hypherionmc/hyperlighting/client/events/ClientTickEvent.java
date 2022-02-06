@@ -22,7 +22,6 @@ public class ClientTickEvent {
 
     @SubscribeEvent
     public void clientTick(TickEvent.PlayerTickEvent event) {
-
         if (event.phase == TickEvent.Phase.START) {
             if (Minecraft.getInstance().level != null) {
                 if (Minecraft.getInstance().screen == null && configToggle.consumeClick() && System.currentTimeMillis() >= nextKeyTriggerTime) {
@@ -35,7 +34,6 @@ public class ClientTickEvent {
                 }
             }
         }
-
     }
 
 }

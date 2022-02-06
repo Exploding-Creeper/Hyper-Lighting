@@ -86,7 +86,6 @@ public class FlameParticle extends TextureSheetParticle {
             this.spriteSet = spriteSetIn;
         }
 
-
         @Nullable
         @Override
         public Particle createParticle(SimpleParticleType typeIn, ClientLevel worldIn, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {

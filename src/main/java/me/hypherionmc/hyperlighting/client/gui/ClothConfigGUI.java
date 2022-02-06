@@ -144,6 +144,5 @@ public class ClothConfigGUI {
                 .build());
 
         return builder.build();
-
     }
 }
