@@ -39,13 +39,13 @@ import javax.annotation.Nullable;
  * Copy the code of the BucketItem, but implement checking against the supplier and add support for color/glow
  * Done to Prevent REI/Architectury from stopping buckets from working
  */
-public class ColoredWaterBucketItem extends Item implements DispensibleContainerItem, ItemDyable {
+public class ColoredWaterBucketItem extends BucketItem implements DispensibleContainerItem, ItemDyable {
 
     private final DyeColor color;
     private final boolean isGlowing;
 
     public ColoredWaterBucketItem(java.util.function.Supplier<? extends FlowingFluid> supplier, Item.Properties builder, DyeColor color, boolean isGlowing) {
-        super(builder);
+        super(supplier, builder);
         this.fluidSupplier = supplier;
         this.color = color;
         this.isGlowing = isGlowing;
