@@ -10,6 +10,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -39,7 +40,6 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
         slots.add(new SwitchBoardHelper(new Vec2(17, 44 + 22), new Vec2(24, 62), new Vec2(29, 62), new Vec2(43, 44)));
         slots.add(new SwitchBoardHelper(new Vec2(66, 44 + 22), new Vec2(73, 62), new Vec2(78, 62), new Vec2(92, 44)));
         slots.add(new SwitchBoardHelper(new Vec2(115, 44 + 22), new Vec2(122, 62), new Vec2(127, 62), new Vec2(141, 44)));
-
     }
 
     @Override
@@ -56,6 +56,7 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);
@@ -143,7 +144,6 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
                     this.te.toggleState(5);
                 }
                 break;
-
         }
     }
 }

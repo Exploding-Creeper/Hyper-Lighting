@@ -7,6 +7,7 @@ import me.hypherionmc.hyperlighting.common.containers.ContainerBatteryNeon;
 import me.hypherionmc.hyperlighting.common.tile.TileBatteryNeon;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -26,18 +27,11 @@ public class GuiBatteryNeon extends AbstractContainerScreen<ContainerBatteryNeon
         super(containerSolarPanel, player, titleIn);
         this.player = player;
         this.te = containerSolarPanel.getTe();
-
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        int id = 0;
-
     }
 
     @Override
     protected void renderBg(PoseStack matrixStack, float partialTicks, int x, int y) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, TEXTURE);
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         GuiUtils.drawTexturedModalRect(matrixStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);
