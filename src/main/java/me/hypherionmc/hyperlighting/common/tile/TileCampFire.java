@@ -44,7 +44,6 @@ public class TileCampFire extends BlockEntity implements Clearable {
                 }
             }
         }
-
     }
 
     public void clientTick() {
@@ -77,7 +76,6 @@ public class TileCampFire extends BlockEntity implements Clearable {
                 }
             }
         }
-
     }
 
     private void addParticles() {
@@ -106,7 +104,6 @@ public class TileCampFire extends BlockEntity implements Clearable {
                     }
                 }
             }
-
         }
     }
 
@@ -131,20 +128,13 @@ public class TileCampFire extends BlockEntity implements Clearable {
             int[] aint1 = nbt.getIntArray("CookingTotalTimes");
             System.arraycopy(aint1, 0, this.cookingTotalTimes, 0, Math.min(this.cookingTotalTimes.length, aint1.length));
         }
-
     }
 
     @Override
     public void saveAdditional(CompoundTag compound) {
-        this.writeItems(compound);
         compound.putIntArray("CookingTimes", this.cookingTimes);
         compound.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-    }
-
-    private CompoundTag writeItems(CompoundTag compound) {
-        super.save(compound);
         ContainerHelper.saveAllItems(compound, this.inventory, true);
-        return compound;
     }
 
     /**
@@ -178,7 +168,6 @@ public class TileCampFire extends BlockEntity implements Clearable {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -196,7 +185,6 @@ public class TileCampFire extends BlockEntity implements Clearable {
             if (!this.level.isClientSide) {
                 Containers.dropContents(this.level, this.getBlockPos(), this.getInventory());
             }
-
             this.inventoryChanged();
         }
     }
