@@ -30,7 +30,7 @@ public class HLWorldGen {
     public static void register() {
         HLFluids.COLORED_WATER.forEach((color, coloredWaterEntry) -> {
             ConfiguredFeature<?, ?> COLORED_WATER_CF = Feature.LAKE.configured(new LakeFeature.Configuration(BlockStateProvider.simple(coloredWaterEntry.getBLOCK().get()), BlockStateProvider.simple(Blocks.DIRT)));
-            PlacedFeature COLORED_WATER_PF = COLORED_WATER_CF.placed(RarityFilter.onAverageOnceEvery(70 * (color.getId() + 1)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
+            PlacedFeature COLORED_WATER_PF = COLORED_WATER_CF.placed(RarityFilter.onAverageOnceEvery(180 * (color.getId() + 1)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
 
             Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(ModConstants.MODID, color.getName().toLowerCase() + "_colored_water_lake"), COLORED_WATER_CF);
             Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(ModConstants.MODID, color.getName().toLowerCase() + "_colored_water_lake"), COLORED_WATER_PF);
@@ -39,7 +39,7 @@ public class HLWorldGen {
 
         HLFluids.GLOWING_COLORED_WATER.forEach((color, coloredWaterEntry) -> {
             ConfiguredFeature<?, ?> COLORED_WATER_CF = Feature.LAKE.configured(new LakeFeature.Configuration(BlockStateProvider.simple(coloredWaterEntry.getBLOCK().get()), BlockStateProvider.simple(Blocks.DIRT)));
-            PlacedFeature COLORED_WATER_PF = COLORED_WATER_CF.placed(RarityFilter.onAverageOnceEvery(90 * (color.getId() + 1)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
+            PlacedFeature COLORED_WATER_PF = COLORED_WATER_CF.placed(RarityFilter.onAverageOnceEvery(240 * (color.getId() + 1)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
 
             Registry.register(BuiltinRegistries.CONFIGURED_FEATURE, new ResourceLocation(ModConstants.MODID, color.getName().toLowerCase() + "_colored_glowing_water_lake"), COLORED_WATER_CF);
             Registry.register(BuiltinRegistries.PLACED_FEATURE, new ResourceLocation(ModConstants.MODID, color.getName().toLowerCase() + "_colored_glowing_water_lake"), COLORED_WATER_PF);
@@ -55,15 +55,6 @@ public class HLWorldGen {
                 if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
                     event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, placedFeature);
                 }
-
-                /*BiomeModifications.create(new Identifier(ModConstants.MOD_ID, "add_" + color.getName().toLowerCase() + "_colored_water")).add(
-                        ModificationPhase.ADDITIONS,
-                        (context) -> {
-                            Biome.Category category = context.getBiome().getCategory();
-                            return category != Biome.Category.NETHER && category != Biome.Category.THEEND && category != Biome.Category.NONE;
-                        },
-                        (context) -> context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.LAKES, placedFeature)
-                );*/
             });
         }
 
@@ -72,14 +63,6 @@ public class HLWorldGen {
                 if (category != Biome.BiomeCategory.NETHER && category != Biome.BiomeCategory.THEEND && category != Biome.BiomeCategory.NONE) {
                     event.getGeneration().addFeature(GenerationStep.Decoration.LAKES, placedFeature);
                 }
-                /*BiomeModifications.create(new Identifier(ModConstants.MOD_ID, "add_" + color.getName().toLowerCase() + "_glowing_colored_water")).add(
-                        ModificationPhase.ADDITIONS,
-                        (context) -> {
-                            Biome.Category category = context.getBiome().getCategory();
-                            return category != Biome.Category.NETHER && category != Biome.Category.THEEND && category != Biome.Category.NONE;
-                        },
-                        (context) -> context.getGenerationSettings().addBuiltInFeature(GenerationStep.Feature.LAKES, placedFeature)
-                );*/
             });
         }
     }
