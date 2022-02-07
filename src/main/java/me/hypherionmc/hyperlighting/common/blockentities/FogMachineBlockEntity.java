@@ -117,7 +117,8 @@ public class FogMachineBlockEntity extends BlockEntity implements Clearable, ISi
         autoFireEnabled = pTag.getBoolean("autofireenabled");
         this.autoFireTime = pTag.getInt("autofiretime");
         this.tank.readNbt(pTag);
-        Inventories.writeNbt(pTag, this.inventory, true);
+        this.inventory.clear();
+        Inventories.readNbt(pTag, this.inventory);
     }
 
     @Override
@@ -132,8 +133,7 @@ public class FogMachineBlockEntity extends BlockEntity implements Clearable, ISi
         pTag.putBoolean("autofireenabled", autoFireEnabled);
         pTag.putInt("autofiretime", autoFireTime);
         this.tank.writeNbt(pTag);
-        this.inventory.clear();
-        Inventories.readNbt(pTag, this.inventory);
+        Inventories.writeNbt(pTag, this.inventory, true);
     }
 
     private void sendUpdates() {
