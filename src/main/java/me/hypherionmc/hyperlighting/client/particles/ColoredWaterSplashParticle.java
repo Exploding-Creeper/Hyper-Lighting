@@ -20,9 +20,9 @@ public class ColoredWaterSplashParticle extends RainSplashParticle {
             this.velocityY = 0.1;
             this.velocityZ = i;
         }
-        this.colorRed = r;
-        this.colorGreen = gg;
-        this.colorBlue = b;
+        this.red = r;
+        this.green = gg;
+        this.blue = b;
     }
 
     @Environment(value = EnvType.CLIENT)
