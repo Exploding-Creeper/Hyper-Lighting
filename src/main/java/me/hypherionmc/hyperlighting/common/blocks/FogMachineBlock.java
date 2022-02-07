@@ -4,7 +4,6 @@ import me.hypherionmc.hyperlighting.HyperLightingFabric;
 import me.hypherionmc.hyperlighting.api.ISidedTickable;
 import me.hypherionmc.hyperlighting.common.blockentities.FogMachineBlockEntity;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
-import me.hypherionmc.hyperlighting.common.network.NetworkHandler;
 import me.hypherionmc.hyperlighting.utils.CustomRenderType;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.*;
@@ -15,7 +14,7 @@ import net.minecraft.client.render.RenderLayer;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.ItemPlacementContext;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
 import net.minecraft.state.property.Properties;
@@ -85,11 +84,13 @@ public class FogMachineBlock extends Block implements BlockEntityProvider, Custo
 
     @Override
     public ActionResult onUse(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit) {
-        if (!world.isClient) {
-            if (!(world.getBlockEntity(hit.getBlockPos()) instanceof FogMachineBlockEntity fogMachine && fogMachine.onPlayerUse(player, hand))) {
-                NetworkHandler.sendOpenGuiPacket((ServerPlayerEntity) player, pos);
-                return ActionResult.SUCCESS;
+        if (!world.isClient && !(world.getBlockEntity(pos) instanceof FogMachineBlockEntity fogMachine && fogMachine.onPlayerUse(player, hand))) {
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            NamedScreenHandlerFactory screenHandlerFactory = blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory) blockEntity : null;
+            if (screenHandlerFactory != null) {
+                player.openHandledScreen(screenHandlerFactory);
             }
+            return ActionResult.SUCCESS;
         }
         return ActionResult.SUCCESS;
     }
