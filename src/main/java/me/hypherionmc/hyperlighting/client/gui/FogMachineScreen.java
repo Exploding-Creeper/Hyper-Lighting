@@ -72,11 +72,6 @@ public class FogMachineScreen extends HandledScreen<FogMachineScreenHandler> {
     }
 
     @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
-    @Override
     protected void drawForeground(MatrixStack matrices, int mouseX, int mouseY) {
         this.textRenderer.draw(matrices, this.title.getString(), 7, this.backgroundHeight - 163 + 2, 4210752);
         this.textRenderer.draw(matrices, this.player.getDisplayName().getString(), 7, this.backgroundHeight - 108 + 2, 4210752);

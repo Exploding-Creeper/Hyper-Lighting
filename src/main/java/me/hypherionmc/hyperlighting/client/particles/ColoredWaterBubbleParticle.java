@@ -20,9 +20,9 @@ public class ColoredWaterBubbleParticle extends SpriteBillboardParticle {
         this.velocityZ = i * (double) 0.2f + (Math.random() * 2.0 - 1.0) * (double) 0.02f;
         this.maxAge = (int) (8.0 / (Math.random() * 0.8 + 0.2));
 
-        this.colorRed = r;
-        this.colorGreen = gg;
-        this.colorBlue = b;
+        this.red = r;
+        this.green = gg;
+        this.blue = b;
     }
 
     @Override

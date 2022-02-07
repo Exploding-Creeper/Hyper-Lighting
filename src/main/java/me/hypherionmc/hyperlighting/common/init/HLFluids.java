@@ -73,7 +73,7 @@ public class HLFluids {
         public ColoredWaterEntry(DyeColor color, boolean isGlowing) {
             STILL = Registry.register(Registry.FLUID, new Identifier(ModConstants.MOD_ID, color.getName().toLowerCase() + (isGlowing ? "_colored_glowing_water_still" : "_colored_water_still")), new ColoredWater.Still(color, isGlowing));
             FLOWING = Registry.register(Registry.FLUID, new Identifier(ModConstants.MOD_ID, color.getName().toLowerCase() + (isGlowing ? "_colored_glowing_water_flowing" : "_colored_water_flowing")), new ColoredWater.Flowing(color, isGlowing));
-            BUCKET = HLItems.register(color.getName().toLowerCase() + (isGlowing ? "_colored_glowing_water_bucket" : "_colored_water_bucket"), new ColoredWaterBucketItem(STILL, new Item.Settings().recipeRemainder(Items.BUCKET).group(HyperLightingFabric.fluidsTab).maxCount(1), color, isGlowing));
+            BUCKET = HLItems.register(color.getName().toLowerCase() + (isGlowing ? "_colored_glowing_water_bucket" : "_colored_water_bucket"), new ColoredWaterBucketItem(STILL, new Item.Settings().group(HyperLightingFabric.fluidsTab).maxCount(1), color, isGlowing));
         }
 
         public FlowableFluid getFLOWING() {

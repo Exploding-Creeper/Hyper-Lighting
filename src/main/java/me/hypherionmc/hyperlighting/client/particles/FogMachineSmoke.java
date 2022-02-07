@@ -28,7 +28,7 @@ public class FogMachineSmoke extends SpriteBillboardParticle {
         this.velocityX = xSpeedIn;
         this.velocityY = ySpeedIn;
         this.velocityZ = zSpeedIn;
-        this.colorAlpha = 0.11F;
+        this.alpha = 0.11F;
         this.scale(4F);
         this.rotIncrement = (float) (3.141592653589793D * (double) worldIn.random.nextFloat() * 0.005D) * (float) (rand.nextBoolean() ? -1 : 1);
         this.setMaxAge(50);
@@ -46,7 +46,7 @@ public class FogMachineSmoke extends SpriteBillboardParticle {
     @Override
     public void tick() {
         super.tick();
-        setColorAlpha(MathHelper.clamp(this.age < this.halfMaxAge ? this.age : this.maxAge - this.age, 0, this.halfMaxAge) * this.alphaStep);
+        setAlpha(MathHelper.clamp(this.age < this.halfMaxAge ? this.age : this.maxAge - this.age, 0, this.halfMaxAge) * this.alphaStep);
     }
 
     @Override
