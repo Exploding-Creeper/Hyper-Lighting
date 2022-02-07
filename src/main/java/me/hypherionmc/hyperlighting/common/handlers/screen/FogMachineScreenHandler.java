@@ -47,28 +47,39 @@ public class FogMachineScreenHandler extends ScreenHandler {
     }
 
     @Override
-    public ItemStack transferSlot(PlayerEntity player, int invSlot) {
-        ItemStack newStack = ItemStack.EMPTY;
-        Slot slot = this.slots.get(invSlot);
-        if (slot != null && slot.hasStack()) {
-            ItemStack originalStack = slot.getStack();
-            newStack = originalStack.copy();
-            if (invSlot < this.inventory.size()) {
-                if (!this.insertItem(originalStack, this.inventory.size(), this.slots.size(), true)) {
+    public ItemStack transferSlot(PlayerEntity player, int index) {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(index);
+        if (slot != null && slot.getStack() != ItemStack.EMPTY) {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (index == 0) {
+                if (!this.insertItem(itemstack1, 1, 37, true)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (!this.insertItem(originalStack, 0, this.inventory.size(), false)) {
-                return ItemStack.EMPTY;
+                slot.onQuickTransfer(itemstack1, itemstack);
+            } else {
+                if (!this.insertItem(itemstack1, 0, 1, false)) {
+                    return ItemStack.EMPTY;
+                }
+                slot.markDirty();
             }
 
-            if (originalStack.isEmpty()) {
+            if (itemstack1.isEmpty()) {
                 slot.setStack(ItemStack.EMPTY);
             } else {
                 slot.markDirty();
             }
+
+            if (itemstack1.getCount() == itemstack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTakeItem(player, itemstack1);
         }
 
-        return newStack;
+        return itemstack;
     }
 
     public BlockPos getPos() {
