@@ -15,9 +15,9 @@ import java.util.function.Predicate;
 public class FluidStorageTank implements Storage<FluidVariant>, StorageView<FluidVariant> {
 
     private final long capacity;
+    private final Predicate<FluidVariant> validFluid;
     private long level = 0;
     private FluidVariant fluid = FluidVariant.blank();
-    private final Predicate<FluidVariant> validFluid;
 
     public FluidStorageTank(long capacity) {
         this(capacity, e -> true);

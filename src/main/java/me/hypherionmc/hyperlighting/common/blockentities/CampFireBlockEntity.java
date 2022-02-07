@@ -135,14 +135,9 @@ public class CampFireBlockEntity extends BlockEntity implements Clearable {
 
     @Override
     public void writeNbt(NbtCompound compound) {
-        this.writeItems(compound);
+        Inventories.writeNbt(compound, this.inventory, true);
         compound.putIntArray("CookingTimes", this.cookingTimes);
         compound.putIntArray("CookingTotalTimes", this.cookingTotalTimes);
-    }
-
-    private void writeItems(NbtCompound compound) {
-        super.writeNbt(compound);
-        Inventories.writeNbt(compound, this.inventory, true);
     }
 
     public BlockEntityUpdateS2CPacket toUpdatePacket() {

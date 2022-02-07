@@ -67,7 +67,8 @@ public class BatteryNeonScreenHandler extends ScreenHandler {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickTransfer(itemstack1, itemstack);
-            } if (index == 1) {
+            }
+            if (index == 1) {
                 if (!this.insertItem(itemstack1, 2, 38, true)) {
                     return ItemStack.EMPTY;
                 }

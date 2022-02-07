@@ -3,7 +3,9 @@ package me.hypherionmc.hyperlighting.utils;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-/** Hacks and utils for Optifu.... I mean optifine */
+/**
+ * Hacks and utils for Optifu.... I mean optifine
+ */
 public class OptiHacks {
 
     private static boolean hasOptifine = false;
