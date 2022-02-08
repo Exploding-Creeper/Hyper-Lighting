@@ -84,40 +84,37 @@ public class BatteryNeon extends BaseEntityBlock implements RemoteSwitchable, Dy
 
     @Override
     public InteractionResult use(BlockState state, Level worldIn, BlockPos pos, Player player, InteractionHand handIn, BlockHitResult hit) {
-        if (!worldIn.isClientSide && !Screen.hasControlDown()) {
-
+        if (worldIn.isClientSide) {
+            if (Screen.hasControlDown()) {
+                OpenGUIPacket openGUIPacket = new OpenGUIPacket(ModConstants.SOLAR_GUI, pos);
+                PacketHandler.INSTANCE.sendToServer(openGUIPacket);
+                return InteractionResult.SUCCESS;
+            }
+        } else {
             if (state.getValue(LIT)) {
                 BlockState oldState = state;
                 state = state.setValue(LIT, false);
                 worldIn.setBlock(pos, state, 2);
                 worldIn.sendBlockUpdated(pos, oldState, state, 4);
-                return InteractionResult.CONSUME;
+                return InteractionResult.SUCCESS;
             } else {
                 if (worldIn.getBlockEntity(pos) != null && worldIn.getBlockEntity(pos) instanceof TileBatteryNeon && ((TileBatteryNeon) worldIn.getBlockEntity(pos)).getPowerLevel() > 0) {
                     BlockState oldState = state;
                     state = state.setValue(LIT, true);
                     worldIn.setBlock(pos, state, 2);
                     worldIn.sendBlockUpdated(pos, oldState, state, 4);
-                    return InteractionResult.CONSUME;
+                    return InteractionResult.SUCCESS;
                 } else {
                     BlockState oldState = state;
                     state = state.setValue(LIT, false);
                     worldIn.setBlock(pos, state, 2);
                     worldIn.sendBlockUpdated(pos, oldState, state, 4);
                     player.displayClientMessage(new TextComponent("Out of power"), true);
-                    return InteractionResult.CONSUME;
+                    return InteractionResult.SUCCESS;
                 }
-
-            }
-
-        } else {
-            if (Screen.hasControlDown()) {
-                OpenGUIPacket openGUIPacket = new OpenGUIPacket(ModConstants.SOLAR_GUI, pos);
-                PacketHandler.INSTANCE.sendToServer(openGUIPacket);
-                return InteractionResult.CONSUME;
             }
         }
-        return InteractionResult.CONSUME;
+        return InteractionResult.SUCCESS;
     }
 
     @Override

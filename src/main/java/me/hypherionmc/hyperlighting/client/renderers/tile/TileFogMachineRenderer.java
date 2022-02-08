@@ -21,9 +21,7 @@ public class TileFogMachineRenderer implements BlockEntityRenderer<TileFogMachin
 
     public static final float TANK_THICKNESS = 0.1f;
 
-    public TileFogMachineRenderer(BlockEntityRendererProvider.Context context) {
-
-    }
+    public TileFogMachineRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
     public void render(TileFogMachine pBlockEntity, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBufferSource, int pPackedLight, int pPackedOverlay) {

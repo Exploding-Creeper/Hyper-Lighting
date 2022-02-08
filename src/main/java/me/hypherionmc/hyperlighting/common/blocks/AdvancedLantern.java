@@ -48,6 +48,7 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final DirectionProperty HORIZONTAL_FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+
     //Bounding Boxes
     private static final VoxelShape BB_TOP = Block.box(4.992, 0, 4, 11.008, 11.008, 11.008);
     private static final VoxelShape BB_NORTH = Block.box(4.992, 3.008, 8, 11.008, 16, 16.992);

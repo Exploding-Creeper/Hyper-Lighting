@@ -15,9 +15,7 @@ import net.minecraft.world.level.block.CampfireBlock;
 
 public class TileCampFireRenderer implements BlockEntityRenderer<TileCampFire> {
 
-    public TileCampFireRenderer(BlockEntityRendererProvider.Context context) {
-
-    }
+    public TileCampFireRenderer(BlockEntityRendererProvider.Context context) {}
 
     @Override
     public void render(TileCampFire tileEntityIn, float partialTicks, PoseStack matrixStackIn, MultiBufferSource bufferIn, int combinedLightIn, int combinedOverlayIn) {

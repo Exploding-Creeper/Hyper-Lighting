@@ -5,7 +5,6 @@ import me.hypherionmc.hyperlighting.common.init.HLSounds;
 import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
@@ -15,17 +14,7 @@ public class LightSaber extends SwordItem {
 
     public LightSaber() {
         super(Tiers.DIAMOND, 1, 1, new Properties().tab(HyperLighting.mainTab).fireResistant().rarity(Rarity.UNCOMMON).setNoRepair());
-
-        if (ModUtils.isRGBLibPresent()) {
-            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
-        }
-
     }
-
-    /*private RGBLight produceColoredLight(Entity entity, ItemStack stack) {
-        //return RGBLight.builder().pos(APIUtils.entityPos(entity)).color(DyeColor.LIGHT_BLUE.getMaterialColor().col, false).radius(10).build();
-        return null;
-    }*/
 
     @Override
     public boolean canBeDepleted() {
@@ -51,6 +40,4 @@ public class LightSaber extends SwordItem {
         }
         return super.onEntitySwing(stack, entity);
     }
-
-
 }

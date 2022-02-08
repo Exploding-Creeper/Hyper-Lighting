@@ -90,7 +90,7 @@ repositories {
 
 dependencies {
 
-    minecraft 'net.minecraftforge:forge:1.18.1-39.0.9'
+    minecraft 'net.minecraftforge:forge:1.18.1-39.0.66'
 
     // The new Hyper Lighting Core - Now known as RGBLib
     /*implementation "me.hypherionmc:RGBLib:${rgblib_version}:api"

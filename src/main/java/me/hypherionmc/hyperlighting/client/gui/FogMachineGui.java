@@ -2,7 +2,6 @@ package me.hypherionmc.hyperlighting.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector4f;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.client.gui.widgets.FluidStackWidget;
 import me.hypherionmc.hyperlighting.common.containers.ContainerFogMachine;
@@ -12,11 +11,10 @@ import me.hypherionmc.hyperlighting.common.network.packets.FogMachineAutoFireTim
 import me.hypherionmc.hyperlighting.common.network.packets.FogMachineFirePacket;
 import me.hypherionmc.hyperlighting.common.tile.TileFogMachine;
 import me.hypherionmc.hyperlighting.util.LangUtils;
-import me.hypherionmc.hyperlighting.util.RenderUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.network.chat.TranslatableComponent;
@@ -24,7 +22,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraftforge.client.gui.GuiUtils;
 import net.minecraftforge.client.gui.widget.Slider;
-import net.minecraftforge.fluids.FluidStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,7 +75,6 @@ public class FogMachineGui extends AbstractContainerScreen<ContainerFogMachine> 
         if (button == fireButton) {
             FogMachineFirePacket fogMachineFirePacket = new FogMachineFirePacket(te.getBlockPos());
             PacketHandler.sendToServer(fogMachineFirePacket);
-
         }
     }
 
@@ -89,6 +85,7 @@ public class FogMachineGui extends AbstractContainerScreen<ContainerFogMachine> 
 
     @Override
     protected void renderBg(PoseStack pPoseStack, float pPartialTick, int pMouseX, int pMouseY) {
+        RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.clearColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.setShaderTexture(0, TEXTURE);
         GuiUtils.drawTexturedModalRect(pPoseStack, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 0);

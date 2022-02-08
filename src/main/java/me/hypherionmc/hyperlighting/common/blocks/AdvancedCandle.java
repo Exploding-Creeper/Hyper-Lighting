@@ -79,37 +79,27 @@ public class AdvancedCandle extends Block implements DyeAble, Lightable {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        switch (state.getValue(FACING)) {
-            case EAST:
-                return TORCH_EAST_AABB;
-            case WEST:
-                return TORCH_WEST_AABB;
-            case SOUTH:
-                return TORCH_SOUTH_AABB;
-            case NORTH:
-                return TORCH_NORTH_AABB;
-            default:
-                return STANDING_AABB;
-        }
+        return switch (state.getValue(FACING)) {
+            case EAST -> TORCH_EAST_AABB;
+            case WEST -> TORCH_WEST_AABB;
+            case SOUTH -> TORCH_SOUTH_AABB;
+            case NORTH -> TORCH_NORTH_AABB;
+            default -> STANDING_AABB;
+        };
     }
 
     @Override
     public void animateTick(BlockState stateIn, Level worldIn, BlockPos pos, Random rand) {
-
         if (stateIn.getValue(LIT)) {
             DyeColor color = stateIn.getValue(COLOR);
 
             double d0 = (double) pos.getX() + 0.5D;
             double d1 = (double) pos.getY() + 0.7D;
             double d2 = (double) pos.getZ() + 0.5D;
-            double d3 = 0.22D;
-            double d4 = 0.27D;
 
             worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 + 0.1, d2, 0.0D, 0.0D, 0.0D);
             worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 + 0.1F, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
-
         }
-
     }
 
     @Nullable
