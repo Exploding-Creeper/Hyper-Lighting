@@ -39,7 +39,7 @@ public class HyperLighting {
 
         RegistryHandler.init();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, HyperLightingConfig.spec);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, HyperLightingConfig.spec);
     }
 
     private void setup(final FMLCommonSetupEvent event) {
