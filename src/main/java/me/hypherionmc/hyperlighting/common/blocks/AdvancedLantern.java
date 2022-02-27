@@ -7,6 +7,7 @@ import me.hypherionmc.hyperlighting.common.handlers.ParticleRegistryHandler;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemWithColoredLight;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
+import me.hypherionmc.hyperlighting.util.MathUtils;
 import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
@@ -35,37 +36,36 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.*;
 import net.minecraft.world.level.material.Material;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock implements DyeAble, Lightable, CustomRenderType {
 
-    //Properties
+    //region Properties
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
     public static final DirectionProperty HORIZONTAL_FACING = HorizontalDirectionalBlock.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
+    //endregion
 
-    //Bounding Boxes
-    private static final VoxelShape BB_TOP = Block.box(4.992, 0, 4, 11.008, 11.008, 11.008);
-    private static final VoxelShape BB_NORTH = Block.box(4.992, 3.008, 8, 11.008, 16, 16.992);
-    private static final VoxelShape BB_SOUTH = Block.box(4.992, 3.008, -0.992, 11.008, 16, 8);
-    private static final VoxelShape BB_EAST = Block.box(-0.992, 3.008, 4.992, 8, 16, 11.008);
-    private static final VoxelShape BB_WEST = Block.box(8, 3.008, 4.992, 16.992, 16, 11.008);
-    private static final VoxelShape BB_CEILING = Block.box(4.912, 3.008, 5.088, 11.904, 16, 11.088);
+    //region Bounding Boxes
+    private static final VoxelShape BB_TOP = Block.box(5, 0, 5, 11, 9, 11);
+    private static final VoxelShape BB_NORTH = Block.box(5, 3, 3, 11, 12, 9);
+    private static final VoxelShape BB_SOUTH = MathUtils.rotateShape(Direction.NORTH, Direction.WEST, BB_NORTH);
+    private static final VoxelShape BB_EAST = MathUtils.rotateShape(Direction.NORTH, Direction.SOUTH, BB_NORTH);
+    private static final VoxelShape BB_WEST = MathUtils.rotateShape(Direction.NORTH, Direction.EAST, BB_NORTH);
+    private static final VoxelShape BB_CEILING = Block.box(5, 4, 5, 11, 13, 11);
+    //endregion
 
     public AdvancedLantern(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.DECORATION).noCollission().instabreak());
-
         this.registerDefaultState(this.getStateDefinition().any().setValue(HORIZONTAL_FACING, Direction.NORTH).setValue(LIT, HyperLightingConfig.lanternOnByDefault.get()).setValue(COLOR, color));
-
-        if (ModUtils.isRGBLibPresent()) {
-            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
-        }
-
         HLItems.ITEMS.register(name, () -> new BlockItemWithColoredLight(this, new Item.Properties().tab(group)));
     }
 
@@ -116,9 +116,7 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
     public void toggleLight(Level worldIn, BlockState state, BlockPos pos) {
         state = state.setValue(LIT, !state.getValue(LIT));
         worldIn.setBlock(pos, state, 2);
-        if (!state.getValue(LIT)) {
-            worldIn.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.3f, 1.0f);
-        }
+        worldIn.playSound(null, pos, !state.getValue(LIT) ? SoundEvents.FIRE_EXTINGUISH : SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 0.3f, 1.0f);
         worldIn.updateNeighborsAt(pos, this);
     }
 
@@ -126,14 +124,6 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIT) ? 15 : 0;
     }
-
-    // RGBLib Support
-    /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        if (state.getValue(LIT) && !HyperLightingConfig.lanternColor.get()) {
-            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getMaterialColor().col, false).radius(15).build();
-        }
-        return null;
-    }*/
 
     @Override
     public BlockColor dyeHandler() {
@@ -185,14 +175,14 @@ public class AdvancedLantern extends FaceAttachedHorizontalDirectionalBlock impl
 
             if (state.getValue(FACE) == AttachFace.WALL) {
                 Direction direction1 = direction.getOpposite();
-                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double) direction1.getStepX(), d1, d2 + 0.27D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0 + 0.27D * (double) direction1.getStepX(), d1 - 0.3D, d2 + 0.27D * (double) direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0 + -0.13D * (double) direction1.getStepX(), d1 + -0.13D, d2 + -0.13D * (double) direction1.getStepZ(), 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME.get(), d0 + -0.13D * (double) direction1.getStepX(), d1 - 0.18D, d2 + -0.13D * (double) direction1.getStepZ(), color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             } else if (state.getValue(FACE) == AttachFace.FLOOR) {
                 worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 - 0.3D, d2, 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 - 0.5D, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME.get(), d0, d1 - 0.35D, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             } else if (state.getValue(FACE) == AttachFace.CEILING) {
-                worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME.get(), d0, d1 - 0.3D, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 - 0.1D, d2, 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME.get(), d0, d1 - 0.1D, d2, color.getTextureDiffuseColors()[0], color.getTextureDiffuseColors()[1], color.getTextureDiffuseColors()[2]);
             }
         }
     }

@@ -2,10 +2,7 @@ package me.hypherionmc.hyperlighting.common.handlers;
 
 import me.hypherionmc.hyperlighting.HyperLighting;
 import me.hypherionmc.hyperlighting.ModConstants;
-import me.hypherionmc.hyperlighting.client.particles.ColoredWaterBubbleParticle;
-import me.hypherionmc.hyperlighting.client.particles.ColoredWaterSplashParticle;
-import me.hypherionmc.hyperlighting.client.particles.FlameParticle;
-import me.hypherionmc.hyperlighting.client.particles.FogMachineSmoke;
+import me.hypherionmc.hyperlighting.client.particles.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -30,9 +27,11 @@ public class ParticleRegistryHandler {
     public static final HashMap<DyeColor, RegistryObject<SimpleParticleType>> FOG_MACHINE_PARTICLES = new HashMap<>();
 
     public static RegistryObject<SimpleParticleType> CUSTOM_FLAME;
+    public static RegistryObject<SimpleParticleType> CANDLE_FLAME;
 
     public static void registerParticles(IEventBus bus) {
         CUSTOM_FLAME = PARTICLES.register("custom_flame", () -> new SimpleParticleType(false));
+        CANDLE_FLAME = PARTICLES.register("candle_flame", () -> new SimpleParticleType(false));
         for (DyeColor color : DyeColor.values()) {
             RegistryObject<SimpleParticleType> BUBBLE = PARTICLES.register(color.name().toLowerCase() + "_bubble", () -> new SimpleParticleType(false));
             RegistryObject<SimpleParticleType> SPLASH = PARTICLES.register(color.name().toLowerCase() + "_splash", () -> new SimpleParticleType(false));
@@ -54,6 +53,7 @@ public class ParticleRegistryHandler {
             HyperLighting.logger.info("Registering particles...");
             registerColoredWaterParticles();
             Minecraft.getInstance().particleEngine.register(ParticleRegistryHandler.CUSTOM_FLAME.get(), FlameParticle.FACTORY::new);
+            Minecraft.getInstance().particleEngine.register(ParticleRegistryHandler.CANDLE_FLAME.get(), CandleFlame.FACTORY::new);
         }
 
         private static void registerColoredWaterParticles() {
