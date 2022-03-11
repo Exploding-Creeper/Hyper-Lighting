@@ -27,9 +27,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Optifine hack around BECAUSE THEY CAN'T STOP FUCKING UP CUSTOM FLUIDS!
  */
+
 @Mixin(LiquidBlockRenderer.class)
 public class LiquidBlockRendererMixin {
-
+/*
     @Shadow @Final private TextureAtlasSprite[] lavaIcons;
     @Shadow @Final private TextureAtlasSprite[] waterIcons;
     @Shadow private TextureAtlasSprite waterOverlay;
@@ -262,4 +263,5 @@ public class LiquidBlockRendererMixin {
     private void vertex(VertexConsumer pConsumer, double pX, double pY, double pZ, float pRed, float pGreen, float pBlue, float alpha, float pU, float pV, int pPackedLight) {
         pConsumer.vertex(pX, pY, pZ).color(pRed, pGreen, pBlue, alpha).uv(pU, pV).uv2(pPackedLight).normal(0.0F, 1.0F, 0.0F).endVertex();
     }
+ */
 }

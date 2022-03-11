@@ -23,11 +23,11 @@ import net.minecraftforge.event.world.BiomeLoadingEvent;
 import java.util.HashMap;
 
 public class HLWorldGen {
-
+    /*
     private static final HashMap<DyeColor, PlacedFeature> COLORED_WATER_GEN = new HashMap<>();
     private static final HashMap<DyeColor, PlacedFeature> GLOWING_COLORED_WATER_GEN = new HashMap<>();
 
-    public static void register() {
+     public static void register() {
         HLFluids.COLORED_WATER.forEach((color, coloredWaterEntry) -> {
             ConfiguredFeature<?, ?> COLORED_WATER_CF = Feature.LAKE.configured(new LakeFeature.Configuration(BlockStateProvider.simple(coloredWaterEntry.getBLOCK().get()), BlockStateProvider.simple(Blocks.DIRT)));
             PlacedFeature COLORED_WATER_PF = COLORED_WATER_CF.placed(RarityFilter.onAverageOnceEvery(180 * (color.getId() + 1)), InSquarePlacement.spread(), PlacementUtils.HEIGHTMAP_WORLD_SURFACE, BiomeFilter.biome());
@@ -66,5 +66,6 @@ public class HLWorldGen {
             });
         }
     }
-
+    */
 }
+
