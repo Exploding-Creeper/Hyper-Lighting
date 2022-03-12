@@ -113,9 +113,9 @@ public class LiquidBlockRendererMixin {
                     int k1 = ll >> ii1 << ii1;
                     int l1 = pj - j1;
                     int i2 = ll - k1;
-                    d0 += l1;
-                    d1 += kk;
-                    d2 += i2;
+                    d1 += l1;
+                    d2 += kk;
+                    d0 += i2;
                 }
 
                 if (flag1 && !isFaceOccludedByNeighbor(pLevel, pPos, Direction.UP, Math.min(Math.min(f8, f10), Math.min(f9, f7)), blockstate1)) {
