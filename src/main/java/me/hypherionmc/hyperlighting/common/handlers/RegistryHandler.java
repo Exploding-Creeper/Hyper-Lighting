@@ -115,6 +115,6 @@ public class RegistryHandler {
 
     public static void commonSetup(FMLCommonSetupEvent event) {
         HyperLighting.logger.info("Registering Worldgen...");
-        // HLWorldGen.register();
+        HLWorldGen.register();
     }
 }

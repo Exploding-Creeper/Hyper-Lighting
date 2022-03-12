@@ -73,7 +73,7 @@ public class HyperLighting {
     }
 
     public void biomeModification(final BiomeLoadingEvent event) {
-        // HLWorldGen.addWaterWorldgen(event);
+        HLWorldGen.addWaterWorldgen(event);
     }
 
 }
