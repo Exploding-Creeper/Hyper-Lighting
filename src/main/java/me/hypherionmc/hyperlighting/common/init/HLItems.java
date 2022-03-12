@@ -1,10 +1,7 @@
 package me.hypherionmc.hyperlighting.common.init;
 
 import me.hypherionmc.hyperlighting.ModConstants;
-import me.hypherionmc.hyperlighting.common.items.FogMachineRemote;
-import me.hypherionmc.hyperlighting.common.items.LighterTool;
-import me.hypherionmc.hyperlighting.common.items.WirelessPowerCard;
-import me.hypherionmc.hyperlighting.common.items.WirelessSwitchCard;
+import me.hypherionmc.hyperlighting.common.items.*;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
