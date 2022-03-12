@@ -5,7 +5,7 @@ issueTrackerURL="https://github.com/Exploding-Creeper/Hyper-Lighting/issues"
 
 [[mods]]
 modId = "hyperlighting"
-version = "1.0"
+version = "${modver}"
 displayName = "Hyper Lighting"
 #updateJSONURL="http://myurl.me/" #optional
 displayURL="https://github.com/Exploding-Creeper/Hyper-Lighting/"
@@ -26,6 +26,6 @@ side = "BOTH"
 [[dependencies.hyperlighting]]
 modId = "minecraft"
 mandatory = true
-versionRange = "[1.18.2,1.19)"
+versionRange = "[1.18,1.19)"
 ordering = "NONE"
 side = "BOTH"
