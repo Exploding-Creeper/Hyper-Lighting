@@ -81,7 +81,7 @@ minecraft {
 }
 
 repositories {
-    maven { url = "https://maven.hypherionmc.me" }
+    maven { url = "https://maven.firstdarkdev.xyz/releases" }
     maven { url = "https://dvs1.progwml6.com/files/maven/" }
     maven { url = "https://maven.tterrag.com/" }
     maven { url = "https://maven.shedaniel.me/" }
@@ -89,12 +89,7 @@ repositories {
 }
 
 dependencies {
-
     minecraft 'net.minecraftforge:forge:1.18.2-40.0.12'
-
-    // The new Hyper Lighting Core - Now known as RGBLib
-    /*implementation "me.hypherionmc:RGBLib:${rgblib_version}:api"
-    runtimeOnly "me.hypherionmc:RGBLib:${rgblib_version}"*/
 
     //implementation "mezz.jei:jei-1.18.1:${jei_version}"
     implementation "mcjty.theoneprobe:theoneprobe:${top_version}:api"
