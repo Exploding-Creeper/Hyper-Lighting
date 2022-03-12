@@ -2,7 +2,6 @@ package me.hypherionmc.hyperlighting.client.renderers.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Quaternion;
 import com.mojang.math.Vector3f;
 import com.mojang.math.Vector4f;
 import me.hypherionmc.hyperlighting.common.blocks.FogMachineBlock;

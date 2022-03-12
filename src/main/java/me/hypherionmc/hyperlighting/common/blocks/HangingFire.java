@@ -5,7 +5,6 @@ import me.hypherionmc.hyperlighting.api.Lightable;
 import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemColor;
 import me.hypherionmc.hyperlighting.util.CustomRenderType;
-import me.hypherionmc.hyperlighting.util.ModUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.color.block.BlockColor;
 import net.minecraft.client.renderer.RenderType;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoundType;
@@ -47,11 +45,6 @@ public class HangingFire extends Block implements CustomRenderType, DyeAble, Lig
     public HangingFire(String name, DyeColor color, CreativeModeTab group) {
         super(Properties.of(Material.METAL).noOcclusion().noCollission().sound(SoundType.METAL));
         this.registerDefaultState(this.defaultBlockState().setValue(ATTACH_FACE, AttachFace.CEILING).setValue(LIT, true).setValue(COLOR, color));
-
-        if (ModUtils.isRGBLibPresent()) {
-            //ColoredLightManager.registerProvider(this, this::produceColoredLight);
-        }
-
         HLItems.ITEMS.register(name, () -> new BlockItemColor(this, new Item.Properties().tab(group)));
     }
 
@@ -68,14 +61,6 @@ public class HangingFire extends Block implements CustomRenderType, DyeAble, Lig
             return this.defaultBlockState().setValue(ATTACH_FACE, AttachFace.CEILING);
         }
         return Blocks.AIR.defaultBlockState();
-    }
-
-    @Override
-    public BlockState updateShape(BlockState stateIn, Direction facing, BlockState facingState, LevelAccessor worldIn, BlockPos currentPos, BlockPos facingPos) {
-        if (facing != Direction.DOWN) {
-            return Blocks.AIR.defaultBlockState();
-        }
-        return updateShape(stateIn, facing, facingState, worldIn, currentPos, facingPos);
     }
 
     @Override
@@ -97,14 +82,6 @@ public class HangingFire extends Block implements CustomRenderType, DyeAble, Lig
     public int getLightEmission(BlockState state, BlockGetter world, BlockPos pos) {
         return state.getValue(LIT) ? 15 : 0;
     }
-
-    // RGBLib Support
-    /*private RGBLight produceColoredLight(BlockPos pos, BlockState state) {
-        if (state.getValue(LIT) && !HyperLightingConfig.lanternColor.get()) {
-            //return RGBLight.builder().pos(pos).color(state.getValue(COLOR).getMaterialColor().col, false).radius(15).build();
-        }
-        return null;
-    }*/
 
     @Override
     public BlockColor dyeHandler() {
