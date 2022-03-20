@@ -31,7 +31,7 @@
     "HyperLightingFabric.mixins.json"
   ],
   "depends": {
-    "fabricloader": ">=0.12.8",
+    "fabricloader": ">=0.13.1",
     "fabric": "*",
     "minecraft": "1.18.x"
   },

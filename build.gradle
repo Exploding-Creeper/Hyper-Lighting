@@ -3,12 +3,14 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+def version_base = "${project.version_major}.${project.version_minor}"
+
+version = version_base + (project.version_patch > 0 ? ".${project.version_patch}" : "")
 group = project.maven_group
 
 // Jenkins
 if (System.getenv('BUILD_NUMBER') != null) {
-    version = version + "." + System.getenv('BUILD_NUMBER') + "d"
+    version = version_base + "." + System.getenv('BUILD_NUMBER') + "d"
 }
 
 repositories {
@@ -29,11 +31,11 @@ dependencies {
     include 'me.hypherionmc.night-config:core:3.6.5_custom'
     include 'me.hypherionmc.night-config:toml:3.6.5_custom'
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:6.0.45") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modImplementation "com.terraformersmc:modmenu:3.0.0"
+    modImplementation "com.terraformersmc:modmenu:${mod_menu}"
     modCompileOnly "mcp.mobius.waila:wthit-api:fabric-${wthitVersion}"
     modRuntime "mcp.mobius.waila:wthit:fabric-${wthitVersion}"
 
@@ -65,7 +67,7 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name + "-1.18.x"
+    archivesBaseName = project.archives_base_name + "-1.18.2"
 }
 
 jar {

@@ -9,6 +9,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(MinecraftClient.class)
 public class MinecraftClientMixin {
@@ -19,7 +20,7 @@ public class MinecraftClientMixin {
     public ClientPlayerEntity player;
 
     @Inject(method = "doAttack", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/network/ClientPlayerEntity;swingHand(Lnet/minecraft/util/Hand;)V"))
-    public void swingHand(CallbackInfo ci) {
+    public void swingHand(CallbackInfoReturnable<Boolean> cir) {
         if (player.getStackInHand(player.getActiveHand()).getItem() == HLItems.LIGHT_SABER) {
             NetworkHandler.sendLightSaberPacket(player.getBlockPos());
         }
