@@ -8,6 +8,7 @@ import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.items.BlockItemWithColoredLight;
 import me.hypherionmc.hyperlighting.utils.BlockUtils;
 import me.hypherionmc.hyperlighting.utils.CustomRenderType;
+import me.hypherionmc.hyperlighting.utils.MathUtils;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.minecraft.block.*;
 import net.minecraft.block.enums.WallMountLocation;
@@ -53,12 +54,12 @@ public class AdvancedLantern extends WallMountedBlock implements DyeAble, Lighta
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
     //Bounding Boxes
-    private static final VoxelShape BB_TOP = Block.createCuboidShape(4.992, 0, 4, 11.008, 11.008, 11.008);
-    private static final VoxelShape BB_NORTH = Block.createCuboidShape(4.992, 3.008, 8, 11.008, 16, 16.992);
-    private static final VoxelShape BB_SOUTH = Block.createCuboidShape(4.992, 3.008, -0.992, 11.008, 16, 8);
-    private static final VoxelShape BB_EAST = Block.createCuboidShape(-0.992, 3.008, 4.992, 8, 16, 11.008);
-    private static final VoxelShape BB_WEST = Block.createCuboidShape(8, 3.008, 4.992, 16.992, 16, 11.008);
-    private static final VoxelShape BB_CEILING = Block.createCuboidShape(4.912, 3.008, 5.088, 11.904, 16, 11.088);
+    private static final VoxelShape BB_TOP = Block.createCuboidShape(5, 0, 5, 11, 9, 11);
+    private static final VoxelShape BB_NORTH = Block.createCuboidShape(5, 3, 3, 11, 12, 9);
+    private static final VoxelShape BB_SOUTH = MathUtils.rotateShape(Direction.NORTH, Direction.WEST, BB_NORTH);
+    private static final VoxelShape BB_EAST = MathUtils.rotateShape(Direction.NORTH, Direction.SOUTH, BB_NORTH);
+    private static final VoxelShape BB_WEST = MathUtils.rotateShape(Direction.NORTH, Direction.EAST, BB_NORTH);
+    private static final VoxelShape BB_CEILING = Block.createCuboidShape(5, 4, 5, 11, 13, 11);
 
     public AdvancedLantern(String name, DyeColor color, ItemGroup group) {
         super(Settings.of(Material.DECORATION).noCollision().breakInstantly().nonOpaque().luminance(BlockUtils.createLightLevelFromLitBlockState(15)));
@@ -109,6 +110,7 @@ public class AdvancedLantern extends WallMountedBlock implements DyeAble, Lighta
         if (!state.get(LIT)) {
             worldIn.playSound(null, pos, SoundEvents.BLOCK_FIRE_EXTINGUISH, SoundCategory.BLOCKS, 0.3f, 1.0f);
         }
+        worldIn.playSound(null, pos, !state.get(LIT) ? SoundEvents.BLOCK_FIRE_EXTINGUISH : SoundEvents.ITEM_FLINTANDSTEEL_USE, SoundCategory.BLOCKS, 0.3f, 1.0f);
         worldIn.updateNeighbors(pos, this);
     }
 
@@ -170,14 +172,14 @@ public class AdvancedLantern extends WallMountedBlock implements DyeAble, Lighta
 
             if (state.get(FACE) == WallMountLocation.WALL) {
                 Direction direction1 = direction.getOpposite();
-                worldIn.addParticle(ParticleTypes.SMOKE, d0 + 0.27D * (double) direction1.getOffsetX(), d1, d2 + 0.27D * (double) direction1.getOffsetZ(), 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME, d0 + 0.27D * (double) direction1.getOffsetX(), d1 - 0.3D, d2 + 0.27D * (double) direction1.getOffsetZ(), color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0 + -0.13D * (double) direction1.getOffsetX(), d1 + -0.13D, d2 + -0.13D * (double) direction1.getOffsetZ(), 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME, d0 + -0.13D * (double) direction1.getOffsetX(), d1 - 0.18D, d2 + -0.13D * (double) direction1.getOffsetZ(), color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
             } else if (state.get(FACE) == WallMountLocation.FLOOR) {
                 worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 - 0.3D, d2, 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME, d0, d1 - 0.5D, d2, color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME, d0, d1 - 0.35D, d2, color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
             } else if (state.get(FACE) == WallMountLocation.CEILING) {
-                worldIn.addParticle(ParticleTypes.SMOKE, d0, d1, d2, 0.0D, 0.0D, 0.0D);
-                worldIn.addParticle(ParticleRegistryHandler.CUSTOM_FLAME, d0, d1 - 0.3D, d2, color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
+                worldIn.addParticle(ParticleTypes.SMOKE, d0, d1 - 0.1D, d2, 0.0D, 0.0D, 0.0D);
+                worldIn.addParticle(ParticleRegistryHandler.CANDLE_FLAME, d0, d1 - 0.1D, d2, color.getColorComponents()[0], color.getColorComponents()[1], color.getColorComponents()[2]);
             }
         }
     }

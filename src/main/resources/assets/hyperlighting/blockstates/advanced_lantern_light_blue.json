@@ -1,33 +1,33 @@
 {
   "variants": {
-    "face=floor,facing=north,lit=true": {"model": "hyperlighting:block/lantern_base", "y":  180},
-    "face=floor,facing=south,lit=true": {"model": "hyperlighting:block/lantern_base", "y":  0},
-    "face=floor,facing=west,lit=true": {"model": "hyperlighting:block/lantern_base", "y": 90},
-    "face=floor,facing=east,lit=true": {"model": "hyperlighting:block/lantern_base", "y":  270},
+    "face=floor,facing=north,lit=true": {"model": "hyperlighting:block/lantern_basic", "y":  180},
+    "face=floor,facing=south,lit=true": {"model": "hyperlighting:block/lantern_basic", "y":  0},
+    "face=floor,facing=west,lit=true": {"model": "hyperlighting:block/lantern_basic", "y": 90},
+    "face=floor,facing=east,lit=true": {"model": "hyperlighting:block/lantern_basic", "y":  270},
 
-    "face=ceiling,facing=north,lit=true": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  90},
-    "face=ceiling,facing=south,lit=true": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  270},
-    "face=ceiling,facing=west,lit=true": {"model": "hyperlighting:block/lantern_base_ceiling"},
-    "face=ceiling,facing=east,lit=true": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  180},
+    "face=ceiling,facing=north,lit=true": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  90},
+    "face=ceiling,facing=south,lit=true": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  270},
+    "face=ceiling,facing=west,lit=true": {"model": "hyperlighting:block/lantern_basic_ceiling"},
+    "face=ceiling,facing=east,lit=true": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  180},
 
-    "face=wall,facing=north,lit=true": {"model": "hyperlighting:block/lantern_base_wall", "y": 270},
-    "face=wall,facing=south,lit=true": {"model": "hyperlighting:block/lantern_base_wall", "y": 90},
-    "face=wall,facing=west,lit=true": {"model": "hyperlighting:block/lantern_base_wall", "y": 180},
-    "face=wall,facing=east,lit=true": {"model": "hyperlighting:block/lantern_base_wall", "y": 0},
+    "face=wall,facing=north,lit=true": {"model": "hyperlighting:block/lantern_basic_wall", "y": 0},
+    "face=wall,facing=south,lit=true": {"model": "hyperlighting:block/lantern_basic_wall", "y": 180},
+    "face=wall,facing=west,lit=true": {"model": "hyperlighting:block/lantern_basic_wall", "y": 270},
+    "face=wall,facing=east,lit=true": {"model": "hyperlighting:block/lantern_basic_wall", "y": 90},
 
-    "face=floor,facing=north,lit=false": {"model": "hyperlighting:block/lantern_base", "y":  180},
-    "face=floor,facing=south,lit=false": {"model": "hyperlighting:block/lantern_base", "y":  0},
-    "face=floor,facing=west,lit=false": {"model": "hyperlighting:block/lantern_base", "y":  90},
-    "face=floor,facing=east,lit=false": {"model": "hyperlighting:block/lantern_base", "y":  270},
+    "face=floor,facing=north,lit=false": {"model": "hyperlighting:block/lantern_basic", "y":  180},
+    "face=floor,facing=south,lit=false": {"model": "hyperlighting:block/lantern_basic", "y":  0},
+    "face=floor,facing=west,lit=false": {"model": "hyperlighting:block/lantern_basic", "y":  90},
+    "face=floor,facing=east,lit=false": {"model": "hyperlighting:block/lantern_basic", "y":  270},
 
-    "face=ceiling,facing=north,lit=false": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  90},
-    "face=ceiling,facing=south,lit=false": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  270},
-    "face=ceiling,facing=west,lit=false": {"model": "hyperlighting:block/lantern_base_ceiling"},
-    "face=ceiling,facing=east,lit=false": {"model": "hyperlighting:block/lantern_base_ceiling", "y":  180},
+    "face=ceiling,facing=north,lit=false": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  90},
+    "face=ceiling,facing=south,lit=false": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  270},
+    "face=ceiling,facing=west,lit=false": {"model": "hyperlighting:block/lantern_basic_ceiling"},
+    "face=ceiling,facing=east,lit=false": {"model": "hyperlighting:block/lantern_basic_ceiling", "y":  180},
 
-    "face=wall,facing=north,lit=false": {"model": "hyperlighting:block/lantern_base_wall", "y": 270},
-    "face=wall,facing=south,lit=false": {"model": "hyperlighting:block/lantern_base_wall", "y": 90},
-    "face=wall,facing=west,lit=false": {"model": "hyperlighting:block/lantern_base_wall", "y": 180},
-    "face=wall,facing=east,lit=false": {"model": "hyperlighting:block/lantern_base_wall"}
+    "face=wall,facing=north,lit=false": {"model": "hyperlighting:block/lantern_basic_wall", "y": 0},
+    "face=wall,facing=south,lit=false": {"model": "hyperlighting:block/lantern_basic_wall", "y": 180},
+    "face=wall,facing=west,lit=false": {"model": "hyperlighting:block/lantern_basic_wall", "y": 270},
+    "face=wall,facing=east,lit=false": {"model": "hyperlighting:block/lantern_basic_wall", "y": 90}
   }
 }

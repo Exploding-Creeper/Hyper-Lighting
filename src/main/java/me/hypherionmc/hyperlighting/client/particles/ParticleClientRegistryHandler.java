@@ -15,6 +15,7 @@ public class ParticleClientRegistryHandler {
         ClientSpriteRegistryCallback.event(PlayerScreenHandler.BLOCK_ATLAS_TEXTURE).register(((atlasTexture, registry) -> {
             registry.register(new Identifier("hyperlighting", "particle/flame_base"));
             registry.register(new Identifier("hyperlighting", "particle/bubble_particle"));
+            registry.register(new Identifier("hyperlighting", "particle/flame_new"));
 
             registry.register(new Identifier("hyperlighting", "particle/splash_0"));
             registry.register(new Identifier("hyperlighting", "particle/splash_1"));
@@ -22,6 +23,7 @@ public class ParticleClientRegistryHandler {
             registry.register(new Identifier("hyperlighting", "particle/splash_3"));
         }));
         ParticleFactoryRegistry.getInstance().register(ParticleRegistryHandler.CUSTOM_FLAME, CustomFlameParticle.Factory::new);
+        ParticleFactoryRegistry.getInstance().register(ParticleRegistryHandler.CANDLE_FLAME, CandleFlame.Factory::new);
 
         ParticleRegistryHandler.COLORED_WATER_BUBBLES.forEach((color, defaultParticleType) -> {
             float[] colors = color.getColorComponents();
