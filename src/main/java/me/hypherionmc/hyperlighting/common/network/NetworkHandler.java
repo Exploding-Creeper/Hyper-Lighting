@@ -1,5 +1,6 @@
 package me.hypherionmc.hyperlighting.common.network;
 
+import me.hypherionmc.hyperlighting.HyperLightingFabric;
 import me.hypherionmc.hyperlighting.ModConstants;
 import me.hypherionmc.hyperlighting.api.RemoteSwitchable;
 import me.hypherionmc.hyperlighting.common.blockentities.FogMachineBlockEntity;
@@ -71,6 +72,13 @@ public class NetworkHandler {
         });
     }
 
+    public static void registerClient() {
+        ClientPlayNetworking.registerGlobalReceiver(new Identifier(ModConstants.MOD_ID, "configpacket"), (client, handler, buf, responseSender) -> {
+            HyperLightingFabric.hyperLightingConfig.genColoredLakes = buf.readBoolean();
+            HyperLightingFabric.hyperLightingConfig.genColoredGlowingLakes = buf.readBoolean();
+        });
+    }
+
     public static void sendStateTogglePacket(BlockPos pos) {
         PacketByteBuf byteBuf = PacketByteBufs.create();
         ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "statepacket"), byteBuf.writeBlockPos(pos));
@@ -81,17 +89,19 @@ public class NetworkHandler {
         ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "opengui"), byteBuf.writeBlockPos(pos));
     }
 
-    public static void sendOpenGuiPacket(ServerPlayerEntity player, BlockPos pos) {
-        PacketByteBuf byteBuf = PacketByteBufs.create();
-        ServerPlayNetworking.send(player, new Identifier(ModConstants.MOD_ID, "opengui"), byteBuf.writeBlockPos(pos));
-    }
-
     public static void sendFogMachinePacket(BlockPos pos, int time, FogMachinePacketType type) {
         PacketByteBuf byteBuf = PacketByteBufs.create();
         byteBuf.writeBlockPos(pos);
         byteBuf.writeInt(type.ordinal());
         byteBuf.writeInt(time);
         ClientPlayNetworking.send(new Identifier(ModConstants.MOD_ID, "fogpacket"), byteBuf);
+    }
+
+    public static void sendConfigPacket(ServerPlayerEntity entity) {
+        PacketByteBuf byteBuf = PacketByteBufs.create();
+        byteBuf.writeBoolean(HyperLightingFabric.hyperLightingConfig.genColoredLakes);
+        byteBuf.writeBoolean(HyperLightingFabric.hyperLightingConfig.genColoredGlowingLakes);
+        ServerPlayNetworking.send(entity, new Identifier(ModConstants.MOD_ID, "configpacket"), byteBuf);
     }
 
     // SERIOUSLY? There has to be a better way of doing this

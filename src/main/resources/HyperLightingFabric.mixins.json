@@ -4,6 +4,7 @@
   "package": "me.hypherionmc.hyperlighting.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "MixinServerWorld",
     "coloredwater.BucketItemAccessorMixin",
     "coloredwater.EntityMixin",
     "coloredwater.GlassBottleItemMixin",

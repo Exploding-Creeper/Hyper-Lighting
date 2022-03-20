@@ -92,6 +92,9 @@ public class RegistryHandler {
 
         registerBlockColors();
         registerItemColors();
+
+        HyperLightingFabric.logger.info("Registering Client Packets...");
+        NetworkHandler.registerClient();
     }
 
     public static void registerBlockColors() {
