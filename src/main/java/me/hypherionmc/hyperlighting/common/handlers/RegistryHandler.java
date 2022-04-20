@@ -31,12 +31,12 @@ public class RegistryHandler {
         HyperLightingFabric.logger.info("Registering Blocks...");
         new HLBlocks();
 
+        HyperLightingFabric.logger.info("Registering Particles (Server)...");
+        ParticleRegistryHandler.register();
+
         HyperLightingFabric.logger.info("Registering Items...");
         HLItems.ITEMS.size();
         HLItems.registerWaterBottles();
-
-        HyperLightingFabric.logger.info("Registering Particles (Server)...");
-        ParticleRegistryHandler.register();
 
         HyperLightingFabric.logger.info("Registering Tile Entities...");
         HLBlockEntities.register();
