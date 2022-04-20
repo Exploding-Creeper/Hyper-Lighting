@@ -186,6 +186,9 @@ public class HLBlocks {
     public static final Block TIKI_BASE = register("tiki_base", new TikiTorchStick("tiki_base"));
     public static final Block FOG_MACHINE = register("fog_machine", new FogMachineBlock("fog_machine"));
 
+    public HLBlocks() {
+
+    }
 
     public static Block register(String name, Block block) {
         Block blk = Registry.register(Registry.BLOCK, new Identifier(ModConstants.MOD_ID, name), block);

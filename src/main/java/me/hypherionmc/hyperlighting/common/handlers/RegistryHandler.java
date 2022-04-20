@@ -29,7 +29,7 @@ public class RegistryHandler {
         HLFluids.registerWaterColors();
 
         HyperLightingFabric.logger.info("Registering Blocks...");
-        HLBlocks.BLOCKS.size();
+        new HLBlocks();
 
         HyperLightingFabric.logger.info("Registering Items...");
         HLItems.ITEMS.size();
