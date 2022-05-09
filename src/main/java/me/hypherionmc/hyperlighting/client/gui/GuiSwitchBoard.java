@@ -84,7 +84,7 @@ public class GuiSwitchBoard extends AbstractContainerScreen<ContainerSwitchBoard
 
     @Override
     protected void renderLabels(PoseStack matrixStack, int mouseX, int mouseY) {
-        this.font.draw(matrixStack, this.player.getDisplayName().getString(), 7, this.imageHeight - 96 + 2, 4210752);
+        super.renderLabels(matrixStack, mouseX, mouseY);
 
         for (int i = 0; i < slots.size(); ++i) {
             if (this.menu.slots.get(i).hasItem() && this.te.isLinked(i)) {

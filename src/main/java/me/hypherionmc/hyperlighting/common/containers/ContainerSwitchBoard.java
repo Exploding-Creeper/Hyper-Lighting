@@ -65,8 +65,8 @@ public class ContainerSwitchBoard extends AbstractContainerMenu {
             ItemStack itemstack1 = slot.getItem();
             itemstack = itemstack1.copy();
 
-            if (index < 6) {
-                if (!this.moveItemStackTo(itemstack1, index, 42, true)) {
+            if (index <= 5) {
+                if (!this.moveItemStackTo(itemstack1, 6, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
                 slot.onQuickCraft(itemstack1, itemstack);
@@ -77,6 +77,8 @@ public class ContainerSwitchBoard extends AbstractContainerMenu {
                             if (!this.moveItemStackTo(itemstack1, i, 6, false)) {
                                 return ItemStack.EMPTY;
                             }
+                            slot.setChanged();
+                            break;
                         }
                     }
                 }

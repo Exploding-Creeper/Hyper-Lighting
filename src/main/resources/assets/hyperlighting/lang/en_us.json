@@ -272,5 +272,6 @@
     "gui.fogger.dyetooltipname": "Dye Slot",
     "gui.fogger.dyetooltipline1": "Place dye in this slot",
     "gui.fogger.dyetooltipline2": "to change the smoke color",
-    "container.fogmachine": "Fog Machine"
+    "container.fogmachine": "Fog Machine",
+    "container.switchboard": "Switch Board"
 }
