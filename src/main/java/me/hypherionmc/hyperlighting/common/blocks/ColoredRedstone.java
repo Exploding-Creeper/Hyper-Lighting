@@ -32,7 +32,7 @@ public class ColoredRedstone extends RedstoneLampBlock implements DyeAble {
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.create("color", DyeColor.class);
 
     public ColoredRedstone(String name, DyeColor color, CreativeModeTab group) {
-        super(Properties.of(Material.GLASS).sound(SoundType.GLASS).strength(0.3f));
+        super(Properties.of(Material.BUILDABLE_GLASS).sound(SoundType.GLASS).strength(0.3f));
 
         this.registerDefaultState(this.getStateDefinition().any().setValue(LIT, false).setValue(COLOR, color));
 
