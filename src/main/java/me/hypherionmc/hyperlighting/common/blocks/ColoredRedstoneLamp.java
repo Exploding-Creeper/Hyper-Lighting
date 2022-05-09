@@ -37,7 +37,7 @@ public class ColoredRedstoneLamp extends RedstoneLampBlock implements DyeAble {
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
     public ColoredRedstoneLamp(String name, DyeColor color, ItemGroup group) {
-        super(Settings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).strength(0.3f).luminance(BlockUtils.createLightLevelFromLitBlockState(15)));
+        super(Settings.of(Material.REDSTONE_LAMP).sounds(BlockSoundGroup.GLASS).strength(0.3f).luminance(BlockUtils.createLightLevelFromLitBlockState(15)));
         this.setDefaultState(this.getDefaultState().with(COLOR, color));
 
         HLItems.register(name, new BlockItemColor(this, new FabricItemSettings().group(group)));
