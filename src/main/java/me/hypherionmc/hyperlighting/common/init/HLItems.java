@@ -19,7 +19,7 @@ public class HLItems {
 
     public static final Item LIGHTER_TOOL = register("lighter_tool", new LighterTool());
     public static final Item WIRELESS_POWERCARD = register("wireless_powercard", new WirelessPowerCard());
-    public static final Item WIRELESS_SWITCH_POWERCARD = register("wireless_switch_card", new WirelessSwitchCard());
+    public static final Item WIRELESS_SWITCH_CARD = register("wireless_switch_card", new WirelessSwitchCard());
     public static final Item LIGHT_SABER = register("light_saber", new LightSaber());
     public static final Item FOG_REMOTE = register("fog_remote", new FogMachineRemote());
 
