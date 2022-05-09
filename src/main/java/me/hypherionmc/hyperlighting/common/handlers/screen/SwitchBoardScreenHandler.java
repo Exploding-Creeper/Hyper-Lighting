@@ -1,7 +1,8 @@
 package me.hypherionmc.hyperlighting.common.handlers.screen;
 
+import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.init.HLScreenHandlers;
-import me.hypherionmc.hyperlighting.common.items.WirelessSwitchCard;
+import me.hypherionmc.hyperlighting.common.inventory.ItemTypeSlot;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventory;
@@ -31,12 +32,12 @@ public class SwitchBoardScreenHandler extends ScreenHandler {
         int m;
         int l;
 
-        this.addSlot(new Slot(inventory, 0, 25, 14));
-        this.addSlot(new Slot(inventory, 1, 74, 14));
-        this.addSlot(new Slot(inventory, 2, 123, 14));
-        this.addSlot(new Slot(inventory, 3, 25, 44));
-        this.addSlot(new Slot(inventory, 4, 74, 44));
-        this.addSlot(new Slot(inventory, 5, 123, 44));
+        this.addSlot(new ItemTypeSlot(inventory, 0, 25, 14, HLItems.WIRELESS_SWITCH_CARD, 1));
+        this.addSlot(new ItemTypeSlot(inventory, 1, 74, 14, HLItems.WIRELESS_SWITCH_CARD, 1));
+        this.addSlot(new ItemTypeSlot(inventory, 2, 123, 14, HLItems.WIRELESS_SWITCH_CARD, 1));
+        this.addSlot(new ItemTypeSlot(inventory, 3, 25, 44, HLItems.WIRELESS_SWITCH_CARD, 1));
+        this.addSlot(new ItemTypeSlot(inventory, 4, 74, 44, HLItems.WIRELESS_SWITCH_CARD, 1));
+        this.addSlot(new ItemTypeSlot(inventory, 5, 123, 44, HLItems.WIRELESS_SWITCH_CARD, 1));
 
         for (m = 0; m < 3; ++m) {
             for (l = 0; l < 9; ++l) {
@@ -57,25 +58,26 @@ public class SwitchBoardScreenHandler extends ScreenHandler {
 
     @Override
     public ItemStack transferSlot(PlayerEntity player, int index) {
+        System.out.println(index);
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot != null && slot.getStack() != ItemStack.EMPTY) {
+        if (slot.hasStack()) {
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index < 6) {
-                if (!this.insertItem(itemstack1, index, 42, true)) {
+            if (index <= 5) {
+                if (!this.insertItem(itemstack1, 6, this.slots.size(), true)) {
                     return ItemStack.EMPTY;
                 }
-                slot.onQuickTransfer(itemstack1, itemstack);
             } else {
-                if (itemstack1.getItem() instanceof WirelessSwitchCard) {
-                    for (int i = 0; i < 6; i++) {
-                        if (slots.get(i).getStack() != ItemStack.EMPTY) {
-                            if (!this.insertItem(itemstack1, i, 6, false)) {
-                                return ItemStack.EMPTY;
-                            }
+                for (int i = 0; i < 6; i++) {
+                    Slot destSlot = this.slots.get(i);
+                    if (!destSlot.hasStack()) {
+                        if (!this.insertItem(itemstack1, i, 6, false)) {
+                            return ItemStack.EMPTY;
                         }
+                        slot.markDirty();
+                        break;
                     }
                 }
             }
@@ -94,6 +96,12 @@ public class SwitchBoardScreenHandler extends ScreenHandler {
         }
 
         return itemstack;
+    }
+
+    @Override
+    public void close(PlayerEntity player) {
+        super.close(player);
+        this.inventory.onClose(player);
     }
 
     public BlockPos getPos() {

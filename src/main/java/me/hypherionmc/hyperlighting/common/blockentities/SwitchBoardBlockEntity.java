@@ -5,6 +5,7 @@ import me.hypherionmc.hyperlighting.api.SolarLight;
 import me.hypherionmc.hyperlighting.api.SwitchModule;
 import me.hypherionmc.hyperlighting.common.handlers.screen.SwitchBoardScreenHandler;
 import me.hypherionmc.hyperlighting.common.init.HLBlockEntities;
+import me.hypherionmc.hyperlighting.common.init.HLItems;
 import me.hypherionmc.hyperlighting.common.inventory.ImplementedInventory;
 import me.hypherionmc.hyperlighting.common.network.NetworkHandler;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
@@ -13,6 +14,7 @@ import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.inventory.Inventories;
+import net.minecraft.item.DyeItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.network.PacketByteBuf;
@@ -28,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class SwitchBoardBlockEntity extends BlockEntity implements ExtendedScreenHandlerFactory, ImplementedInventory {
 
-    private final DefaultedList<ItemStack> inventory = DefaultedList.ofSize(6, ItemStack.EMPTY);
+    private DefaultedList<ItemStack> inventory = DefaultedList.ofSize(6, ItemStack.EMPTY);
 
     public SwitchBoardBlockEntity(BlockPos pos, BlockState state) {
         super(HLBlockEntities.TILE_SWITCH_BOARD, pos, state);
@@ -138,13 +140,14 @@ public class SwitchBoardBlockEntity extends BlockEntity implements ExtendedScree
     @Override
     public void readNbt(NbtCompound nbt) {
         super.readNbt(nbt);
+        this.inventory = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         Inventories.readNbt(nbt, inventory);
     }
 
     @Override
     public void writeNbt(NbtCompound nbt) {
-        Inventories.writeNbt(nbt, inventory);
         super.writeNbt(nbt);
+        Inventories.writeNbt(nbt, inventory);
     }
 
     @Override
@@ -168,22 +171,23 @@ public class SwitchBoardBlockEntity extends BlockEntity implements ExtendedScree
         this.sendUpdates();
     }
 
-    @Override
-    public void setStack(int slot, ItemStack stack) {
-        ImplementedInventory.super.setStack(slot, stack);
-        this.sendUpdates();
-    }
-
-    @Override
     public ItemStack removeStack(int slot, int count) {
+        ItemStack stack = ImplementedInventory.super.removeStack(slot);
         this.sendUpdates();
-        return ImplementedInventory.super.removeStack(slot, count);
+        return stack;
     }
 
     @Override
     public ItemStack removeStack(int slot) {
+        ItemStack stack = ImplementedInventory.super.removeStack(slot);
         this.sendUpdates();
-        return ImplementedInventory.super.removeStack(slot);
+        return stack;
+    }
+
+    @Override
+    public void setStack(int slot, ItemStack stack) {
+        ImplementedInventory.super.setStack(slot, stack);
+        this.sendUpdates();
     }
 
     private void sendUpdates() {

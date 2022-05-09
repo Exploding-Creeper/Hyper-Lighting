@@ -47,6 +47,7 @@ public class SwitchBoard extends Block implements BlockEntityProvider {
             if (screenHandlerFactory != null) {
                 player.openHandledScreen(screenHandlerFactory);
             }
+            return ActionResult.SUCCESS;
         }
         return ActionResult.SUCCESS;
     }
