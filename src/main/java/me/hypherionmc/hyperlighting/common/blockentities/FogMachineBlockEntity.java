@@ -13,8 +13,10 @@ import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.impl.transfer.fluid.FluidVariantImpl;
+import net.minecraft.block.AirBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
@@ -97,10 +99,14 @@ public class FogMachineBlockEntity extends BlockEntity implements Clearable, ISi
 
         this.sendUpdates();
     }
+    public boolean isBlockLoaded() {
+        Block cachedShit = getCachedState().getBlock();
+        return !(cachedShit instanceof AirBlock);
+    }
 
     @Override
     public void tickClient() {
-        if (isFiring()) {
+        if (isFiring() && isBlockLoaded()) {
             addParticles();
         }
     }
