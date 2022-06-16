@@ -44,12 +44,12 @@ public class BatteryNeon extends Block implements BlockEntityProvider, RemoteSwi
     public static final DirectionProperty FACING = Properties.FACING;
     public static final EnumProperty<DyeColor> COLOR = EnumProperty.of("color", DyeColor.class);
 
-    private static final VoxelShape DOWN_BOUNDING_BOX = Block.createCuboidShape(0, 0, 7.008, 16, 3.008, 8.992);
-    private static final VoxelShape UP_BOUNDING_BOX = Block.createCuboidShape(0, 12.8, 7.008, 16, 16, 8.992);
-    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.createCuboidShape(0, 7.008, 12.992, 16, 8.992, 16);
-    private static final VoxelShape EAST_BOUNDING_BOX = Block.createCuboidShape(0, 7.008, 16, 12.8, 8.992, 16);
-    private static final VoxelShape WEST_BOUNDING_BOX = Block.createCuboidShape(0, 7.008, 0, 3.2, 8.992, 16);
-    private static final VoxelShape NORTH_BOUNDING_BOX = Block.createCuboidShape(0, 7.008, 0.336, 16, 8.992, 3.328);
+    private static final VoxelShape DOWN_BOUNDING_BOX = Block.createCuboidShape(0, 0.005, 7, 16, 3.005, 9);
+    private static final VoxelShape UP_BOUNDING_BOX = Block.createCuboidShape(0, 12.995, 7, 16, 15.995, 9);
+    private static final VoxelShape SOUTH_BOUNDING_BOX = Block.createCuboidShape(0, 7, 12.995, 16, 9, 15.995);
+    private static final VoxelShape EAST_BOUNDING_BOX = Block.createCuboidShape(12.995, 7, 0, 15.995, 9, 16);
+    private static final VoxelShape WEST_BOUNDING_BOX = Block.createCuboidShape(0.005, 7, 0, 3.005, 9, 16);
+    private static final VoxelShape NORTH_BOUNDING_BOX = Block.createCuboidShape(0, 7, 0.005, 16, 9, 3.005);
 
     public BatteryNeon(String name) {
         super(Settings.of(Material.GLASS).sounds(BlockSoundGroup.GLASS).luminance(BlockUtils.createLightLevelFromLitBlockState(15)));
